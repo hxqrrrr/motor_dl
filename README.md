@@ -13,7 +13,7 @@ TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pyt
 ----
 
 #### 配置环境：
-
+可以使用anaconda直接导入motor_env.yaml
 ```
 #bash
 conda create -n motor python=3.10.14 
