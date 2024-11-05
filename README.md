@@ -19,7 +19,7 @@ TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pyt
 conda create -n motor python=3.10.14 
 conda activate motor
 conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.8 -c pytorch -c nvidia
- ```
+```
 
 ------
 
@@ -36,4 +36,6 @@ transformer方案：把目前的cnn改成transformer
 pytorh入门：https://github.com/hunkim/PyTorchZeroToAll
 
 transformer入门：https://nutritious-cruiser-d7d.notion.site/learn-path-transformers-11d42872c054803596faee1f411525f6?pvs=4
+
+hangingface ：https://huggingface.co/
 
