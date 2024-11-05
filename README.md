@@ -6,7 +6,8 @@
 
 cnn.ipynb:能运行的cnn训练
 
-可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)\
+可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)
+
 TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pytorch-e2b84aa55e67
 
 ------
