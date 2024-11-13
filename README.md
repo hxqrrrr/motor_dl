@@ -23,11 +23,13 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 ------
 
-#### 后续工作：
+#### TODO：
 
-transformer方案：把目前的cnn改成transformer
+- [ ] 残差-自注意方案（主要）：把目前的cnn改成残差-自注意，类似transformer
 
-音频信号方案：https://nutritious-cruiser-d7d.notion.site/CNN-11542872c0548060983fc6b582e3b89a?pvs=4
+- [ ] 音频信号方案（仅参考）：https://nutritious-cruiser-d7d.notion.site/CNN-11542872c0548060983fc6b582e3b89a?pvs=4
+
+
 
 -------
 
