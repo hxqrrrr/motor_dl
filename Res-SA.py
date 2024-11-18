@@ -65,8 +65,7 @@ class MyDataset(Dataset):
             
             # 数据集形状处理
             data_tensor = torch.tensor(read_df(data, data_).values, dtype=torch.float32)
-            print(data_tensor.shape)
-            # 检测数据集形状，维度为2且第一维值为4
+                       # 检测数据集形状，维度为2且第一维值为4
             if data_tensor.ndim != 2 or data_tensor.shape[0] != 4:  # Adjust according to your needs
                 print(f"Unexpected shape for {fname}: {data_tensor.shape}")
                 return None, -1  # Indicate an error
@@ -140,9 +139,9 @@ class OneDCNN(nn.Module):
         return x
     
 #Res-SA模型
-class ResSA(nn.Module):
+class ResSA1(nn.Module):
     def __init__(self, input_size, num_classes,batch_size, kernel_size=3):
-        super(ResSA, self).__init__()
+        super(ResSA1, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=(4, kernel_size), padding=(0, 1))
         self.conv2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=(1, kernel_size), padding=(0, 1))
         self.conv3 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=(1, kernel_size), padding=(0, 1))
@@ -193,8 +192,132 @@ class ResSA(nn.Module):
         x = x.reshape(batch_size, height, width, -1)  # 恢复原始形状
         x = x.permute(0, 3, 1, 2)  # 调整回所需的通道顺序
    
+        x = self.bnReLU2(x)
         x = self.pool(x)
+        x = self.flatten(x)
+  
+        x = self.fc1(x)
+        x = nn.functional.relu(x)
+        x = self.fc2(x)
+        return x
+    
+class ResSA2(nn.Module):
+    def __init__(self, input_size, num_classes,batch_size, kernel_size=5):
+        super(ResSA2, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv4 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv5 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv6 = nn.Conv2d(in_channels=256, out_channels=256, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv7 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.conv8 = nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(1, kernel_size), padding=(0, 2))
+        self.SA1 = nn.MultiheadAttention(embed_dim=64, num_heads=8)
+        self.SA2 = nn.MultiheadAttention(embed_dim=128, num_heads=8)
+        self.SA3 = nn.MultiheadAttention(embed_dim=256, num_heads=8)
+        self.pool = nn.MaxPool2d(kernel_size=(1, 2))
+        self.fc1 = nn.Linear(512 * 4 * 500, 128)
+        self.fc2 = nn.Linear(128, num_classes)
+        self.bnReLU1 = nn.Sequential(nn.BatchNorm2d(64), nn.ReLU())
+        self.bnReLU2 = nn.Sequential(nn.BatchNorm2d(128), nn.ReLU())
+        self.bnReLU3 = nn.Sequential(nn.BatchNorm2d(256), nn.ReLU())
+        self.bnReLU4 = nn.Sequential(nn.BatchNorm2d(512), nn.ReLU())
+        self.flatten = nn.Flatten()
+        
+        # 取消注释并正确初始化SA层
+        self.SA1 = nn.MultiheadAttention(embed_dim=64, num_heads=8)
+        self.SA2 = nn.MultiheadAttention(embed_dim=128, num_heads=8)
+        self.SA3 = nn.MultiheadAttention(embed_dim=256, num_heads=8)
+        
+        # 添加一个1x1卷积层来调整残差连接的通道数
+        self.shortcut1 = nn.Conv2d(64, 128, kernel_size=1)
+        self.shortcut2 = nn.Conv2d(128, 256, kernel_size=1)
+        self.shortcut3 = nn.Conv2d(256, 512, kernel_size=1)
 
+    def forward(self, x):
+        # x形状为(batch_size, 4, 1001)
+        x = x.unsqueeze(1)
+        # x形状为(batch_size, 1，4， 1001)
+        print(x.shape)
+        x =self.conv1(x)
+        x = self.bnReLU1(x)
+        #残差层1
+        residual = x
+        x = self.conv2(x)
+        x = self.bnReLU1(x)
+        x = x + residual
+        x = self.bnReLU1(x)
+
+        residual = x
+        x = self.conv2(x)
+        x = self.bnReLU1(x)
+        x = x + residual
+        x = self.bnReLU1(x)
+
+        #SA层1
+        batch_size, _, height, width = x.shape
+        x = x.permute(0, 2, 1, 3)  # [batch_size, height, channels, width]
+        x = x.reshape(batch_size * height, width, -1)  # [batch_size*height, width, channels]
+        x, _ = self.SA1(x, x, x)
+        x = x.reshape(batch_size, height, width, -1)  # 恢复原始形状
+        x = x.permute(0, 3, 1, 2)  # 调整回所需的通道顺序
+   
+        # 在添加残差之前，调整通道数
+        residual = self.shortcut1(x)
+        x = self.conv3(x)
+        x = self.bnReLU2(x)
+        x = x + residual
+        x = self.bnReLU2(x)
+
+        residual = x
+        x = self.conv4(x)
+        x = self.bnReLU2(x)
+        x = x + residual
+        x = self.bnReLU2(x)
+
+        #SA层2
+        batch_size, _, height, width = x.shape
+        x = x.permute(0, 2, 1, 3)  # [batch_size, height, channels, width]
+        x = x.reshape(batch_size * height, width, -1)  # [batch_size*height, width, channels]
+        x, _ = self.SA2(x, x, x)
+        x = x.reshape(batch_size, height, width, -1)  # 恢复原始形状
+        x = x.permute(0, 3, 1, 2)  # 调整回所需的通道顺序
+
+        # 在添加残差之前，调整通道数
+        residual = self.shortcut2(x)
+        x = self.conv5(x)
+        x = self.bnReLU3(x)
+        x = x + residual
+        x = self.bnReLU3(x)
+
+        residual = x
+        x = self.conv6(x)
+        x = self.bnReLU3(x)
+        x = x + residual
+        x = self.bnReLU3(x)
+  
+        #SA层3
+        batch_size, _, height, width = x.shape
+        x = x.permute(0, 2, 1, 3)  # [batch_size, height, channels, width]
+        x = x.reshape(batch_size * height, width, -1)  # [batch_size*height, width, channels]
+        x, _ = self.SA3(x, x, x)
+        x = x.reshape(batch_size, height, width, -1)  # 恢复原始形状
+        x = x.permute(0, 3, 1, 2)  # 调整回所需的通道顺序
+
+        # 在添加残差之前，调整通道数
+        residual = self.shortcut3(x)
+        x = self.conv7(x)
+        x = self.bnReLU4(x)
+        x = x + residual
+        x = self.bnReLU4(x)
+
+        residual = x
+        x = self.conv8(x)
+        x = self.bnReLU4(x)
+        x = x + residual
+        x = self.bnReLU4(x)
+
+        x = self.pool(x)
         x = self.flatten(x)
   
         x = self.fc1(x)
@@ -206,13 +329,15 @@ class ResSA(nn.Module):
 # "cuda" only when GPUs are available.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # Initialize a model, and put it on the device specified.
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(current_dir, "定子匝间短路")
 
-batch_size =1024
+batch_size =16
 n_epochs = 1000
 patience = 200
-lr=0.005
+lr=0.001
 weight_decay=1e-5
-model = ResSA(input_size=1001, num_classes=16,batch_size=batch_size).to(device)
+model = ResSA2(input_size=1001, num_classes=16,batch_size=batch_size).to(device)
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(
@@ -221,9 +346,9 @@ optimizer = torch.optim.Adam(
     weight_decay=weight_decay,
     betas=(0.9, 0.999)
 )
-train_set = MyDataset("定子匝间短路")
+train_set = MyDataset(data_dir)
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
-valid_set = MyDataset("定子匝间短路")
+valid_set = MyDataset(data_dir)
 valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
 
 
