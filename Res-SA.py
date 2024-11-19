@@ -17,6 +17,9 @@ import torch
 from torch.utils.data import DataLoader, random_split
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.tensorboard import SummaryWriter
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
 # 设置随机种子
 myseed = 6666  
@@ -242,10 +245,10 @@ class ResSA2(nn.Module):
         self.pool = nn.MaxPool2d(kernel_size=(1, 2))
         self.fc1 = nn.Linear(512 * 4 * 500, 128)
         self.fc2 = nn.Linear(128, num_classes)
-        self.bnReLU1 = nn.Sequential(nn.BatchNorm2d(64), nn.ReLU())
-        self.bnReLU2 = nn.Sequential(nn.BatchNorm2d(128), nn.ReLU())
-        self.bnReLU3 = nn.Sequential(nn.BatchNorm2d(256), nn.ReLU())
-        self.bnReLU4 = nn.Sequential(nn.BatchNorm2d(512), nn.ReLU())
+        self.bnReLU1 = nn.Sequential(nn.BatchNorm2d(64), nn.ReLU(),nn.Dropout(0.1))
+        self.bnReLU2 = nn.Sequential(nn.BatchNorm2d(128), nn.ReLU(),nn.Dropout(0.1))
+        self.bnReLU3 = nn.Sequential(nn.BatchNorm2d(256), nn.ReLU(),nn.Dropout(0.1))
+        self.bnReLU4 = nn.Sequential(nn.BatchNorm2d(512), nn.ReLU(),nn.Dropout(0.1))
         self.flatten = nn.Flatten()
         
         # 取消注释并正确初始化SA层
@@ -348,20 +351,114 @@ class ResSA2(nn.Module):
         x = nn.functional.relu(x)
         x = self.fc2(x)
         return x
-    
-    
+
+
+class SelfAttention(nn.Module):
+    def __init__(self, embed_size, heads, dropout=0.1):
+        super(SelfAttention, self).__init__()
+        self.embed_size = embed_size
+        self.heads = heads
+        self.head_dim = embed_size // heads
+        
+        assert (
+            self.head_dim * heads == embed_size
+        ), "Embedding size must be divisible by heads"
+        
+        # 自注意力层的组件
+        self.values = nn.Linear(embed_size, embed_size, bias=False)
+        self.keys = nn.Linear(embed_size, embed_size, bias=False)
+        self.queries = nn.Linear(embed_size, embed_size, bias=False)
+        self.fc_out = nn.Linear(embed_size, embed_size)
+        
+        # 前馈网络组件
+        self.ff_fc1 = nn.Linear(embed_size, embed_size * 4)
+        self.ff_fc2 = nn.Linear(embed_size * 4, embed_size)
+        
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x):
+        # 自注意力部分
+        N = x.shape[0]
+        length = x.shape[1]
+        
+        values = self.values(x).view(N, length, self.heads, self.head_dim)
+        keys = self.keys(x).view(N, length, self.heads, self.head_dim)
+        queries = self.queries(x).view(N, length, self.heads, self.head_dim)
+
+        values = values.permute(0, 2, 1, 3)
+        keys = keys.permute(0, 2, 1, 3)
+        queries = queries.permute(0, 2, 1, 3)
+
+        energy = torch.einsum("nqhd,nkhd->nqk", [queries, keys]) 
+        attention = self.dropout(F.softmax(energy / (self.embed_size ** (1 / 2)), dim=2))
+
+        attention_out = torch.einsum("nqk,nvhd->nqhd", [attention, values]).reshape(
+            N, length, self.heads * self.head_dim
+        )
+        
+        attention_out = self.fc_out(attention_out)
+        
+        # 前馈网络部分
+        ff_out = self.ff_fc2(self.dropout(F.relu(self.ff_fc1(attention_out))))
+        
+        return ff_out
+
+class ResidualSelfAttentionModel(nn.Module):
+    def __init__(self, input_channels=4, sequence_length=1001, embed_size=256, num_heads=8, dropout=0.1, num_classes=16):
+        super(ResidualSelfAttentionModel,self).__init__()
+        
+        # 修改投影层以处理输入维度
+        self.projection = nn.Sequential(
+            nn.Linear(input_channels, embed_size),  # 先将4维特征映射到embed_size
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+        
+        self.attention = SelfAttention(embed_size=embed_size, heads=num_heads, dropout=dropout)
+        # self.ffn = FeedForward(embed_size=embed_size, dropout=dropout)
+        self.layer_norm1 = nn.LayerNorm(embed_size)
+        self.layer_norm2 = nn.LayerNorm(embed_size)
+        self.dropout = nn.Dropout(dropout)
+        
+        self.classifier = nn.Sequential(
+            nn.Linear(embed_size, 128),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(128, num_classes)
+        )
+
+    def forward(self, x):
+        # x输入维度: (batch_size, 4, 1001)
+        
+        # 转置使得时间维度在中间
+        x = x.transpose(1, 2)  # (batch_size, 1001, 4)
+        
+        # 投影到更高维度
+        x = self.projection(x)  # (batch_size, 1001, embed_size)
+        
+        # 自注意力处理
+        attention_out = self.layer_norm1(x + self.dropout(self.attention(x)))
+        out = self.layer_norm2(attention_out + self.dropout(attention_out))
+        
+        # 全局池化：取序列的平均值
+        out = out.mean(dim=1)  # (batch_size, embed_size)
+        
+        # 分类
+        out = self.classifier(out)  # (batch_size, num_classes)
+        
+        return out
 # "cuda" only when GPUs are available.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # Initialize a model, and put it on the device specified.
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(current_dir, "定子匝间短路")
 
-batch_size =16
+batch_size =64
 n_epochs = 1000
 patience = 200
 lr=0.001
 weight_decay=1e-5
-model = OneDCNN(input_size=1001, num_classes=16).to(device)
+model = ResidualSelfAttentionModel().to(device)
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(
@@ -378,7 +475,7 @@ valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_wo
 name = f'{_exp_name}_bs{batch_size}_epoch{n_epochs}_patience{patience}_lr{lr}_wd{weight_decay}_seed{myseed}'
 # 参数记录在runs文件夹，使用tendorboard查看
 # writer = SummaryWriter(f'runs/{name}')
-writer = SummaryWriter("runs/demo1")
+writer = SummaryWriter("runs/demo4")
 print(f"记录在runs/{_exp_name}中")
 
 # 初始化
