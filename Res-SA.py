@@ -48,7 +48,7 @@ class MyDataset(Dataset):
     使用方法：dataset = MyDataset(path)
     即可读取同一文件夹下所有电流.csv和转矩.csv数据，并将其合并为一个数据集
     '''
-    def __init__(self,path,files = None):
+    def __init__(self,path):
         super(MyDataset).__init__()
         self.path = path
         self.files = sorted([os.path.join(path,x) for x in os.listdir(path) if x.endswith("电流.csv")])
@@ -108,7 +108,7 @@ def MyDataLoader(data_dir, batch_size, n_workers):
 
     )
 
-    return train_loader, valid_loader, 
+    return train_loader, valid_loader
 
 
 
@@ -200,9 +200,33 @@ class ResSA1(nn.Module):
         x = nn.functional.relu(x)
         x = self.fc2(x)
         return x
+class OneDCNN(nn.Module):  
+    def __init__(self, input_size, num_classes, kernel_size=5):  
+        super(OneDCNN, self).__init__()  
+        self.conv1 = nn.Conv1d(in_channels=4, out_channels=16, kernel_size=kernel_size)  
+        self.pool = nn.MaxPool1d(kernel_size=2)  
+        self.conv2 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=kernel_size)  
+        
+        # 计算有效的输入尺寸  
+        conv1_output_size = (input_size - kernel_size + 1)  
+        conv1_pooled_size = conv1_output_size // 2  
+        conv2_output_size = (conv1_pooled_size - kernel_size + 1)  
+        conv2_pooled_size = conv2_output_size // 2  
+        
+        # 为fc1定义尺寸  
+        self.fc1 = nn.Linear(32 * conv2_pooled_size, 128)  
+        self.fc2 = nn.Linear(128, num_classes)  
+
+    def forward(self, x):  
+        x = self.pool(nn.functional.relu(self.conv1(x)))  
+        x = self.pool(nn.functional.relu(self.conv2(x)))  
+        x = x.view(x.size(0), -1)  # Flatten the output  
+        x = nn.functional.relu(self.fc1(x))  
+        x = self.fc2(x)  
+        return x
     
 class ResSA2(nn.Module):
-    def __init__(self, input_size, num_classes,batch_size, kernel_size=5):
+    def __init__(self, input_size, num_classes, kernel_size=5):
         super(ResSA2, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=(1, kernel_size), padding=(0, 2))
         self.conv2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=(1, kernel_size), padding=(0, 2))
@@ -337,7 +361,7 @@ n_epochs = 1000
 patience = 200
 lr=0.001
 weight_decay=1e-5
-model = ResSA2(input_size=1001, num_classes=16,batch_size=batch_size).to(device)
+model = OneDCNN(input_size=1001, num_classes=16).to(device)
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(
@@ -351,9 +375,12 @@ train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_wo
 valid_set = MyDataset(data_dir)
 valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
 
-
+name = f'{_exp_name}_bs{batch_size}_epoch{n_epochs}_patience{patience}_lr{lr}_wd{weight_decay}_seed{myseed}'
 # 参数记录在runs文件夹，使用tendorboard查看
-writer = SummaryWriter('runs/lr0.005_bs512_epoch2000_patience10000_lrdecay0.1_wd1e-5_seed6666')
+# writer = SummaryWriter(f'runs/{name}')
+writer = SummaryWriter("runs/demo1")
+print(f"记录在runs/{_exp_name}中")
+
 # 初始化
 stale = 0
 best_acc = 0
@@ -417,3 +444,23 @@ for epoch in range(n_epochs):
     # Print the information.
     writer.add_scalar('Loss/train', train_loss, epoch) 
     writer.add_scalar('Accuracy/train', train_acc, epoch)
+
+    # ---------- Validation ----------
+    model.eval()
+    valid_loss = []
+    valid_accs = []
+    
+    with torch.no_grad():
+        for batch in valid_loader:
+            datas, labels = batch
+            logits = model(datas.to(device))
+            loss = criterion(logits, labels.to(device))
+            acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
+            valid_loss.append(loss.item())
+            valid_accs.append(acc)
+            
+    valid_loss = sum(valid_loss) / len(valid_loss)
+    valid_acc = sum(valid_accs) / len(valid_accs)
+    
+    writer.add_scalar('Loss/valid', valid_loss, epoch)
+    writer.add_scalar('Accuracy/valid', valid_acc, epoch)
