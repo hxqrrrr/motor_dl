@@ -29,7 +29,13 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 #### **Res-SA.py**
 
-![](https://github.com/hxqrrrr/motor_dl/blob/main/img/~%244vsoaee.png)
+可以直接使用的残差自注意架构
+
+正确率在85~90
+
+需要调参
+
+![Res-SA架构图](https://github.com/hxqrrrr/motor_dl/blob/main/img/~%244vsoaee.png)
 
 ---
 
