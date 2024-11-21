@@ -1,5 +1,4 @@
-# 设置实验名称
-_exp_name = "sample"
+
 # 导入必要的包
 import numpy as np
 import pandas as pd
@@ -20,6 +19,7 @@ from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # 设置随机种子
 myseed = 6666  
@@ -100,7 +100,6 @@ def MyDataLoader(data_dir, batch_size, n_workers):
         drop_last=True,
         num_workers=n_workers,
         pin_memory=True,
-
     )
     valid_loader = DataLoader(
         validset,
@@ -108,11 +107,8 @@ def MyDataLoader(data_dir, batch_size, n_workers):
         num_workers=n_workers,
         drop_last=True,
         pin_memory=True,
-
     )
-
     return train_loader, valid_loader
-
 
 
 #一维cnn模型
@@ -141,7 +137,6 @@ class OneDCNN(nn.Module):
         x = self.fc2(x)  
         return x
     
-
 
 class SelfAttention(nn.Module):
     def __init__(self, embed_size, heads, dropout=0.1):
@@ -185,13 +180,134 @@ class SelfAttention(nn.Module):
         attention_out = torch.einsum("nqk,nvhd->nqhd", [attention, values]).reshape(
             N, length, self.heads * self.head_dim
         )
-        
         attention_out = self.fc_out(attention_out)
         
         # 前馈网络部分
         ff_out = self.ff_fc2(self.dropout(F.relu(self.ff_fc1(attention_out))))
         
         return ff_out
+    
+
+class ResidualConv2DBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=(1,5), stride=1, padding=(0,2),dropout=0.1):
+        super(ResidualConv2DBlock, self).__init__()
+        if padding is None:
+            padding = kernel_size[0] // 2, kernel_size[1] // 2
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size, stride, padding)
+        self.bnRelu1 = nn.Sequential(nn.BatchNorm2d(out_channels),
+                                     nn.ReLU(),
+                                     nn.Dropout(dropout))
+        self.bnRelu2 = nn.Sequential(nn.BatchNorm2d(out_channels),
+                                     nn.ReLU(),
+                                     nn.Dropout(dropout))
+        self.shortcut = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding),
+            nn.BatchNorm2d(out_channels)
+        )
+    def forward(self, x):
+        identity = x
+        
+        out = self.conv1(x)
+        out = self.bnRelu1(out)
+        
+        if self.shortcut is not None:
+            identity = self.shortcut(identity)
+        
+        out += identity
+        
+        identity = out
+        out = self.conv2(out)
+        out = self.bnRelu2(out)
+        out += identity
+        
+        return out
+
+
+class SABlock(nn.Module):
+    def __init__(self, input_channels, sequence_length=1001, embed_size=256, num_heads=8, dropout=0.1):
+        super(SABlock,self).__init__()
+        
+        self.embed_size = embed_size
+        
+        # 修改投影层以处理2D输入
+        self.projection = nn.Sequential(
+            nn.Conv1d(input_channels, embed_size, kernel_size=1),  # 使用1x1卷积替代Linear
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+        
+        self.attention = SelfAttention(embed_size=embed_size, heads=num_heads, dropout=dropout)
+        self.layer_norm1 = nn.LayerNorm([sequence_length, embed_size])
+        self.layer_norm2 = nn.LayerNorm([sequence_length, embed_size])
+        self.dropout = nn.Dropout(dropout)
+        
+        # 修改输出投影层
+        self.output_projection = nn.Conv1d(embed_size, input_channels, kernel_size=1)
+
+    def forward(self, x):
+        # x输入维度: (batch_size, channels, 1, sequence_length)
+        
+        # 去掉多余的维度
+        x = x.squeeze(2)  # (batch_size, channels, sequence_length)
+        
+        # 使用1x1卷积进行投影
+        x = self.projection(x)  # (batch_size, embed_size, sequence_length)
+        
+        # 转置为注意力机制需要的形状
+        x = x.transpose(1, 2)  # (batch_size, sequence_length, embed_size)
+        
+        # 自注意力处理
+        attention_out = self.layer_norm1(x + self.dropout(self.attention(x)))
+        out = self.layer_norm2(attention_out + self.dropout(attention_out))
+        
+        # 转置回原始形状
+        out = out.transpose(1, 2)  # (batch_size, embed_size, sequence_length)
+        
+        # 投影回原始通道数
+        out = self.output_projection(out)  # (batch_size, channels, sequence_length)
+        
+        # 添加回维度以匹配输入
+        out = out.unsqueeze(2)  # (batch_size, channels, 1, sequence_length)
+        
+        return out
+    
+
+class Res_SA(nn.Module):
+    def __init__(self, dropout, input_channels=4, sequence_length=1001, embed_size=256, num_heads=8, num_classes=16):
+        super(Res_SA,self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=4, out_channels=64, kernel_size=(1,5), stride=1, padding=(0,2))
+        self.sa_block1 = SABlock(input_channels=64, sequence_length=1001, embed_size=256, num_heads=8, dropout=dropout)
+        self.sa_block2 = SABlock(input_channels=128, sequence_length=1001, embed_size=256, num_heads=8, dropout=dropout)
+        self.sa_block3 = SABlock(input_channels=256, sequence_length=1001, embed_size=256, num_heads=8, dropout=dropout)
+        self.residual_conv2d_block1 = ResidualConv2DBlock(in_channels=64, out_channels=64, kernel_size=(1,5), stride=1, padding=(0,2),dropout=dropout)
+        self.residual_conv2d_block2 = ResidualConv2DBlock(in_channels=64, out_channels=128, kernel_size=(1,5), stride=1, padding=(0,2),dropout=dropout)
+        self.residual_conv2d_block3 = ResidualConv2DBlock(in_channels=128, out_channels=256, kernel_size=(1,5), stride=1, padding=(0,2),dropout=dropout)
+        self.residual_conv2d_block4 = ResidualConv2DBlock(in_channels=256, out_channels=512, kernel_size=(1,5), stride=1, padding=(0,2),dropout=dropout)
+        self.avgpool = nn.AdaptiveAvgPool2d((1,1))
+        self.output = nn.Sequential(
+            nn.Linear(512, 128),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(128, num_classes)
+        )
+    def forward(self, x):
+        print(x.shape)
+        x = x.unsqueeze(2)
+        x = self.conv1(x)
+        x = self.residual_conv2d_block1(x)
+        x = self.sa_block1(x)
+        x = self.residual_conv2d_block2(x)
+        x = self.sa_block2(x)
+        x = self.residual_conv2d_block3(x)
+        x = self.sa_block3(x)
+        x = self.residual_conv2d_block4(x)
+        x = self.avgpool(x)
+        print(x.shape)
+        x = x.view(x.size(0), -1)
+        x = self.output(x)
+        return x
+    
 
 class ResidualSelfAttentionModel(nn.Module):
     def __init__(self, input_channels=4, sequence_length=1001, embed_size=256, num_heads=8, dropout=0.1, num_classes=16):
@@ -205,7 +321,6 @@ class ResidualSelfAttentionModel(nn.Module):
         )
         
         self.attention = SelfAttention(embed_size=embed_size, heads=num_heads, dropout=dropout)
-        # self.ffn = FeedForward(embed_size=embed_size, dropout=dropout)
         self.layer_norm1 = nn.LayerNorm(embed_size)
         self.layer_norm2 = nn.LayerNorm(embed_size)
         self.dropout = nn.Dropout(dropout)
@@ -237,44 +352,55 @@ class ResidualSelfAttentionModel(nn.Module):
         out = self.classifier(out)  # (batch_size, num_classes)
         
         return out
+    
+#超参数调节部分
 # "cuda" only when GPUs are available.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # Initialize a model, and put it on the device specified.
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(current_dir, "定子匝间短路")
+# 添加模型保存路径
+model_save_path = "best_model.pth"
 
 batch_size =64
 n_epochs = 1000
-patience = 200
-lr=0.001
+patience = 500
+lr=0.002
+wramup_epochs=5
+initial_lr=0.001
 weight_decay=1e-5
-model = ResidualSelfAttentionModel().to(device)
+dropout=0.1
+model = Res_SA(dropout=dropout).to(device)
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 criterion = nn.CrossEntropyLoss()
+
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=lr,
     weight_decay=weight_decay,
     betas=(0.9, 0.999)
 )
+# 创建调度器
+scheduler = ReduceLROnPlateau(optimizer, 
+                             mode='min',           # 监控指标是越小越好
+                             factor=0.1,           # 学习率调整倍数
+                             patience=100,           # 容忍多少个epoch指标不改善
+                             verbose=True)         # 打印学习率变化信息
+
+
+
 train_set = MyDataset(data_dir)
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
 valid_set = MyDataset(data_dir)
 valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
 
-name = f'{_exp_name}_bs{batch_size}_epoch{n_epochs}_patience{patience}_lr{lr}_wd{weight_decay}_seed{myseed}'
 # 参数记录在runs文件夹，使用tendorboard查看
-# writer = SummaryWriter(f'runs/{name}')
-writer = SummaryWriter("runs/demo4")
-print(f"记录在runs/{_exp_name}中")
+writer = SummaryWriter("runs/fulltry8")
+
 
 # 初始化
 stale = 0
 best_acc = 0
-
-
-
-
 
 # 主循环
 for epoch in range(n_epochs):
@@ -336,7 +462,7 @@ for epoch in range(n_epochs):
     model.eval()
     valid_loss = []
     valid_accs = []
-    
+
     with torch.no_grad():
         for batch in valid_loader:
             datas, labels = batch
@@ -348,6 +474,27 @@ for epoch in range(n_epochs):
             
     valid_loss = sum(valid_loss) / len(valid_loss)
     valid_acc = sum(valid_accs) / len(valid_accs)
-    
+    scheduler.step(valid_loss)  # 用验证损失来调整学习率
+    # 保存最优模型
+    if valid_acc > best_acc:
+        best_acc = valid_acc
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'best_acc': best_acc,
+        }, model_save_path)
+        print(f'Saved model with acc: {best_acc:.4f}')
+        stale = 0
+    else:
+        stale += 1
+        if stale > patience:
+            print(f'No improvement for {patience} epochs, early stopping...')
+            break
+
     writer.add_scalar('Loss/valid', valid_loss, epoch)
     writer.add_scalar('Accuracy/valid', valid_acc, epoch)
+
+    print(f"Epoch {epoch+1}/{n_epochs}")
+    print(f"Train Acc: {train_acc:.4f}, Valid Acc: {valid_acc:.4f}")
+    print(f"Train Loss: {train_loss:.4f}, Valid Loss: {valid_loss:.4f}")
