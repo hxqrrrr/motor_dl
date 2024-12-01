@@ -1,8 +1,6 @@
 ﻿# motor_dl：大创电机项目仓库
 
-#### 项目主页：
-
-https://www.notion.so/13d42872c05480b88ec4ef624a233933?pvs=4
+#### 项目主页：[链接](https://www.notion.so/13d42872c05480b88ec4ef624a233933?pvs=4)
 
 #### 项目介绍：
 
@@ -31,21 +29,21 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 可以直接使用的残差自注意架构
 
-正确率在85~90
+正确率在85~90，需要调参
 
-需要调参
+----------------
 
-![Res-SA架构图](https://github.com/hxqrrrr/motor_dl/blob/main/img/~%244vsoaee.png)
+#### Res-SA架构图：
+
+![Res-SA架构图](https://gitee.com/xingzhixin5/picture/raw/master/申报书 (1)-20.png)
 
 ---
 
 #### TODO：
 
-- [ ] 残差-自注意方案（主要）：把目前的cnn改成残差-自注意，类似transformer
+- [ ] 迁移学习：[notion介绍](https://nutritious-cruiser-d7d.notion.site/14f42872c05480438277e6166262efa6?pvs=4)
 
-- [ ] 音频信号方案（废弃）：https://nutritious-cruiser-d7d.notion.site/CNN-11542872c0548060983fc6b582e3b89a?pvs=4
-
-
+- [x] 残差-自注意方案（主要）：把目前的cnn改成残差-自注意，类似transformer
 
 -------
 
