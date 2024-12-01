@@ -35,7 +35,7 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 #### Res-SA架构图：
 
-![Res-SA架构图](https://gitee.com/xingzhixin5/picture/raw/master/申报书 (1)-20.png)
+![Res-SA架构图](https://github.com/hxqrrrr/motor_dl/blob/main/img/%E7%94%B3%E6%8A%A5%E4%B9%A6%20(1)-20.png)
 
 ---
 
