@@ -398,55 +398,6 @@ class Res_SA(nn.Module):
         # 分类阶段
         x = self.output(x)  # 通过分类头得到最终预测
         return x
-
-class ResidualSelfAttentionModel(nn.Module):
-    """
-    废弃的残差自注意力模型: 
-    只实现了自注意力机制,没有实现残差连接
-    已废弃
-    """
-    def __init__(self, input_channels=4, sequence_length=1001, embed_size=256, num_heads=8, dropout=0.1, num_classes=16):
-        super(ResidualSelfAttentionModel,self).__init__()
-        
-        # 修改投影层以处理输入维度
-        self.projection = nn.Sequential(
-            nn.Linear(input_channels, embed_size),  # 先将4维特征映射到embed_size
-            nn.ReLU(),
-            nn.Dropout(dropout)
-        )
-        
-        self.attention = SelfAttention(embed_size=embed_size, heads=num_heads, dropout=dropout)
-        self.layer_norm1 = nn.LayerNorm(embed_size)
-        self.layer_norm2 = nn.LayerNorm(embed_size)
-        self.dropout = nn.Dropout(dropout)
-        
-        self.classifier = nn.Sequential(
-            nn.Linear(embed_size, 128),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(128, num_classes)
-        )
-
-    def forward(self, x):
-        # x输入维度: (batch_size, 4, 1001)
-        
-        # 转置使得时间维度在中间
-        x = x.transpose(1, 2)  # (batch_size, 1001, 4)
-        
-        # 投影到更高维度
-        x = self.projection(x)  # (batch_size, 1001, embed_size)
-        
-        # 自注意力处理
-        attention_out = self.layer_norm1(x + self.dropout(self.attention(x)))
-        out = self.layer_norm2(attention_out + self.dropout(attention_out))
-        
-        # 全局池化：取序列的平均值
-        out = out.mean(dim=1)  # (batch_size, embed_size)
-        
-        # 分类
-        out = self.classifier(out)  # (batch_size, num_classes)
-        
-        return out
     
 #超参数调节部分
 # "cuda" only when GPUs are available.
