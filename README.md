@@ -4,9 +4,10 @@
 
 #### 项目介绍：
 
-可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)
+- 可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)
 
-TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pytorch-e2b84aa55e67
+- TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pytorch-e2b84aa55e67
+
 
 ----
 
@@ -21,11 +22,20 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 ------
 
+## models文件夹：
+
 #### **Res-SA.py**
 
-可以直接使用的残差自注意架构
+- 残差自注意架构类
 
-正确率在85~90，需要调参
+- 适应原有的数据集
+
+#### Res_SA_new.py
+
+- 构建的残差自注意类
+- 适应[新的数据集](https://github.com/hxqrrrr/motor_dl/blob/main/data.h5)
+  - 形状：（数据数，通道数=5，步长=5000）
+  - 详细见[手册说明](https://github.com/hxqrrrr/motor_dl/blob/main/%E8%AF%B4%E6%98%8E.txt)
 
 ----------------
 
