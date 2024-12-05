@@ -4,10 +4,6 @@
 
 #### 项目介绍：
 
-定子匝间短路文件夹：电流故障数据集，两个一组
-
-cnn.ipynb:能运行的cnn训练
-
 可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)
 
 TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pytorch-e2b84aa55e67

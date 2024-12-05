@@ -21,16 +21,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-# 设置随机种子
-myseed = 6666  
-# 设置随机种子以确保结果的可重复性
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-np.random.seed(myseed)
-torch.manual_seed(myseed)
-if torch.cuda.is_available():
-    # 为所有GPU设置随机种子
-    torch.cuda.manual_seed_all(myseed)
 
 # 数据集形状处理
 def read_df(df,df_):
@@ -399,148 +389,160 @@ class Res_SA(nn.Module):
         x = self.output(x)  # 通过分类头得到最终预测
         return x
     
-#超参数调节部分
-# "cuda" only when GPUs are available.
-device = "cuda" if torch.cuda.is_available() else "cpu"
-# Initialize a model, and put it on the device specified.
-current_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(current_dir, "定子匝间短路")
-# 添加模型保存路径
-model_save_path = "best_model.pth"
 
-batch_size =64
-n_epochs = 1000
-patience = 500
-lr=0.002
-wramup_epochs=5
-initial_lr=0.001
-weight_decay=1e-5
-dropout=0.1
-model = Res_SA(dropout=dropout).to(device)
-# Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
-criterion = nn.CrossEntropyLoss()
+if __name__ == "__main__":
+    # 设置随机种子
+    myseed = 6666  
+    # 设置随机种子以确保结果的可重复性
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(myseed)
+    torch.manual_seed(myseed)
+    if torch.cuda.is_available():
+        # 为所有GPU设置随机种子
+        torch.cuda.manual_seed_all(myseed)
+    #超参数调节部分
+    # "cuda" only when GPUs are available.
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    # Initialize a model, and put it on the device specified.
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(current_dir, "定子匝间短路")
+    # 添加模型保存路径
+    model_save_path = "best_model.pth"
 
-optimizer = torch.optim.Adam(
-    model.parameters(),
-    lr=lr,
-    weight_decay=weight_decay,
-    betas=(0.9, 0.999)
-)
-# 创建调度器
-scheduler = ReduceLROnPlateau(optimizer, 
-                             mode='min',           # 监控指标是越小越好
-                             factor=0.1,           # 学习率调整倍数
-                             patience=100,           # 容忍多少个epoch指标不改善
-                             verbose=True)         # 打印学习率变化信息
+    batch_size =64
+    n_epochs = 1000
+    patience = 500
+    lr=0.002
+    wramup_epochs=5
+    initial_lr=0.001
+    weight_decay=1e-5
+    dropout=0.1
+    model = Res_SA(dropout=dropout).to(device)
+    # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
+    criterion = nn.CrossEntropyLoss()
+
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=lr,
+        weight_decay=weight_decay,
+        betas=(0.9, 0.999)
+    )
+    # 创建调度器
+    scheduler = ReduceLROnPlateau(optimizer, 
+                                mode='min',           # 监控指标是越小越好
+                                factor=0.1,           # 学习率调整倍数
+                                patience=100,           # 容忍多少个epoch指标不改善
+                                verbose=True)         # 打印学习率变化信息
 
 
 
-train_set = MyDataset(data_dir)
-train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
-valid_set = MyDataset(data_dir)
-valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
+    train_set = MyDataset(data_dir)
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
+    valid_set = MyDataset(data_dir)
+    valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
 
-# 参数记录在runs文件夹，使用tendorboard查看
-writer = SummaryWriter("runs/fulltry8")
+    # 参数记录在runs文件夹，使用tendorboard查看
+    writer = SummaryWriter("runs/test")
 
 
-# 初始化
-stale = 0
-best_acc = 0
+    # 初始化
+    stale = 0
+    best_acc = 0
 
-# 主循环
-for epoch in range(n_epochs):
+    # 主循环
+    for epoch in range(n_epochs):
 
-    # ---------- Training ----------
-    # Make sure the model is in train mode before training.
-    model.train()
+        # ---------- Training ----------
+        # Make sure the model is in train mode before training.
+        model.train()
 
-    # These are used to record information in training.
-    train_loss = []
-    train_accs = []
+        # These are used to record information in training.
+        train_loss = []
+        train_accs = []
 
-    for batch in tqdm(train_loader):
+        for batch in tqdm(train_loader):
 
-        # A batch consists of image data and corresponding labels.
-        datas, labels = batch
-        
-        #imgs = imgs.half()
-       
-    
-
-        # Forward the data. (Make sure data and model are on the same device.)
-        logits = model(datas.to(device))
-
-        # Calculate the cross-entropy loss.
-        # We don't need to apply softmax before computing cross-entropy as it is done automatically.
-        loss = criterion(logits, labels.to(device))
-
-        # Gradients stored in the parameters in the previous step should be cleared out first.
-        optimizer.zero_grad()
-
-        # Compute the gradients for parameters.
-        loss.backward()
-
-        # Clip the gradient norms for stable training.
-        grad_norm = nn.utils.clip_grad_norm_(model.parameters(), max_norm=10)
-
-        # Update the parameters with computed gradients.
-        optimizer.step()
-
-        # Compute the accuracy for current batch.
-        acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
-
-        # Record the loss and accuracy.
-        train_loss.append(loss.item())
-        train_accs.append(acc)
-        #print
-        print(f"loss: {loss.item():.4f}")
-        print(f"acc: {acc:.4f}")
-        
-    train_loss = sum(train_loss) / len(train_loss)
-    train_acc = sum(train_accs) / len(train_accs)
-
-    # Print the information.
-    writer.add_scalar('Loss/train', train_loss, epoch) 
-    writer.add_scalar('Accuracy/train', train_acc, epoch)
-
-    # ---------- Validation ----------
-    model.eval()
-    valid_loss = []
-    valid_accs = []
-
-    with torch.no_grad():
-        for batch in valid_loader:
+            # A batch consists of image data and corresponding labels.
             datas, labels = batch
-            logits = model(datas.to(device))
-            loss = criterion(logits, labels.to(device))
-            acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
-            valid_loss.append(loss.item())
-            valid_accs.append(acc)
             
-    valid_loss = sum(valid_loss) / len(valid_loss)
-    valid_acc = sum(valid_accs) / len(valid_accs)
-    scheduler.step(valid_loss)  # 用验证损失来调整学习率
-    # 保存最优模型
-    if valid_acc > best_acc:
-        best_acc = valid_acc
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'best_acc': best_acc,
-        }, model_save_path)
-        print(f'Saved model with acc: {best_acc:.4f}')
-        stale = 0
-    else:
-        stale += 1
-        if stale > patience:
-            print(f'No improvement for {patience} epochs, early stopping...')
-            break
+            #imgs = imgs.half()
+        
+        
 
-    writer.add_scalar('Loss/valid', valid_loss, epoch)
-    writer.add_scalar('Accuracy/valid', valid_acc, epoch)
+            # Forward the data. (Make sure data and model are on the same device.)
+            logits = model(datas.to(device))
 
-    print(f"Epoch {epoch+1}/{n_epochs}")
-    print(f"Train Acc: {train_acc:.4f}, Valid Acc: {valid_acc:.4f}")
-    print(f"Train Loss: {train_loss:.4f}, Valid Loss: {valid_loss:.4f}")
+            # Calculate the cross-entropy loss.
+            # We don't need to apply softmax before computing cross-entropy as it is done automatically.
+            loss = criterion(logits, labels.to(device))
+
+            # Gradients stored in the parameters in the previous step should be cleared out first.
+            optimizer.zero_grad()
+
+            # Compute the gradients for parameters.
+            loss.backward()
+
+            # Clip the gradient norms for stable training.
+            grad_norm = nn.utils.clip_grad_norm_(model.parameters(), max_norm=10)
+
+            # Update the parameters with computed gradients.
+            optimizer.step()
+
+            # Compute the accuracy for current batch.
+            acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
+
+            # Record the loss and accuracy.
+            train_loss.append(loss.item())
+            train_accs.append(acc)
+            #print
+            print(f"loss: {loss.item():.4f}")
+            print(f"acc: {acc:.4f}")
+            
+        train_loss = sum(train_loss) / len(train_loss)
+        train_acc = sum(train_accs) / len(train_accs)
+
+        # Print the information.
+        writer.add_scalar('Loss/train', train_loss, epoch) 
+        writer.add_scalar('Accuracy/train', train_acc, epoch)
+
+        # ---------- Validation ----------
+        model.eval()
+        valid_loss = []
+        valid_accs = []
+
+        with torch.no_grad():
+            for batch in valid_loader:
+                datas, labels = batch
+                logits = model(datas.to(device))
+                loss = criterion(logits, labels.to(device))
+                acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
+                valid_loss.append(loss.item())
+                valid_accs.append(acc)
+                
+        valid_loss = sum(valid_loss) / len(valid_loss)
+        valid_acc = sum(valid_accs) / len(valid_accs)
+        scheduler.step(valid_loss)  # 用验证损失来调整学习率
+        # 保存最优模型
+        if valid_acc > best_acc:
+            best_acc = valid_acc
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'best_acc': best_acc,
+            }, model_save_path)
+            print(f'Saved model with acc: {best_acc:.4f}')
+            stale = 0
+        else:
+            stale += 1
+            if stale > patience:
+                print(f'No improvement for {patience} epochs, early stopping...')
+                break
+
+        writer.add_scalar('Loss/valid', valid_loss, epoch)
+        writer.add_scalar('Accuracy/valid', valid_acc, epoch)
+
+        print(f"Epoch {epoch+1}/{n_epochs}")
+        print(f"Train Acc: {train_acc:.4f}, Valid Acc: {valid_acc:.4f}")
+        print(f"Train Loss: {train_loss:.4f}, Valid Loss: {valid_loss:.4f}")
