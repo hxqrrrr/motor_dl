@@ -22,6 +22,12 @@ conda install pytorch=2.1.2 torchvision=0.16.2 torchaudio=2.1.2 pytorch-cuda=11.
 
 ------
 
+## train.py：
+
+- 训练的起点（）
+
+-----
+
 ## models文件夹：
 
 #### **Res-SA.py**
