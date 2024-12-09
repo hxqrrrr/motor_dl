@@ -6,7 +6,7 @@
         }
     },
     "data": {
-        "file_path": "data/data.h5",
+        "file_path": "data/h5data",
         "batch_size": 32,
         "train_ratio": 0.8
     },

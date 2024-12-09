@@ -6,19 +6,41 @@ import os
 
 # DataLoader
 class h5Dataset(Dataset):
-    def __init__(self, file_path):
-        self.file_path = file_path
-
+    def __init__(self, folder_path, train=True, train_ratio=0.8):
+        self.folder_path = folder_path
+        print(f"正在加载文件夹: {folder_path}")
+        
+        # 获取h5文件列表
+        self.h5_files = [f for f in os.listdir(folder_path) if f.endswith(('.h5', '.h5data'))]
+        if not self.h5_files:
+            raise ValueError(f"在 {folder_path} 中没有找到任何 .h5 或 .h5data 文件")
+        
+        # 加载数据
+        file_path = os.path.join(folder_path, self.h5_files[0])
+        with h5py.File(file_path, 'r') as f:
+            self.data = f['data'][:]
+            self.labels = f['labels'][:]
+            
+        # 计算划分点
+        total_samples = len(self.data)
+        split_idx = int(total_samples * train_ratio)
+        
+        # 根据train参数选择数据集部分
+        if train:
+            self.data = self.data[:split_idx]
+            self.labels = self.labels[:split_idx]
+        else:
+            self.data = self.data[split_idx:]
+            self.labels = self.labels[split_idx:]
+            
+        self.labels = torch.argmax(torch.tensor(self.labels, dtype=torch.float32), dim=1)
+        
     def __len__(self):
-        with h5py.File(self.file_path, 'r') as f:
-            return len(f['data'])
+        return len(self.data)
 
     def __getitem__(self, index):
-        with h5py.File(self.file_path, 'r') as f:
-            data = f['data'][index]
-            label = f['labels'][index]
-            label = torch.argmax(torch.tensor(label, dtype=torch.float32))# 将8位独热编码转换为数字
-            return torch.tensor(data, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
+        return torch.tensor(self.data[index], dtype=torch.float32), \
+               torch.tensor(self.labels[index], dtype=torch.long)
 
 
 class KATDataset(Dataset):

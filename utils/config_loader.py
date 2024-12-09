@@ -10,7 +10,7 @@ from models.dataset import h5Dataset, KATDataset
 
 
 def get_dataset(file_path):
-    if file_path.endswith('.h5'):
+    if file_path.endswith('h5data'):
         return h5Dataset(file_path)
     elif file_path.endswith('KAT'):
         return KATDataset(file_path)
@@ -75,10 +75,18 @@ def setup_dataset(config):
     # 创建数据集
     dataset = get_dataset(file_path)
     
+    # 添加数据集大小检查
+    total_size = len(dataset)
+    if total_size == 0:
+        raise ValueError("数据集为空！请检查数据集路径和加载过程。")
+    
     # 计算训练集和验证集的大小
-    dataset_size = len(dataset)
-    train_size = int(dataset_size * train_ratio)
-    val_size = dataset_size - train_size
+    train_size = int(0.8 * total_size)  # 假设使用80%作为训练集
+    val_size = total_size - train_size
+    
+    # 确保两个子集都不为空
+    if train_size == 0 or val_size == 0:
+        raise ValueError(f"数据集划分错误：训练集大小={train_size}，验证集大小={val_size}")
     
     # 分割数据集
     train_dataset, val_dataset = random_split(
@@ -104,3 +112,5 @@ def setup_dataset(config):
     )
     
     return train_loader, val_loader
+
+get_dataset('data/h5data')
