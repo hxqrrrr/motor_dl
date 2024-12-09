@@ -1,5 +1,5 @@
-
 # 导入必要的包
+import h5py
 import numpy as np
 import pandas as pd
 import os
@@ -20,138 +20,87 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-# 数据集形状处理
+
 # DataLoader
+class h5Dataset(Dataset):
+    def __init__(self, file_path):
+        self.file_path = file_path
 
-# 数据集形状处理
-def read_df(df,df_):
-    '''
-    df: 电流数据，形状为(1001,3)
-    df_: 转矩数据，形状为(1001,1)
-    处理后的数据集形状为(4,1001)
-    '''
-    df = df.iloc[:1001,1:].T
-    df_=df_.iloc[:1001,1:].T
-    df_append = pd.concat([df, df_], ignore_index=True, axis=0)
-    return  df_append
-
-class MyDataset(Dataset):
-    '''
-    定义数据集
-    path: 数据集路径
-    使用方法：dataset = MyDataset(path)
-    即可读取同一文件夹下所有电流.csv和转矩.csv数据，并将其合并为一个数据集
-    '''
-    def __init__(self,path):
-        super(MyDataset).__init__()
-        self.path = path
-        self.files = sorted([os.path.join(path,x) for x in os.listdir(path) if x.endswith("电流.csv")])
-        self.files_= sorted([os.path.join(path,x) for x in os.listdir(path) if x.endswith("转矩.csv")])
-  
     def __len__(self):
-        return len(self.files)
-  
-    def __getitem__(self, idx):
-        try:
-            fname = self.files[idx]
-            data = pd.read_csv(fname)
-            data_ = pd.read_csv(self.files_[idx])
-            
-            # 数据集形状处理
-            data_tensor = torch.tensor(read_df(data, data_).values, dtype=torch.float32)
-                       # 检测数据集形状，维度为2且第一维值为4
-            if data_tensor.ndim != 2 or data_tensor.shape[0] != 4:  # Adjust according to your needs
-                print(f"Unexpected shape for {fname}: {data_tensor.shape}")
-                return None, -1  # Indicate an error
-    
-        except Exception as e:
-            print(f"Error reading file {fname}: {e}")
-            return None, -1  # Handle error appropriately
-    
-        try:
-            # 数据集标签处理，使用文件名中的数字切片作为标签
-            label = int(fname.split("\\")[-1].split("_")[0])  # Use [-1] to get last part
-        except Exception as e:
-            print(f"Error extracting label from {fname}: {e}")
-            label = -1  # Test has no label
-    
-        return data_tensor, label
+        with h5py.File(self.file_path, 'r') as f:
+            return len(f['data'])
 
-def MyDataLoader(data_dir, batch_size, n_workers):
-    """Generate dataloader"""
-    dataset = MyDataset(data_dir)
-    trainlen = int(0.9 * len(dataset))
-    lengths = [trainlen, len(dataset) - trainlen]
-    trainset, validset = random_split(dataset, lengths)
+    def __getitem__(self, index):
+        with h5py.File(self.file_path, 'r') as f:
+            data = f['data'][index]
+            label = f['labels'][index]
+            label = torch.argmax(torch.tensor(label, dtype=torch.float32))# 将8位独热编码转换为数字
+            return torch.tensor(data, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
 
-    train_loader = DataLoader(
-        trainset,
-        batch_size=batch_size,
-        shuffle=True,
-        drop_last=True,
-        num_workers=n_workers,
-        pin_memory=True,
-    )
-    valid_loader = DataLoader(
-        validset,
-        batch_size=batch_size,
-        num_workers=n_workers,
-        drop_last=True,
-        pin_memory=True,
-    )
-    return train_loader, valid_loader
-
-
-#一维cnn模型
-class OneDCNN(nn.Module):  
-    '''
-    一维cnn模型
-    input_size: 输入数据长度
-    num_classes: 类别数
-    kernel_size: 卷积核大小
-    为什么使用一维cnn模型：
-    1. 一维cnn模型可以处理时间序列数据，而二维cnn模型只能处理图像数据。
-    2. 我们的数据形状（batch_size,in_channels=4,sequence_length=1001），一维cnn模型可以处理这种数据
-    3. 二维cnn要求输入数据形状为（batch_size,channels,height,width），无法处理我们的数据，需要修改形状后才能读取
-    '''
-    def __init__(self, input_size, num_classes, kernel_size=5):  
-        super(OneDCNN, self).__init__()  
-        # 第一个卷积层,输入通道4,输出通道16,卷积核大小kernel_size
-        self.conv1 = nn.Conv1d(in_channels=4, out_channels=16, kernel_size=kernel_size)  
-        # 最大池化层,池化核大小为2
-        self.pool = nn.MaxPool1d(kernel_size=2)  
-        # 第二个卷积层,输入通道16,输出通道32,卷积核大小kernel_size
-        self.conv2 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=kernel_size)  
+# 定义CNN1D模型
+class CNN1D(nn.Module):
+    def __init__(self, input_channels=5, sequence_length=5000, num_classes=8):
+        super(CNN1D, self).__init__()
         
-        # 计算每层卷积后的输出尺寸
-        # 第一次卷积后的尺寸 = 输入尺寸 - 卷积核大小 + 1
-        conv1_output_size = (input_size - kernel_size + 1)  
-        # 第一次池化后的尺寸 = 卷积输出尺寸 // 2
-        conv1_pooled_size = conv1_output_size // 2  
-        # 第二次卷积后的尺寸 = 第一次池化尺寸 - 卷积核大小 + 1
-        conv2_output_size = (conv1_pooled_size - kernel_size + 1)  
-        # 第二次池化后的尺寸 = 第二次卷积尺寸 // 2
-        conv2_pooled_size = conv2_output_size // 2  
+        # 第一个卷积块
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(input_channels, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第二个卷积块
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第三个卷积块
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm1d(256),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 计算全连接层的输入维度
+        self.fc_input_dim = 256 * (sequence_length // 8)
         
         # 全连接层
-        # 第一个全连接层,输入维度为32*conv2_pooled_size,输出维度128
-        self.fc1 = nn.Linear(32 * conv2_pooled_size, 128)  
-        # 第二个全连接层,输入维度128,输出维度为类别数
-        self.fc2 = nn.Linear(128, num_classes)  
-
-    def forward(self, x):  
-        # 第一次卷积+激活+池化
-        x = self.pool(nn.functional.relu(self.conv1(x)))  
-        # 第二次卷积+激活+池化
-        x = self.pool(nn.functional.relu(self.conv2(x)))  
-        # 展平张量,为全连接层准备
-        x = x.view(x.size(0), -1)  
-        # 第一个全连接层+激活
-        x = nn.functional.relu(self.fc1(x))  
-        # 第二个全连接层,输出预测结果
-        x = self.fc2(x)  
+        self.fc = nn.Sequential(
+            nn.Linear(self.fc_input_dim, 512),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, num_classes)
+        )
+        
+    def forward(self, x):
+        # 卷积层
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        
+        # 展平
+        x = x.view(x.size(0), -1)
+        
+        # 全连接层
+        x = self.fc(x)
         return x
     
+
+
+
+
+
+
+
+
+
+
+
 class SelfAttention(nn.Module):
     '''
     自注意力机制原理:
@@ -390,6 +339,3 @@ class Res_SA(nn.Module):
         x = self.output(x)  # 通过分类头得到最终预测
         return x
     
-
-if __name__ == "__main__":
-    pass

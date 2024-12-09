@@ -1,0 +1,30 @@
+{
+    "model": {
+        "name": "CNN1D",
+        "params": {
+            "dropout": 0.3
+        }
+    },
+    "data": {
+        "file_path": "data/data.h5",
+        "batch_size": 32,
+        "train_ratio": 0.8,
+        "datasets": [
+            {
+                "name": "data1.h5",
+                "other_config": "value"
+            }
+        ]
+    },
+    "training": {
+        "epochs": 50,
+        "learning_rate": 0.001,
+        "patience": 5,
+        "scheduler": {
+            "factor": 0.5,
+            "patience": 2
+        }
+    },
+    "device": "cuda",
+    "seed": 42
+}
