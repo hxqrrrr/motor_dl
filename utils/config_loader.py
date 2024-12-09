@@ -3,7 +3,7 @@ import torch
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from models.cnn1d import CNN1D
+from models.cnn1d import CNN1D, CNN1D_KAT
 from models.res_sa import Res_SA
 from torch.utils.data import DataLoader, random_split
 from models.dataset import h5Dataset, KATDataset
@@ -30,6 +30,8 @@ def get_model(config):
     
     if model_name == "CNN1D":
         return CNN1D()
+    elif model_name == "CNN1D_KAT":
+        return CNN1D_KAT()
     elif model_name == "Res_SA":
         return Res_SA(**model_params)
     else:
