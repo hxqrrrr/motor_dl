@@ -3,9 +3,20 @@ import torch
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from models.Res_SA_new import *
+from models.cnn1d import CNN1D
+from models.res_sa import Res_SA
 from torch.utils.data import DataLoader, random_split
+from models.dataset import h5Dataset, KATDataset
 
+
+def get_dataset(file_path):
+    if file_path.endswith('.h5'):
+        return h5Dataset(file_path)
+    elif file_path.endswith('KAT'):
+        return KATDataset(file_path)
+    else:
+        raise ValueError(f"不支持的文件格式: {file_path}")
+    
 def load_config(config_path):
     """加载配置文件"""
     with open(config_path, 'r') as f:
@@ -60,7 +71,7 @@ def setup_dataset(config):
     train_ratio = config['data']['train_ratio']
     
     # 创建数据集
-    dataset = h5Dataset(file_path)
+    dataset = get_dataset(file_path)
     
     # 计算训练集和验证集的大小
     dataset_size = len(dataset)

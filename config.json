@@ -6,15 +6,9 @@
         }
     },
     "data": {
-        "file_path": "data/data.h5",
+        "file_path": "data/KAT",
         "batch_size": 32,
-        "train_ratio": 0.8,
-        "datasets": [
-            {
-                "name": "data1.h5",
-                "other_config": "value"
-            }
-        ]
+        "train_ratio": 0.8
     },
     "training": {
         "epochs": 50,

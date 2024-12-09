@@ -1,5 +1,5 @@
 import h5py
-from models.Res_SA_new import *
+from models import *
 import pandas as pd
 import matplotlib.pyplot as plt
 import torch
