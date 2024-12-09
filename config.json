@@ -6,7 +6,7 @@
         }
     },
     "data": {
-        "file_path": "data/KAT",
+        "file_path": "data/data.h5",
         "batch_size": 32,
         "train_ratio": 0.8
     },
