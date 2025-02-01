@@ -125,14 +125,14 @@ class CWRUDataset(Dataset):
         signal = self.signals[idx]
         label = self.labels[idx]
         
-        # 转换为torch tensor
-        signal = torch.from_numpy(signal).float()
+        # 转换为torch tensor并增加维度
+        signal = torch.from_numpy(signal).float().unsqueeze(0)  # 增加一个维度
         label = torch.tensor(label).long()
         
         # 应用变换（如果有）
         if self.transform:
             signal = self.transform(signal)
-            
+        print(signal.shape)    
         return signal, label
 
 # 使用示例
