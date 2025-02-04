@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 
 class CWRUDataset(Dataset):
-    def __init__(self, data_dir, signal_length=120000, transform=None,downsample_ratio=1):
+    def __init__(self, data_dir, signal_length=120000, transform=None,downsample_ratio=1,truncate_length=30000):
         """
         初始化CWRU数据集
         :param data_dir: 数据目录路径
@@ -19,9 +19,11 @@ class CWRUDataset(Dataset):
         self.file_list = [f for f in os.listdir(data_dir) if f.endswith('.mat')]
         self.scaler = StandardScaler()
         self.downsample_ratio = downsample_ratio
+        self.truncate_length = truncate_length
         # 预加载数据
         self.signals, self.labels = self._load_data()
         
+
     
     def _load_data(self):
         signals = []
@@ -118,22 +120,45 @@ class CWRUDataset(Dataset):
         label = (fault_size - 1) * 4 + load
         
         return label
+    
+    
+    def _downsample(self, signal):
+        if self.downsample_ratio > 1:
+            signal = signal[::self.downsample_ratio]
+        return signal
+    
+    def _truncate_signal(self, signal, target_length=30000):
+        """
+        将信号截断到指定长度
+        :param signal: 输入信号 (numpy array)
+        :param target_length: 目标长度 (默认30000)
+        :return: 截断后的信号
+        """
+
+        if len(signal) > target_length:
+            # 如果信号长度大于目标长度，从中间截取
+            start = (len(signal) - target_length) // 2
+            signal = signal[start:start + target_length]
+        elif len(signal) < target_length:
+            # 如果信号长度小于目标长度，用0填充
+            padding = np.zeros(target_length - len(signal))
+            signal = np.concatenate([signal, padding])
+        return signal
+    
     def __len__(self):
         return len(self.signals)
     
     def __getitem__(self, idx):
         signal = self.signals[idx]  # 获取 NumPy array 信号
         label = self.labels[idx]
-
         # **下采样 (如果 downsample_ratio > 1)**
-        if self.downsample_ratio > 1:
-            signal = signal[::self.downsample_ratio]
-
-
+        signal = self._downsample(signal)
+        # 截断信号
+        signal = self._truncate_signal(signal, self.truncate_length)
+        
         # 转换为torch tensor并增加维度 (在下采样之后)
         signal_tensor = torch.from_numpy(signal).float().unsqueeze(0)  # 先转为 Tensor
         label_tensor = torch.tensor(label).long()
-
         # 应用变换（如果有）
         if self.transform:
             signal_tensor = self.transform(signal_tensor)
@@ -142,9 +167,10 @@ class CWRUDataset(Dataset):
 
 # 使用示例
 if __name__ == "__main__":
-    data_dir = 'C:/Users/luoji/PycharmProjects/motor_dl/data/CWRU/12k Drive End Bearing Fault Data'
-    dataset = CWRUDataset(data_dir, downsample_ratio=4)
+    data_dir = 'data/CWRU/12k Drive End Bearing Fault Data'
+    dataset = CWRUDataset(data_dir, downsample_ratio=4,truncate_length=20000)
     
+
     # 创建DataLoader
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
     

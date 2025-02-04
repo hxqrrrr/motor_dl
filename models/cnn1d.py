@@ -9,6 +9,7 @@ class CNN1D(nn.Module):
     def __init__(self, input_channels=1, sequence_length=12000, num_classes=12):
         super(CNN1D, self).__init__()
         self.sequence_length = sequence_length
+        self.fc_input_dim = 256 * (sequence_length // 8)
         # 第一个卷积块
         self.conv1 = nn.Sequential(
             nn.Conv1d(input_channels, 64, kernel_size=3, padding=1),
@@ -32,45 +33,26 @@ class CNN1D(nn.Module):
         )
         # 全连接层
         self.fc = nn.Sequential(
-            nn.Linear(3840000, 512),  
+            nn.Linear(self.fc_input_dim,256),  
             nn.ReLU(),
             nn.Dropout(0.3),
-            nn.Linear(512, num_classes)
+            nn.Linear(256, num_classes)
         )
-    def get_fc_input_dim(self):
-        """
-        动态计算全连接层的输入维度。
-        
-        返回:
-            int: 展平后的特征维度。
-        """
-        with torch.no_grad():  # 不计算梯度
-            # 创建一个模拟输入张量
-            x = torch.randn(1, self.conv1[0].in_channels, self.sequence_length)
-            
-            # 通过卷积层前向传播
-            x = self.conv1(x)
-            x = self.conv2(x)
-            x = self.conv3(x)
-            
-            # 计算展平后的维度
-            fc_input_dim = x.view(1, -1).shape[1]
-        
-        return int(fc_input_dim)  # 确保返回值为整数
+        # 标准化
+        self.norm = nn.BatchNorm1d(input_channels) 
+
+
 
     def forward(self, x):
         # 卷积层
+        x = self.norm(x)
         x = self.conv1(x)
-        print("After conv1:", x.shape)
         x = self.conv2(x)
-        print("After conv2:", x.shape)
         x = self.conv3(x)
-        print("After conv3:", x.shape)
         # 展平
         x = x.view(x.size(0), -1)
-        print("After flatten:", x.shape)
-        # 全连接层
-        print(x.shape)
+
+    
         x = self.fc(x)
         return x
 
