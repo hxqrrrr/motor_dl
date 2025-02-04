@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 
 class CWRUDataset(Dataset):
-    def __init__(self, data_dir, signal_length=120000, transform=None):
+    def __init__(self, data_dir, signal_length=120000, transform=None,downsample_ratio=1):
         """
         初始化CWRU数据集
         :param data_dir: 数据目录路径
@@ -18,7 +18,7 @@ class CWRUDataset(Dataset):
         self.transform = transform
         self.file_list = [f for f in os.listdir(data_dir) if f.endswith('.mat')]
         self.scaler = StandardScaler()
-        
+        self.downsample_ratio = downsample_ratio
         # 预加载数据
         self.signals, self.labels = self._load_data()
         
@@ -122,23 +122,28 @@ class CWRUDataset(Dataset):
         return len(self.signals)
     
     def __getitem__(self, idx):
-        signal = self.signals[idx]
+        signal = self.signals[idx]  # 获取 NumPy array 信号
         label = self.labels[idx]
-        
-        # 转换为torch tensor并增加维度
-        signal = torch.from_numpy(signal).float().unsqueeze(0)  # 增加一个维度
-        label = torch.tensor(label).long()
-        
+
+        # **下采样 (如果 downsample_ratio > 1)**
+        if self.downsample_ratio > 1:
+            signal = signal[::self.downsample_ratio]
+
+
+        # 转换为torch tensor并增加维度 (在下采样之后)
+        signal_tensor = torch.from_numpy(signal).float().unsqueeze(0)  # 先转为 Tensor
+        label_tensor = torch.tensor(label).long()
+
         # 应用变换（如果有）
         if self.transform:
-            signal = self.transform(signal)
-        print(signal.shape)    
-        return signal, label
+            signal_tensor = self.transform(signal_tensor)
+
+        return signal_tensor, label_tensor
 
 # 使用示例
 if __name__ == "__main__":
-    data_dir = 'data/CWRU/12k Drive End Bearing Fault Data'
-    dataset = CWRUDataset(data_dir)
+    data_dir = 'C:/Users/luoji/PycharmProjects/motor_dl/data/CWRU/12k Drive End Bearing Fault Data'
+    dataset = CWRUDataset(data_dir, downsample_ratio=4)
     
     # 创建DataLoader
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
