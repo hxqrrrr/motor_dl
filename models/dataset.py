@@ -1,9 +1,9 @@
-import h5py
+# import h5py
 import torch
 from torch.utils.data import Dataset
 import scipy.io as sio
 import os
-
+from data.dataloader.cwru_dataset import CWRUDataset
 # DataLoader
 class h5Dataset(Dataset):
     def __init__(self, folder_path, train=True, train_ratio=0.8):

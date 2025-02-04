@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models.cnn1d import CNN1D, CNN1D_KAT
 from models.res_sa import Res_SA
 from torch.utils.data import DataLoader, random_split
-from models.dataset import h5Dataset, KATDataset
+from models.dataset import h5Dataset, KATDataset,CWRUDataset
 
 
 def get_dataset(file_path):
@@ -14,6 +14,8 @@ def get_dataset(file_path):
         return h5Dataset(file_path)
     elif file_path.endswith('KAT'):
         return KATDataset(file_path)
+    elif file_path.endswith('12k Drive End Bearing Fault Data'):
+        return CWRUDataset(file_path)
     else:
         raise ValueError(f"不支持的文件格式: {file_path}")
     
