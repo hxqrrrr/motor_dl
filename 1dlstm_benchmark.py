@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import DataLoader
-from data.dataloader.cwru_dataset import CWRUDataset
+from data.dataloader.updated_cwru_dataloader import CWRUDataset,create_dataloader_mckn
 from models.lstm1d import LSTM1D
 from sklearn.model_selection import train_test_split
 import numpy as np
@@ -23,8 +23,9 @@ if __name__ == "__main__":
     print(f"Using device: {device}")
 
     # 数据加载
-    data_dir = 'data/CWRU/12k Drive End Bearing Fault Data'
-    dataset = CWRUDataset(data_dir,downsample_ratio=4)
+    data_dir = 'data/CWRU_10Class_Verified'
+    dataset = CWRUDataset(data_dir, signal_length=1200,signal_count_per_label=1000, transform=None,scale=True, downsample_ratio=1, num_classes=10,
+                 window_size=240, stride=60)
     print(len(dataset))
     # 划分训练集和验证集
     train_idx, val_idx = train_test_split(np.arange(len(dataset)), test_size=0.2, random_state=42)

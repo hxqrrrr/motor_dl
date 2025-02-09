@@ -1,8 +1,8 @@
 import torch
 from torch.utils.data import DataLoader
 import torch.nn as nn
-from data.dataloader.cwru_dataset import CWRUDataset
-from models.cnn1d import CNN1D
+from data.dataloader.updated_cwru_dataloader import CWRUDataset,create_dataloader_mckn
+from models.cnn1d import CNN1D,CNN1D_shuffle
 from sklearn.model_selection import train_test_split
 import numpy as np
 import time
@@ -10,120 +10,109 @@ from torch.cuda.amp import GradScaler, autocast
 from sklearn.preprocessing import StandardScaler
 
 
-def train_epoch(model, train_loader, criterion, optimizer, scaler, device, accumulation_steps):
+# Train and evaluate functions
+def train_epoch(model, train_loader, criterion, optimizer, device, accumulation_steps):
     model.train()
     total_loss = 0.0
     optimizer.zero_grad()
 
     for i, (signals, labels) in enumerate(train_loader):
-        signals = signals.to(device)
-        labels = labels.to(device)
+        signals, labels = signals.to(device), labels.to(device)
 
-        with autocast():
-            outputs = model(signals)
-            loss = criterion(outputs, labels)
-            loss = loss / accumulation_steps  # 使用梯度累积
+        # Forward pass
+        outputs = model(signals)
+        loss = criterion(outputs, labels) / accumulation_steps
 
-        scaler.scale(loss).backward()
+        # Backward pass
+        loss.backward()
 
+        # Gradient accumulation
         if (i + 1) % accumulation_steps == 0:
-            scaler.step(optimizer)
-            scaler.update()
+            optimizer.step()
             optimizer.zero_grad()
 
         total_loss += loss.item()
 
-    return total_loss / (len(train_loader) / accumulation_steps)
+    return total_loss / len(train_loader)
 
 def evaluate(model, val_loader, criterion, device):
     model.eval()
-    val_loss = 0.0
-    correct = 0
-    total = 0
+    val_loss, correct, total = 0.0, 0, 0
 
     with torch.no_grad():
         for signals, labels in val_loader:
-            signals = signals.to(device)
-            labels = labels.to(device)
+            signals, labels = signals.to(device), labels.to(device)
 
             outputs = model(signals)
             loss = criterion(outputs, labels)
             val_loss += loss.item()
 
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicted = torch.max(outputs, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
     val_acc = 100 * correct / total
     return val_loss / len(val_loader), val_acc
 
+# Initialize model weights
 def init_weights(m):
-    if isinstance(m, nn.Conv1d):
-        nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='relu')
-    elif isinstance(m, nn.Linear):
-        nn.init.xavier_normal_(m.weight)
+    if isinstance(m, torch.nn.Conv1d):
+        torch.nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='relu')
+    elif isinstance(m, torch.nn.Linear):
+        torch.nn.init.xavier_normal_(m.weight)
 
-
+# Main block
 if __name__ == "__main__":
-    # 设置随机种子保证可重复性
     torch.manual_seed(42)
     np.random.seed(42)
 
-    # 超参数设置
-    num_epochs = 50
-    batch_size = 10
-    learning_rate = 0.00001  # 尝试更大的学习率
-    accumulation_steps = 4  # 梯度累积步数
-    sequence_length = 30000
+    # Hyperparameters
+    num_epochs = 100
+    batch_size = 20
+    learning_rate = 0.001
+    accumulation_steps = 4
+    sequence_length = 240
 
-    # 设备选择
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    # 数据加载
-    data_dir = 'data/CWRU/12k Drive End Bearing Fault Data'
-    dataset = CWRUDataset(data_dir, downsample_ratio=4, truncate_length=sequence_length)
+    # Data preparation
+    data_dir = 'data/CWRU_10Class_Verified'
+    dataset = CWRUDataset(data_dir, signal_length=1200, signal_count_per_label=1000, 
+                          transform=None, scale=True, downsample_ratio=1, num_classes=10,
+                          window_size=240, stride=60)
+    
     scaler = StandardScaler()
     dataset.signals = scaler.fit_transform(dataset.signals)
-    # 划分训练集和验证集
+    
     train_idx, val_idx = train_test_split(np.arange(len(dataset)), test_size=0.2, random_state=42)
-    train_dataset = torch.utils.data.Subset(dataset, train_idx)
-    val_dataset = torch.utils.data.Subset(dataset, val_idx)
+    train_loader = DataLoader(torch.utils.data.Subset(dataset, train_idx), batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(torch.utils.data.Subset(dataset, val_idx), batch_size=batch_size, shuffle=False)
 
-    # 创建DataLoader
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-
-    # 创建模型
-    model = CNN1D(sequence_length=sequence_length, input_channels=1, num_classes=12).to(device)
+    # Model setup
+    # model = CNN1D_shuffle(sequence_length=sequence_length, input_channels=1, num_classes=10).to(device)
+    model = CNN1D(sequence_length=sequence_length, input_channels=1, num_classes=10).to(device)
     model.apply(init_weights)
-    # 创建优化器和学习率调度器
+
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
-
-    # 损失函数
     criterion = torch.nn.CrossEntropyLoss()
 
-    # 混合精度训练
-    scaler = GradScaler()
-
-    # 训练循环
+    # Training loop
     for epoch in range(num_epochs):
         start_time = time.time()
 
-        # 训练阶段
-        train_loss = train_epoch(model, train_loader, criterion, optimizer, scaler, device, accumulation_steps)
-
-        # 验证阶段
+        # Train and evaluate
+        train_loss = train_epoch(model, train_loader, criterion, optimizer, device, accumulation_steps)
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
 
-        # 学习率调度
+        # Scheduler step
         scheduler.step(val_loss)
 
-        # 打印训练信息
+        # Logging
         epoch_time = time.time() - start_time
         print(f"Epoch [{epoch + 1}/{num_epochs}] | Time: {epoch_time:.2f}s")
         print(f"Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.2f}%")
 
-        # 保存模型
+        # Save model
         torch.save(model.state_dict(), f'model_epoch_{epoch + 1}.pth')
