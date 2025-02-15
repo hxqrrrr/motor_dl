@@ -1,12 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
 import torch.nn as nn
-from data.dataloader.updated_cwru_dataloader import CWRUDataset,create_dataloader_mckn
-from models.cnn1d import CNN1D,CNN1D_shuffle
+from data.dataloader.updated_cwru_dataloader import CWRUDataset
+from models.cnn1d import CNN1D
 from sklearn.model_selection import train_test_split
 import numpy as np
 import time
-from torch.cuda.amp import GradScaler, autocast
 from sklearn.preprocessing import StandardScaler
 
 
@@ -68,19 +67,17 @@ if __name__ == "__main__":
 
     # Hyperparameters
     num_epochs = 100
-    batch_size = 20
-    learning_rate = 0.001
+    batch_size = 64
+    learning_rate = 0.005
     accumulation_steps = 4
-    sequence_length = 240
+    sequence_length = 360
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     # Data preparation
     data_dir = 'data/CWRU_10Class_Verified'
-    dataset = CWRUDataset(data_dir, signal_length=1200, signal_count_per_label=1000, 
-                          transform=None, scale=True, downsample_ratio=1, num_classes=10,
-                          window_size=240, stride=60)
+    dataset = CWRUDataset(data_dir, transform=None,batch_size=batch_size, scale=True, downsample_ratio=1, num_classes=10, window_size=sequence_length, stride=60)
     
     scaler = StandardScaler()
     dataset.signals = scaler.fit_transform(dataset.signals)
