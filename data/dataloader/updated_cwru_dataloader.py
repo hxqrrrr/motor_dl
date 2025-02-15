@@ -9,24 +9,44 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt  # For visualization in main test
 
+
+
+        # 数据集处理逻辑：
+        # 1. 初始化数据集类，设置数据目录、信号长度、下采样比例、类别数量、窗口大小和步长等参数。
+        # 2. 预加载数据，包括滑动窗口增强。
+        # 3. 在 _load_data 方法中：
+        #    a. 遍历数据目录中的每个类名，检查其是否在10类映射中。
+        #    b. 对于每个.mat文件，加载驱动端振动信号。
+        #    c. 获取信号对应的10类标签。
+        #    d. 处理完整信号，转置并展平。
+        #    e. 对正常状态进行下采样。
+        #    f. 直接测量数据长度，统一信号长度。
+        #    g. 先下采样，再将信号分割为窗口。
+        #    h. 打印每条信号分割成的窗口数量。
+        # 4. 将所有信号转换为numpy数组并标准化。
+        # 5. 在 __getitem__ 方法中，获取指定索引的信号和标签，进行下采样，转换为torch张量并添加维度，应用变换（如果有）。
+        # 6. 在 show_dataset_info 方法中，显示数据集的详细信息，包括样本大小、样本形状、批次数据形状等。
+        # 7. 创建数据加载器，分割数据集为训练集和验证集。
+
+
+
+
+
 class CWRUDataset(Dataset):
-    def __init__(self, data_dir, signal_length=1200,signal_count_per_label=1000, transform=None,scale=True, downsample_ratio=1, num_classes=10,
-                 window_size=240, stride=60):
+    def __init__(self, data_dir, batch_size, transform=None, scale=True, downsample_ratio=1, num_classes=10, window_size=240, stride=60):
         """
-        Initializes CWRUDataset (MCKD-CNN Paper Replication - 10 Class, Sliding Window, DE Signal)
-        :param data_dir: Path to data directory
-        :param signal_length: Uniform signal length (e.g., 1200)
-        :param transform: Optional data transforms
-        :param downsample_ratio: Downsampling ratio (default: 1 - no downsampling)
-        :param num_classes: Number of classes (default: 10)
-        :param window_size: Sliding window size (e.g., 240)
-        :param stride: Sliding window stride (e.g., 60)
+        初始化 CWRUDataset（MCKD-CNN 论文复现 - 10 类，滑动窗口，驱动端信号）
+        :param data_dir: 数据目录的路径
+        :param transform: 可选的数据变换
+        :param downsample_ratio: 下采样比例（默认：1 - 不进行下采样）
+        :param num_classes: 类别数量（默认：10）
+        :param window_size: 滑动窗口大小（例如，240）
+        :param stride: 滑动窗口步长（例如，60）
         """
         super(CWRUDataset, self).__init__()
         self.data_dir = data_dir
-        self.signal_length = signal_length
-        self.signal_count_per_label = signal_count_per_label
         self.transform = transform
+        self.batch_size = batch_size
         self.downsample_ratio = downsample_ratio
         self.num_classes = num_classes
         self.window_size = window_size
@@ -52,80 +72,81 @@ class CWRUDataset(Dataset):
 
         # Preload data (including sliding window augmentation)
         self.signals, self.labels = self._load_data()
-
+        self.show_dataset_info(self.batch_size)
     def _load_data(self):
+        # 初始化数据存储
         all_signals = []
         all_labels = []
         class_names = sorted(os.listdir(self.data_dir))
-        count = 0
-        lst_of_num_sample = []
+        
         for class_name in class_names:
+            # 检查类名是否在10类映射中
             if class_name not in self.class_labels_10class:
-                continue  # Skip classes not in 10-class mapping
-            print(count,class_name)
+                continue  # 跳过不在10类映射中的类
             class_dir = os.path.join(self.data_dir, class_name)
+            
             for filename in os.listdir(class_dir):
-                num_signals_for_label = 0
                 if filename.endswith('.mat'):
                     filepath = os.path.join(class_dir, filename)
                     try:
                         data = sio.loadmat(filepath)
 
-                        # **Corrected Signal Loading: Load Drive End Vibration Signal (_DE_time)**
+                        # 加载驱动端振动信号
                         de_time_keys = [key for key in data.keys() if key.endswith('_DE_time')]
                         if de_time_keys:
-                            signal_data = data.get(de_time_keys[0])# Load Drive End signal
+                            signal_data = data.get(de_time_keys[0])
                         else:
-                            print(
-                                f"Warning: Drive End vibration signal variable (_DE_time) not found in {filename}, skipping.")
+                            print(f"Warning: 未找到驱动端振动信号变量 (_DE_time) 在 {filename} 中，跳过。")
                             continue
 
                         if signal_data is None:
-                            print(f"Warning: Drive End vibration signal data is None in {filename}, skipping.")
+                            print(f"Warning: 驱动端振动信号数据在 {filename} 中为 None，跳过。")
                             continue
 
+                        # 获取10类标签
                         label = self._get_10class_label(class_name)
                         if label is None:
                             continue
 
-                        # **Process the full signal directly (NO Sliding Window)**
+                        # 处理完整信号
                         if not isinstance(signal_data, np.ndarray):
                             signal_data = np.array(signal_data)
-                            print("signal_data was not a np array, it has been converted")
+                            print("signal_data 不是 np 数组，已转换。")
                         full_signal = signal_data.transpose().flatten()  # 转置并展平
-                        # full_signal = signal_data.flatten()  # 转置并展平
-                        if class_name == 'Normal':
-                            ratio = len(full_signal) // self.signal_length
-                            full_signal = full_signal[: : ratio]
-                            print(full_signal.shape,"修复过的normal")
-                        # Uniform signal length (applied to the full signal)
-                        if len(full_signal) > self.signal_length:
-                            signal = full_signal[:self.signal_length]
-                        else:
-                            signal = np.pad(full_signal, (0, max(0, self.signal_length - len(full_signal))))
-                        print(signal.shape)
+
+                        # 直接使用完整信号
+                        signal = full_signal
+
+                        # 检查信号原始长度是否大于测量的信号长度
+                        if len(full_signal) > len(signal):
+                            print(f"信号 {filename} 的原始长度 {len(full_signal)} 大于测量的信号长度 {len(signal)}")
+
+                        # 先下采样
+                        if self.downsample_ratio > 1:
+                            signal = signal[::self.downsample_ratio]
+
+                        # 将信号分割为窗口
                         for start_idx in range(0, len(signal), self.stride):
-                            if len(signal)-start_idx < self.window_size:
+                            if len(signal) - start_idx < self.window_size:
                                 break
                             windowed_signal = signal[start_idx:start_idx + self.window_size]
-                            print(windowed_signal.shape)
                             all_signals.append(windowed_signal)
                             all_labels.append(label)
-                            num_signals_for_label += 1
-                            if num_signals_for_label >= self.signal_count_per_label:
-                                break
-                        count+=1
+
+                        # 打印每条信号分割成的窗口数量
+                        num_windows = (len(signal) - self.window_size) // self.stride + 1
+                        print(f"信号 {filename} 分割成 {num_windows} 个窗口")
                     except Exception as e:
                         print(f"Error loading or processing {filename}: {e}")
                         continue
-        # Convert to numpy arrays and standardize (applied to ALL signals)
-        all_signals_np = np.array(all_signals,dtype=np.float64)
-        print("converted to np array")
-        if self.scale is True:
+
+        # 转换为numpy数组并标准化
+        all_signals_np = np.array(all_signals, dtype=np.float64)
+        print("转换为 np 数组")
+        if self.scale:
             self.scaler.fit(all_signals_np)
-            print("fitted")
             all_signals_np = self.scaler.transform(all_signals_np)
-            print("scaled")
+            print("数据已标准化")
         return all_signals_np, np.array(all_labels)
 
 
@@ -135,6 +156,7 @@ class CWRUDataset(Dataset):
 
 
     def __len__(self):
+
         return len(self.signals)
 
     def __getitem__(self, idx):
@@ -156,97 +178,47 @@ class CWRUDataset(Dataset):
 
         return signal_tensor, label_tensor
 
+    def show_dataset_info(self, batch_size):
+        """显示数据集的详细信息，包括样本大小、样本形状、批次数据形状等"""
+        # 打印数据集基本信息
+        print(f"数据集大小: {len(self)}")
+        print(f"标签数量: {self.num_classes}")
+        print(f"窗口大小: {self.window_size}")
+        print(f"窗口步长: {self.stride}")
+        print(f"下采样比例: {self.downsample_ratio}")
 
+        # 获取一个数据样本
+        signal, label = self[0]
 
-def create_dataloader_mckn(data_dir, batch_size, signal_length=1200, downsample_ratio=1, num_workers=0, pin_memory=True, val_ratio=0.2,
-                           window_size=240, stride=60):
-    """创建 MCKN_CNN 数据加载器"""
-    print("creating dataloader mckn")
-    dataset = CWRUDataset(data_dir, signal_length=signal_length, downsample_ratio=downsample_ratio, num_classes=10, # num_classes=10
-                            window_size=window_size, stride=stride) # 传递 window_size 和 stride
+        # 打印样本的形状和标签
+        print(f"样本信号形状: {signal.shape}")
+        print(f"样本标签: {label}")
 
-    val_size = int(val_ratio * len(dataset))
-    train_size = len(dataset) - val_size # **调整： 先定义 val_size， 再定义 train_size**
-    trainset, valset = random_split(dataset, [train_size, val_size]) # **修正： 现在 train_size 已经被定义， 不会报错**
+        # 创建数据加载器
+        dataloader = DataLoader(self, batch_size=batch_size, shuffle=True)
 
-    train_loader = DataLoader(
-        trainset,
-        batch_size=batch_size,
-        shuffle=True,
-        drop_last=True,
-        num_workers=num_workers,
-        pin_memory=pin_memory
-    )
-    val_loader = DataLoader(
-        valset,
-        batch_size=batch_size,
-        num_workers=num_workers,
-        drop_last=True,
-        pin_memory=pin_memory
-    )
+        # 获取一个批次的数据
+        batch_signals, batch_labels = next(iter(dataloader))
 
-    return train_loader, val_loader
-
-
+        # 打印批次数据的形状
+        print(f"批次信号形状: {batch_signals.shape}")
+        print(f"批次标签形状: {batch_labels.shape}")
 
 if __name__ == '__main__':
-    # -------------  Main Function Test  -------------
-    print("-----  CWRUDataset Main Function Test  -----")
+    # -------------  Simple Dataset Test  -------------
+    print("-----  Simple CWRUDataset Test  -----")
 
-    data_dir = 'C:/Users/luoji/PycharmProjects/motor_dl/data/CWRU_10Class_Verified'  # **<-- VERY IMPORTANT: Set YOUR DATA DIRECTORY HERE! **
-    batch_size = 16
-    signal_length = 120000
-    downsample_ratio = 1 # Test downsampling ratio 4
-    window_size = 2400   # Test window size 240
-    stride = 240        # Test stride 60
+    # 设置数据目录和参数
+    data_dir = 'data/CWRU_10Class_Verified'
+    batch_size = 20
+    window_size = 200
+    downsample_ratio = 2
+    stride = 60
 
-    # Create CWRUDataset instance with sliding window and downsampling
-    dataset = CWRUDataset(data_dir, signal_length=signal_length, downsample_ratio=downsample_ratio,
-                            window_size=window_size, stride=stride, num_classes=10) # num_classes=10 for 10-class test
-
-    # Print dataset size (number of windowed signals)
-    print(f"Dataset size (number of windowed signals): {len(dataset)}") # Expect: Much larger than original .mat files
-
-    # Create DataLoader
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
-
-    # Get a batch of data
-    example_batch = next(iter(dataloader))
-    signals, labels = example_batch
-
-    # Print Batch signals and labels shapes
-    print("Batch signals shape:", signals.shape)# Expect: [batch_size, 1, signal_length // downsample_ratio] (e.g., [32, 1, 300])
-    print("Batch labels shape:", labels.shape)    # Expect: [batch_size]
-    print("Example Batch labels:", labels)    # Print example batch labels
+    # 创建数据集实例
+    dataset = CWRUDataset(data_dir,  window_size=window_size, stride=stride, downsample_ratio=downsample_ratio,batch_size=batch_size)
 
 
-    # Visualization Check (Plot waveforms of first 3 samples - optional but HIGHLY recommended)
-    num_samples_to_plot = min(3, batch_size)
-    plt.figure(figsize=(10, 3 * num_samples_to_plot))
-    for i in range(num_samples_to_plot):
-        signal = signals[i].squeeze().numpy()
-        label = labels[i].item()
 
-        plt.subplot(num_samples_to_plot, 1, i + 1)
-        plt.plot(signal)
-        plt.title(f"Sample {i+1}, Label: {label} (Class: {dataset.labels[i]})") # Show original class label
-
-    plt.tight_layout()
-    plt.show() # Show plot
-
-
-    # -------------  .mat File Data Inspection (Example for ONE file) -------------
-    print("\n-----  .mat File Data Inspection (Example for ONE file) -----")
-
-    example_mat_filepath = 'C:/Users/luoji/PycharmProjects/motor_dl/data/CWRU_10Class_Verified/B007/118_0.mat'
-    example_mat_data = sio.loadmat(example_mat_filepath)
-
-    print("Keys in .mat file:", example_mat_data.keys())
-
-    # Check shape and dtype of Drive End vibration signal variable ('X118_DE_time' - EXAMPLE - adjust if needed)
-    if 'X118_DE_time' in example_mat_data: # **<-- MODIFY VARIABLE NAME IF NEEDED! **
-        signal_data_example_de = example_mat_data['X118_DE_time'] # **<-- MODIFY VARIABLE NAME IF NEEDED! **
-        print("Shape of 'X118_DE_time' variable:", signal_data_example_de.shape) # **<-- MODIFY VARIABLE NAME IF NEEDED! **
-        print("Data type of 'X118_DE_time' variable:", signal_data_example_de.dtype) # **<-- MODIFY VARIABLE NAME IF
 
 
