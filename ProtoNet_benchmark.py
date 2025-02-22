@@ -73,13 +73,17 @@ def evaluate(model, dataloader, device):
         with tqdm(dataloader, desc="评估") as pbar:
             for batch_idx, (support_x, support_y, query_x, query_y) in enumerate(pbar):
                 # 将数据移到设备上
-                support_x = support_x.squeeze(0).to(device)  # [n_way * n_support, channel=5, seq_len]
-                support_y = support_y.squeeze(0).to(device)  # [n_way * n_support]
-                query_x = query_x.squeeze(0).to(device)     # [n_way * n_query, channel=5, seq_len]
-                query_y = query_y.squeeze(0).to(device)     # [n_way * n_query]
+                support_x = support_x.to(device)  # [batch_size, n_way * n_support, channel=5, seq_len]
+                support_y = support_y.to(device)  # [batch_size, n_way * n_support]
+                query_x = query_x.to(device)     # [batch_size, n_way * n_query, channel=5, seq_len]
+                query_y = query_y.to(device)     # [batch_size, n_way * n_query]
                 
                 # 前向传播
-                logits = model(support_x, support_y, query_x)
+                logits = model(support_x, support_y, query_x)  # [batch_size, n_query, n_way]
+                
+                # 重塑维度以计算损失和准确率
+                logits = logits.view(-1, logits.size(-1))  # [batch_size * n_query, n_way]
+                query_y = query_y.view(-1)                 # [batch_size * n_query]
                 
                 # 计算损失
                 loss = torch.nn.functional.cross_entropy(logits, query_y)
