@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     # Data preparation
     data_dir = 'data/CWRU_10Class_Verified'
-    dataset = CWRUDataset(data_dir, transform=None,batch_size=batch_size, scale=True, downsample_ratio=1, num_classes=10, window_size=sequence_length, stride=60)
+    dataset = CWRUDataset(data_dir, transform=None,batch_size=batch_size, scale=True, downsample_ratio=1, num_classes=10, window_size=sequence_length, stride=360)
     
     scaler = StandardScaler()
     dataset.signals = scaler.fit_transform(dataset.signals)
