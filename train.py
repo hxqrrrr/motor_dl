@@ -16,38 +16,38 @@ import argparse
 if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='元学习模型训练脚本')
-    parser.add_argument('--model', type=str, default='protonet',
-                      help='要训练的模型名称 (protonet 或 protonet_attention)')
+    parser.add_argument('--model', type=str, default='relationnet',
+                      help='要训练的模型名称 (protonet 或 protonet_attention 或 relationnet)')
     parser.add_argument('--pretrained', type=str, default=None,
                       help='预训练模型路径，例如: runs/protonet_20240223_194815/best_model_val_acc_0.8670.pth')
     args = parser.parse_args()
 
     # 设置超参数
-    model_config = {
-        'in_channels': 5,
-        'hidden_dim': 64,
-        'feature_dim': 128,
-        'backbone': 'cnn1d',
-        'distance_type': 'euclidean'
-    }
-    
-    train_config = {
+    training_params = {
+        # 任务参数
         'n_way': 5,
         'n_support': 5,
         'n_query': 10,
         'batch_size': 4,
+        
+        # 训练超参数
         'n_epochs': 80,
         'patience': 15,
-        'test_interval': 1
+        'lr': 0.001,                # 学习率
+        'weight_decay': 0.0001,     # 权重衰减
+        
+        # 学习率调度器参数
+        'step_size': 3,             # 每3个epoch调整一次学习率
+        'gamma': 0.5,               # 学习率衰减因子
+        
+        # 模型参数
+        'in_channels': 5,           # 输入通道数
+        'hidden_dim': 64,           # 隐藏层维度
+        'feature_dim': 128,         # 特征维度
+        'backbone': 'cnn1d',        # 骨干网络类型
+        'distance_type': 'euclidean' # 距离度量方式
     }
     
-    optimizer_config = {
-        'lr': 0.001,
-        'weight_decay': 0.0001,
-        'step_size': 2,
-        'gamma': 0.5
-    }
-
     # 设置设备
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"使用设备: {device}")
@@ -76,28 +76,28 @@ if __name__ == "__main__":
     # 创建训练集和验证集
     train_dataset = ProtoNetDataset(
         base_dataset=train_base_dataset,
-        n_way=train_config['n_way'],
-        n_support=train_config['n_support'],
-        n_query=train_config['n_query']
+        n_way=training_params['n_way'],
+        n_support=training_params['n_support'],
+        n_query=training_params['n_query']
     )
     
     val_dataset = ProtoNetDataset(
         base_dataset=val_base_dataset,
-        n_way=train_config['n_way'],
-        n_support=train_config['n_support'],
-        n_query=train_config['n_query']
+        n_way=training_params['n_way'],
+        n_support=training_params['n_support'],
+        n_query=training_params['n_query']
     )
     
     # 创建数据加载器
     train_loader = DataLoader(
         train_dataset,
-        batch_size=train_config['batch_size'],
+        batch_size=training_params['batch_size'],
         shuffle=True,
         num_workers=4
     )
     val_loader = DataLoader(
         val_dataset,
-        batch_size=train_config['batch_size'],
+        batch_size=training_params['batch_size'],
         shuffle=False,
         num_workers=4
     )
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     # 创建模型
     model = get_model(
         model_name=args.model,
-        **model_config
+        **training_params
     ).to(device)
     
     # 初始化训练状态
@@ -116,15 +116,15 @@ if __name__ == "__main__":
     # 创建优化器
     optimizer = optim.Adam(
         model.parameters(),
-        lr=optimizer_config['lr'],
-        weight_decay=optimizer_config['weight_decay']
+        lr=training_params['lr'],
+        weight_decay=training_params['weight_decay']
     )
     
     # 创建学习率调度器
     scheduler = optim.lr_scheduler.StepLR(
         optimizer,
-        step_size=optimizer_config['step_size'],
-        gamma=optimizer_config['gamma']
+        step_size=training_params['step_size'],
+        gamma=training_params['gamma']
     )
     
     # 如果指定了预训练模型，加载模型和训练状态
@@ -146,8 +146,8 @@ if __name__ == "__main__":
     epochs = []
     
     # 训练循环
-    for epoch in range(start_epoch, train_config['n_epochs']):
-        print(f"\nEpoch {epoch+1}/{train_config['n_epochs']}")
+    for epoch in range(start_epoch, training_params['n_epochs']):
+        print(f"\nEpoch {epoch+1}/{training_params['n_epochs']}")
         
         # 训练一个epoch
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, device)
@@ -174,14 +174,24 @@ if __name__ == "__main__":
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'scheduler_state_dict': scheduler.state_dict(),
-                'best_val_acc': best_val_acc
+                'best_val_acc': best_val_acc,
+                'val_accs': val_accs,
+                'in_channels': training_params['in_channels'],
+                'hidden_dim': training_params['hidden_dim'],
+                'feature_dim': training_params['feature_dim'],
+                'backbone': training_params['backbone'],
+                'distance_type': training_params['distance_type'],
+                'lr': training_params['lr'],
+                'weight_decay': training_params['weight_decay'],
+                'step_size': training_params['step_size'],
+                'gamma': training_params['gamma']
             }
-            save_training_info(model_info, train_config, save_dir, is_best_model=True)
+            save_training_info(model_info, training_params, save_dir, is_best_model=True)
             print(f"保存最佳模型，验证准确率: {val_acc:.4f}")
         else:
             patience_counter += 1
-            if patience_counter >= train_config['patience']:
-                print(f"验证准确率在{train_config['patience']}个评估周期内未改善，在epoch {epoch}停止训练")
+            if patience_counter >= training_params['patience']:
+                print(f"验证准确率在{training_params['patience']}个评估周期内未改善，在epoch {epoch}停止训练")
                 break
         
         scheduler.step()
@@ -193,9 +203,18 @@ if __name__ == "__main__":
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'scheduler_state_dict': scheduler.state_dict(),
-        'val_accs': val_accs
+        'val_accs': val_accs,
+        'in_channels': training_params['in_channels'],
+        'hidden_dim': training_params['hidden_dim'],
+        'feature_dim': training_params['feature_dim'],
+        'backbone': training_params['backbone'],
+        'distance_type': training_params['distance_type'],
+        'lr': training_params['lr'],
+        'weight_decay': training_params['weight_decay'],
+        'step_size': training_params['step_size'],
+        'gamma': training_params['gamma']
     }
-    params_file = save_training_info(model_info, train_config, save_dir, is_best_model=False)
+    params_file = save_training_info(model_info, training_params, save_dir, is_best_model=False)
     
     print(f"训练完成！最佳验证集准确率: {best_val_acc:.4f}")
     print(f"训练参数已保存到: {params_file}")
