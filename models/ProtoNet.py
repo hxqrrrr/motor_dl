@@ -1,12 +1,87 @@
-
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from typing import Dict, Optional, Tuple
-from models.cnn1d import CNN1D_embed
 
+
+class CNN1D_embed(nn.Module):
+    """用于Prototypical Network的1D-CNN嵌入网络
+    
+    参数:
+        in_channels: 输入通道数
+        hidden_dim: 隐藏层维度
+        feature_dim: 输出特征维度
+    """
+    def __init__(
+        self,
+        in_channels: int,
+        hidden_dim: int,
+        feature_dim: int,
+    ):
+        super(CNN1D_embed, self).__init__()
+        
+        # 第一个卷积块
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(in_channels, hidden_dim, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第二个卷积块
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(hidden_dim, hidden_dim * 2, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 2),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第三个卷积块
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(hidden_dim * 2, hidden_dim * 4, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 4),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.MaxPool1d(2)
+        )
+
+        # 添加自适应平均池化层
+        self.adaptive_pool = nn.AdaptiveAvgPool1d(1)
+        
+        # 特征映射层
+        self.feature_layer = nn.Sequential(
+            nn.Linear(hidden_dim * 4, feature_dim),
+            nn.BatchNorm1d(feature_dim),
+            nn.ReLU(),
+            nn.Dropout(0.5)
+        )
+        
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # 第一个卷积块
+        x = self.conv1(x)
+        
+        # 第二个卷积块
+        x = self.conv2(x)
+        
+        # 第三个卷积块
+        x = self.conv3(x)
+        
+        # 自适应池化
+        x = self.adaptive_pool(x)
+        
+        # 展平
+        x = x.view(x.size(0), -1)
+        
+        # 特征映射
+        x = self.feature_layer(x)
+        
+        # L2归一化
+        x = F.normalize(x, p=2, dim=1)
+        
+        return x
 
 
 class ProtoNet(nn.Module):

@@ -96,6 +96,21 @@ class h5Dataset(Dataset):
         return torch.tensor(self.data[index], dtype=torch.float32), \
                self.labels[index].clone().detach()
 
+    def get_all_samples(self):
+        """
+        获取数据集中所有样本的唯一标识符
+        返回：包含所有样本标识符的列表
+        """
+        # 使用数据和标签的组合作为唯一标识符
+        identifiers = []
+        for i in range(len(self.data)):
+            # 使用数据的哈希值和标签作为唯一标识符
+            data_hash = hash(self.data[i].tobytes())
+            label = self.labels[i].item()
+            identifier = f"{data_hash}_{label}"
+            identifiers.append(identifier)
+        return identifiers
+
 
 class KATDataset(Dataset):
     def __init__(self, folder_path):
@@ -161,7 +176,7 @@ class ProtoNetDataset(Dataset):
         
     def __len__(self):
         # 返回可能的episode数量
-        return 1000  # 可以设置为更大的数字
+        return 400  # 可以设置为更大的数字
         
     def __getitem__(self, index):
         """

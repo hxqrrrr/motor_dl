@@ -1,3 +1,7 @@
-
-runs/lr0.005_bs512_epoch2000_patience10000_lrdecay0.1_wd1e-5_seed6666/events.out.tfevents.1731770223.hxq.36040.0
+data/
+runs/
 *.pth
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
