@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 """mckn_cnn_dataset.py (Final Complete Version - 10 Class, Sliding Window, DE Signal Loading, Main Test)"""
+import sys
 import os
+import time
+
+# 添加项目根目录到 Python 路径
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(project_root)
+
 import numpy as np
 import scipy.io as sio
 import torch
@@ -8,7 +15,7 @@ from torch import nn
 from torch.utils.data import Dataset, DataLoader, random_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt  # For visualization in main test
-
+from utils.vmd import extract_vmd_features
 
 
         # 数据集处理逻辑：
@@ -33,7 +40,7 @@ import matplotlib.pyplot as plt  # For visualization in main test
 
 
 class CWRUDataset(Dataset):
-    def __init__(self, data_dir, batch_size, transform=None, scale=True, downsample_ratio=1, num_classes=10, window_size=240, stride=60):
+    def __init__(self, data_dir, batch_size, transform=None, scale=True, downsample_ratio=1, num_classes=10, window_size=600, stride=600,vmd_mode=False,k=3):
         """
         初始化 CWRUDataset（MCKD-CNN 论文复现 - 10 类，滑动窗口，驱动端信号）
         :param data_dir: 数据目录的路径
@@ -42,6 +49,8 @@ class CWRUDataset(Dataset):
         :param num_classes: 类别数量（默认：10）
         :param window_size: 滑动窗口大小（例如，240）
         :param stride: 滑动窗口步长（例如，60）
+        :param vmd_mode: 是否启用 VMD 模式
+        :param k: VMD 的 k 值
         """
         super(CWRUDataset, self).__init__()
         self.data_dir = data_dir
@@ -51,6 +60,8 @@ class CWRUDataset(Dataset):
         self.num_classes = num_classes
         self.window_size = window_size
         self.stride = stride
+        self.vmd_mode = vmd_mode
+        self.k = k
         self.file_list = [f for f in os.listdir(data_dir) if f.endswith('.mat')]
         self.batch_norm = nn.BatchNorm1d(1)
         self.scaler = StandardScaler()
@@ -73,6 +84,7 @@ class CWRUDataset(Dataset):
         # Preload data (including sliding window augmentation)
         self.signals, self.labels = self._load_data()
         self.show_dataset_info(self.batch_size)
+
     def _load_data(self):
         # 初始化数据存储
         all_signals = []
@@ -139,10 +151,19 @@ class CWRUDataset(Dataset):
                     except Exception as e:
                         print(f"Error loading or processing {filename}: {e}")
                         continue
-
+        if self.vmd_mode:
+            print("开始 VMD 特征提取...")
+            start_time = time.time()
+            # 使用 GPU 加速进行 VMD 特征提取
+            all_signals = [extract_vmd_features(signal, K=self.k, use_gpu=True) for signal in all_signals]
+            end_time = time.time()
+            print(f"VMD 特征提取完成，用时：{end_time - start_time:.2f}秒")
+            print(f"VMD 特征维度：{all_signals[0].shape}")
+            
         # 转换为numpy数组并标准化
         all_signals_np = np.array(all_signals, dtype=np.float64)
         print("转换为 np 数组")
+
         if self.scale:
             self.scaler.fit(all_signals_np)
             all_signals_np = self.scaler.transform(all_signals_np)
@@ -211,12 +232,12 @@ if __name__ == '__main__':
     # 设置数据目录和参数
     data_dir = 'data/CWRU_10Class_Verified'
     batch_size = 20
-    window_size = 200
+    window_size = 600
     downsample_ratio = 2
-    stride = 60
+    stride = 600
 
     # 创建数据集实例
-    dataset = CWRUDataset(data_dir,  window_size=window_size, stride=stride, downsample_ratio=downsample_ratio,batch_size=batch_size)
+    dataset = CWRUDataset(data_dir,  window_size=window_size, stride=stride, downsample_ratio=downsample_ratio,batch_size=batch_size,vmd_mode=True,k=3)
 
 
 
