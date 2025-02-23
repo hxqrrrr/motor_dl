@@ -1,38 +1,4 @@
-# 整体架构设计：
-# 创建一个主类 ProtoNet，继承自 nn.Module
-# 该类需要包含嵌入网络、原型计算和分类预测等核心功能
-# 嵌入网络设计：
-# 考虑到你最近查看的文件中包含了 models/cnn1d.py 和 models/cnn2d_.py，说明你可能在处理一维或二维的数据
-# 可以设计一个灵活的嵌入网络结构，支持不同的backbone：
-# 1D-CNN 用于时序数据
-# 2D-CNN 用于图像数据
-# LSTM 用于序列数据（因为看到你有1dlstm_benchmark.py）
-# 原型计算模块：
-# 设计一个专门的方法来计算原型
-# 输入为support set的特征
-# 按类别分组计算均值
-# 返回每个类的原型向量
-# 距离度量模块：
-# 实现欧氏距离和余弦相似度两种度量方式
-# 可以设计成可配置的，允许选择不同的距离度量方法
-# 分类预测流程：
-# forward方法需要接收support set和query set
-# 对两个集合都通过嵌入网络得到特征
-# 计算support set的原型
-# 计算query set样本与原型的距离
-# 返回预测结果
-# 损失函数设计：
-# 使用交叉熵损失或负对数似然损失
-# 考虑添加其他辅助损失来提升性能
-# 7. 训练策略：
-# 实现episode-based训练
-# 每个episode随机采样N个类，每个类K个样本作为support set
-# 剩余样本作为query set
-# 其他考虑：
-# 添加配置文件支持（因为看到你有utils/config_loader.py）
-# 添加数据预处理和增强
-# 实现模型保存和加载功能
-# 添加评估指标计算
+
 
 import torch
 import torch.nn as nn
