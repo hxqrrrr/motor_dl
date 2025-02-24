@@ -1,6 +1,8 @@
 import sys
 import os
 import argparse
+import json
+from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
@@ -17,10 +19,24 @@ from utils.utils import check_data_leakage, train_epoch, evaluate, get_model
 if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='ProtoNet Benchmark')
-    parser.add_argument('--model_name', type=str, default='protonet_attention', help='模型名称')
+    parser.add_argument('--model_name', type=str, default='all_model', help='模型名称')
     parser.add_argument('--model_path', type=str, required=True, help='模型路径')
     parser.add_argument('--data_path', type=str, default='data/h5data', help='数据集路径')
     args = parser.parse_args()
+
+    # 创建benchmark文件夹
+    os.makedirs('benchmark', exist_ok=True)
+    
+    # 获取当前时间作为结果文件的标识
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # 准备结果字典
+    results = {
+        "model_name": args.model_name,
+        "model_path": args.model_path,
+        "timestamp": timestamp,
+        "configs": []
+    }
 
     # 设置设备
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -87,11 +103,36 @@ if __name__ == "__main__":
         test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
         
         # 评估
-        test_loss, test_acc = evaluate(model, test_loader, device)
+        test_loss, test_acc, test_recall, test_f1 = evaluate(model, test_loader, device)
+        
+        # 保存结果
+        config_result = {
+            "config": config,
+            "metrics": {
+                "loss": float(test_loss),
+                "accuracy": float(test_acc),
+                "recall": float(test_recall),
+                "f1": float(test_f1)
+            }
+        }
+        results["configs"].append(config_result)
         
         # 打印结果
         print(f"平均损失: {test_loss:.4f}")
         print(f"平均准确率: {test_acc:.4f}")
+        print(f"平均召回率: {test_recall:.4f}")
+        print(f"平均F1分数: {test_f1:.4f}")
         print("-" * 50)
+    
+    # 保存结果到JSON文件
+    # 获取模型路径的上一级文件夹名称
+    model_dir = os.path.dirname(args.model_path)
+    model_folder_name = os.path.basename(model_dir)
+    
+    result_file = os.path.join('benchmark', f'{model_folder_name}.json')
+    with open(result_file, 'w', encoding='utf-8') as f:
+        json.dump(results, f, indent=4, ensure_ascii=False)
+    
+    print(f"\n结果已保存到: {result_file}")
     
     
