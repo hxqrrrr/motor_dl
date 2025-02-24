@@ -159,7 +159,7 @@ class AttentionRelationModule(nn.Module):
         return relation_scores
 
 
-class AttentionRelationProtoNet(nn.Module):
+class AllModel(nn.Module):
     """基于注意力机制的关系网络版本的Prototypical Network
     
     参数:
@@ -177,7 +177,7 @@ class AttentionRelationProtoNet(nn.Module):
         backbone: str = 'cnn1d',
         distance_type: str = 'relation'
     ):
-        super(AttentionRelationProtoNet, self).__init__()
+        super(AllModel, self).__init__()
         self.in_channels = in_channels
         self.hidden_dim = hidden_dim
         self.feature_dim = feature_dim

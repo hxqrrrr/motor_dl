@@ -14,6 +14,64 @@
 └── img/               # 文档图片
 ```
 
+## 支持模型：
+
+本项目支持多种backbone和距离度量方式的组合训练。以下是完整的训练指令：
+
+### CNN1D backbone
+
+```bash
+# 1. CNN1D + Euclidean
+python train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 2. CNN1D + Cosine
+python train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 3. CNN1D + Relation
+python train.py --model all_model --backbone cnn1d --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+```
+
+### Channel Attention backbone
+
+```bash
+# 4. Channel + Euclidean
+python train.py --model all_model --backbone channel --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 5. Channel + Cosine
+python train.py --model all_model --backbone channel --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 6. Channel + Relation
+python train.py --model all_model --backbone channel --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+```
+
+### Spatial Attention backbone
+
+```bash
+# 7. Spatial + Euclidean
+python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 8. Spatial + Cosine
+python train.py --model all_model --backbone spatial --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 9. Spatial + Relation
+python train.py --model all_model --backbone spatial --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+```
+
+### CBAM Attention backbone
+
+```bash
+# 10. CBAM + Euclidean
+python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 11. CBAM + Cosine
+python train.py --model all_model --backbone cbam --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+
+# 12. CBAM + Relation
+python train.py --model all_model --backbone cbam --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+```
+
+## train.py：
+
 ## 主要特性
 
 - 支持多种深度学习模型：
@@ -94,51 +152,17 @@ python benchmark.py --model_path runs/protonet_XXXXXX/best_model.pth
 ## 文件说明
 
 - `train.py`: 主训练脚本
-- `train_ProtoNet.py`: 原型网络训练脚本
-- `train_ProtoNet_attention.py`: 带注意力机制的原型网络训练脚本
 - `benchmark.py`: 模型基准测试脚本
 - `models/dataset.py`: 数据集处理
 - `utils/utils.py`: 工具函数
 
-## 训练结果
 
-训练过程中的日志、模型和可视化结果将保存在 `runs` 目录下，格式为：
-```
-runs/
-└── model_name_timestamp/
-    ├── best_model.pth
-    ├── final_model.pth
-    ├── training_curves.png
-    └── params.json
-```
-
-## 注意事项
-
-1. 确保数据集格式正确且已正确放置
-2. 训练前检查GPU内存是否充足
-3. 可以通过修改配置参数调整模型性能
-4. 建议使用GPU进行训练以获得更好的性能
-
-## 许可证
-
-本项目采用 MIT 许可证
-
-# 电机故障诊断深度学习项目
 
 ## 项目主页：[链接](https://www.notion.so/13d42872c05480b88ec4ef624a233933?pvs=4)
 
 ## 项目介绍：
 - 本项目使用深度学习方法对电机故障进行诊断分类
 - 本框架是一个利用json文件在不同数据集测试不同模型性能的平台
-
----
-
-## 工具
-
-
-- 可视化工具使用[tensorboard](https://www.tensorflow.org/tensorboard?hl=zh-cn)
-
-- TensorBoard教程：https://kuanhoong.medium.com/how-to-use-tensorboard-with-pytorch-e2b84aa55e67
 
 
 ----
@@ -160,32 +184,11 @@ runs/
   - BF-R: [0,0,0,0,0,0,1,0] - 轴承滚动体故障
   - BF-C: [0,0,0,0,0,0,0,1] - 轴承保持架故障
 
-### 2. KAT格式数据集:
-- 文件格式: .mat文件
-- 数据结构: 
-  - data: 振动采样数据
-  - label: 对应的标签信息（0: 健康, 1: 内圈故障, 2: 外圈故障）
-- 采样频率: 64 kHz
-- 样本数量: 每个工况文件包含300个样本（每种类型100个）
-- 工况说明:
-  - KATData0.mat: 转速1500rpm, 负载转矩0.7Nm, 径向力1000N
-  - KATData1.mat: 转速900rpm, 负载转矩0.7Nm, 径向力1000N
-  - KATData2.mat: 转速1500rpm, 负载转矩0.1Nm, 径向力1000N
-  - KATData3.mat: 转速1500rpm, 负载转矩0.7Nm, 径向力400N
-
 -----
 
-## 支持模型：
-
-
-
-------
-
-## train.py：
+## 
 
 - 训练的起点（）
-
------
 
 ## 项目结构
 

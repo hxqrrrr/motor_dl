@@ -6,7 +6,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 import torch.nn as nn
 from models.ProtoNet import ProtoNet
-from models.cnn1d import CNN1D
 from models.dataset import ProtoNetDataset, h5Dataset
 from torch.utils.data import DataLoader
 import torch.optim as optim

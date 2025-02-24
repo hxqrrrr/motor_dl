@@ -16,10 +16,22 @@ import argparse
 if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='元学习模型训练脚本')
-    parser.add_argument('--model', type=str, default='relationnet',
-                      help='要训练的模型名称 (protonet 或 protonet_attention 或 relationnet)')
+    parser.add_argument('--model', type=str, default='all_model',
+                      help='要训练的模型名称 (protonet 或 protonet_attention 或 relationnet 或 all_model)')
     parser.add_argument('--pretrained', type=str, default=None,
                       help='预训练模型路径，例如: runs/protonet_20240223_194815/best_model_val_acc_0.8670.pth')
+    parser.add_argument('--in_channels', type=int, default=5,
+                      help='输入通道数 (默认: 5)')
+    parser.add_argument('--hidden_dim', type=int, default=64,
+                      help='隐藏层维度 (默认: 64)')
+    parser.add_argument('--feature_dim', type=int, default=128,
+                      help='特征维度 (默认: 128)')
+    parser.add_argument('--backbone', type=str, default='cnn1d',
+                      choices=['cnn1d', 'channel', 'spatial', 'cbam'],
+                      help='特征提取器类型: cnn1d, channel, spatial, cbam (默认: cnn1d)')
+    parser.add_argument('--distance_type', type=str, default='euclidean',
+                      choices=['euclidean', 'cosine', 'relation'],
+                      help='距离度量方式: euclidean, cosine, relation (默认: euclidean)')
     args = parser.parse_args()
 
     # 设置超参数
@@ -40,12 +52,12 @@ if __name__ == "__main__":
         'step_size': 3,             # 每3个epoch调整一次学习率
         'gamma': 0.5,               # 学习率衰减因子
         
-        # 模型参数
-        'in_channels': 5,           # 输入通道数
-        'hidden_dim': 64,           # 隐藏层维度
-        'feature_dim': 128,         # 特征维度
-        'backbone': 'cnn1d',        # 骨干网络类型
-        'distance_type': 'euclidean' # 距离度量方式
+        # 模型参数 - 从命令行参数获取
+        'in_channels': args.in_channels,     # 输入通道数
+        'hidden_dim': args.hidden_dim,       # 隐藏层维度
+        'feature_dim': args.feature_dim,     # 特征维度
+        'backbone': args.backbone,           # 骨干网络类型
+        'distance_type': args.distance_type  # 距离度量方式
     }
     
     # 设置设备
