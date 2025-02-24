@@ -176,7 +176,7 @@ class ProtoNetDataset(Dataset):
         
     def __len__(self):
         # 返回可能的episode数量
-        return 400  # 可以设置为更大的数字
+        return 100  # 可以设置为更大的数字
         
     def __getitem__(self, index):
         """
