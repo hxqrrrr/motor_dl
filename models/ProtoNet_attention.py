@@ -107,12 +107,14 @@ class CNN1D_Attention(nn.Module):
         in_channels (int): 输入通道数
         hidden_dim (int): 隐藏层维度
         feature_dim (int): 输出特征维度
+        dropout (float): Dropout比率
     """
     def __init__(
         self,
         in_channels: int,
         hidden_dim: int,
-        feature_dim: int
+        feature_dim: int,
+        dropout: float = 0.5
     ):
         super(CNN1D_Attention, self).__init__()
         
@@ -121,7 +123,8 @@ class CNN1D_Attention(nn.Module):
             nn.Conv1d(in_channels, hidden_dim, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(inplace=True),
-            nn.MaxPool1d(2)
+            nn.MaxPool1d(2),
+            nn.Dropout(dropout)
         )
         
         # 第二个卷积块 - 同样保持通道数不变
@@ -129,7 +132,8 @@ class CNN1D_Attention(nn.Module):
             nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(inplace=True),
-            nn.MaxPool1d(2)
+            nn.MaxPool1d(2),
+            nn.Dropout(dropout)
         )
         
         # 第三个卷积块 - 增加通道数
@@ -137,7 +141,8 @@ class CNN1D_Attention(nn.Module):
             nn.Conv1d(hidden_dim, hidden_dim * 2, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim * 2),
             nn.ReLU(inplace=True),
-            nn.MaxPool1d(2)
+            nn.MaxPool1d(2),
+            nn.Dropout(dropout)
         )
         
         # 全局池化层
@@ -148,7 +153,7 @@ class CNN1D_Attention(nn.Module):
             nn.Linear(hidden_dim * 2, feature_dim),
             nn.BatchNorm1d(feature_dim),
             nn.ReLU(inplace=True),
-            nn.Dropout(0.5)
+            nn.Dropout(dropout)
         )
         
     def get_intermediate_features(self, x: torch.Tensor) -> torch.Tensor:
@@ -201,12 +206,13 @@ class AttentiveEncoder(nn.Module):
         in_channels: int,
         hidden_dim: int,
         feature_dim: int,
-        attention_type: str = 'cbam'
+        attention_type: str = 'cbam',
+        dropout: float = 0.5
     ):
         super(AttentiveEncoder, self).__init__()
         
         # 使用新的CNN1D_Attention作为backbone
-        self.backbone = CNN1D_Attention(in_channels, hidden_dim, feature_dim)
+        self.backbone = CNN1D_Attention(in_channels, hidden_dim, feature_dim, dropout)
         
         # 注意力模块 - 使用hidden_dim作为通道数
         if attention_type == 'channel':
@@ -248,6 +254,7 @@ class ProtoNetWithAttention(ProtoNet):
         attention_type (str): 注意力类型 ('channel', 'spatial', 'cbam')
         backbone (str): 特征提取器的类型 ('cnn1d', 'cnn2d', 'lstm')
         distance_type (str): 距离度量方式 ('euclidean', 'cosine')
+        dropout (float): Dropout比率
     """
     def __init__(
         self,
@@ -256,10 +263,11 @@ class ProtoNetWithAttention(ProtoNet):
         feature_dim: int,
         attention_type: str = 'cbam',
         backbone: str = 'cnn1d',
-        distance_type: str = 'euclidean'
+        distance_type: str = 'euclidean',
+        dropout: float = 0.5
     ):
         super().__init__(in_channels, hidden_dim, feature_dim, backbone, distance_type)
-        self.encoder = AttentiveEncoder(in_channels, hidden_dim, feature_dim, attention_type)
+        self.encoder = AttentiveEncoder(in_channels, hidden_dim, feature_dim, attention_type, dropout)
 
     def forward(self, support_images: torch.Tensor, support_labels: torch.Tensor, 
                 query_images: torch.Tensor) -> torch.Tensor:

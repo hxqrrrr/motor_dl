@@ -12,12 +12,14 @@ class CNN1D_embed(nn.Module):
         in_channels: 输入通道数
         hidden_dim: 隐藏层维度
         feature_dim: 输出特征维度
+        dropout: Dropout比率
     """
     def __init__(
         self,
         in_channels: int,
         hidden_dim: int,
         feature_dim: int,
+        dropout: float = 0.5
     ):
         super(CNN1D_embed, self).__init__()
         
@@ -26,7 +28,7 @@ class CNN1D_embed(nn.Module):
             nn.Conv1d(in_channels, hidden_dim, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Dropout(dropout * 0.2),  # 较小的dropout率
             nn.MaxPool1d(2)
         )
         
@@ -35,7 +37,7 @@ class CNN1D_embed(nn.Module):
             nn.Conv1d(hidden_dim, hidden_dim * 2, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim * 2),
             nn.ReLU(),
-            nn.Dropout(0.2),
+            nn.Dropout(dropout * 0.4),  # 中等的dropout率
             nn.MaxPool1d(2)
         )
         
@@ -44,7 +46,7 @@ class CNN1D_embed(nn.Module):
             nn.Conv1d(hidden_dim * 2, hidden_dim * 4, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_dim * 4),
             nn.ReLU(),
-            nn.Dropout(0.3),
+            nn.Dropout(dropout * 0.6),  # 较大的dropout率
             nn.MaxPool1d(2)
         )
 
@@ -56,7 +58,7 @@ class CNN1D_embed(nn.Module):
             nn.Linear(hidden_dim * 4, feature_dim),
             nn.BatchNorm1d(feature_dim),
             nn.ReLU(),
-            nn.Dropout(0.5)
+            nn.Dropout(dropout)  # 最大的dropout率
         )
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -168,6 +170,7 @@ class AllModel(nn.Module):
         feature_dim (int): 最终特征向量的维度
         backbone (str): 特征提取器的类型 ('cnn1d', 'cnn2d', 'lstm')
         distance_type (str): 距离度量方式 ('euclidean', 'cosine', 'relation')
+        dropout (float): Dropout比率
     """
     def __init__(
         self,
@@ -175,7 +178,8 @@ class AllModel(nn.Module):
         hidden_dim: int,
         feature_dim: int,
         backbone: str = 'cnn1d',
-        distance_type: str = 'relation'
+        distance_type: str = 'relation',
+        dropout: float = 0.5
     ):
         super(AllModel, self).__init__()
         self.in_channels = in_channels
@@ -183,6 +187,7 @@ class AllModel(nn.Module):
         self.feature_dim = feature_dim
         self.backbone = backbone
         self.distance_type = distance_type
+        self.dropout = dropout
         
         # 初始化嵌入网络
         self.encoder = self._build_encoder()
@@ -197,28 +202,16 @@ class AllModel(nn.Module):
             return CNN1D_embed(
                 self.in_channels, 
                 self.hidden_dim, 
-                self.feature_dim
+                self.feature_dim,
+                self.dropout
             )
-        elif self.backbone == 'channel':
+        elif self.backbone in ['channel', 'spatial', 'cbam']:
             return AttentiveEncoder(
                 self.in_channels,
                 self.hidden_dim,
                 self.feature_dim,
-                attention_type='channel'
-            )
-        elif self.backbone == 'spatial':
-            return AttentiveEncoder(
-                self.in_channels,
-                self.hidden_dim,
-                self.feature_dim,
-                attention_type='spatial'
-            )
-        elif self.backbone == 'cbam':
-            return AttentiveEncoder(
-                self.in_channels,
-                self.hidden_dim,
-                self.feature_dim,
-                attention_type='cbam'
+                attention_type=self.backbone,
+                dropout=self.dropout
             )
         else:
             raise ValueError(f"Unknown backbone type: {self.backbone}")
