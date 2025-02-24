@@ -1,0 +1,60 @@
+实验组开始时间: 2025-02-24 20:59:15.054003
+实验配置:
+[
+  {
+    "command": "tensorboard --logdir=runs --port=6006 --host=localhost"
+  },
+  {
+    "command": "python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: tensorboard --logdir=runs --port=6006 --host=localhost
+开始时间: 2025-02-24 20:59:15.055003
+==================================================
+
+'tensorboard' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+==================================================
+命令执行完成时间: 2025-02-24 20:59:15.073876
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
+开始时间: 2025-02-24 20:59:17.090954
+==================================================
+
+'python' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+==================================================
+命令执行完成时间: 2025-02-24 20:59:17.124845
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
+开始时间: 2025-02-24 20:59:19.130325
+==================================================
+
+'python' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+==================================================
+命令执行完成时间: 2025-02-24 20:59:19.152404
+返回码: 1
+==================================================
+
+
+==================================================
+实验组结束时间: 2025-02-24 20:59:19.153403
