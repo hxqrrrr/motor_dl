@@ -3,7 +3,7 @@ from tqdm import tqdm
 from models.dataset import h5Dataset
 from models.ProtoNet import ProtoNet
 from models.ProtoNet_attention import ProtoNetWithAttention
-from models.ProtoNet_relationnet import AttentionRelationProtoNet
+from models.ProtoNet_relationnet import AttentionRelationProtoNet, AllModel
 import matplotlib.pyplot as plt
 import os
 import json
@@ -16,7 +16,8 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
     model_dict = {
         'protonet': ProtoNet,
         'protonet_attention': ProtoNetWithAttention,
-        'relationnet': AttentionRelationProtoNet
+        'relationnet': AttentionRelationProtoNet,
+        'all_model': AllModel
     }
     
     if model_name not in model_dict:
