@@ -22,52 +22,52 @@
 
 ```bash
 # 1. CNN1D + Euclidean
-python train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 2. CNN1D + Cosine
-python train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 3. CNN1D + Relation
-python train.py --model all_model --backbone cnn1d --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 ```
 
 ### Channel Attention backbone
 
 ```bash
 # 4. Channel + Euclidean
-python train.py --model all_model --backbone channel --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 5. Channel + Cosine
-python train.py --model all_model --backbone channel --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 6. Channel + Relation
-python train.py --model all_model --backbone channel --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 ```
 
 ### Spatial Attention backbone
 
 ```bash
 # 7. Spatial + Euclidean
-python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 8. Spatial + Cosine
-python train.py --model all_model --backbone spatial --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 9. Spatial + Relation
-python train.py --model all_model --backbone spatial --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 ```
 
 ### CBAM Attention backbone
 
 ```bash
 # 10. CBAM + Euclidean
-python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 11. CBAM + Cosine
-python train.py --model all_model --backbone cbam --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 
 # 12. CBAM + Relation
-python train.py --model all_model --backbone cbam --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
 ```
 
 ## train.py：
@@ -131,8 +131,9 @@ python benchmark.py --model_path runs/protonet_XXXXXX/best_model.pth
 - `in_channels`: 输入通道数
 - `hidden_dim`: 隐藏层维度
 - `feature_dim`: 特征维度
-- `backbone`: 主干网络类型 ('cnn1d' 或 'lstm1d')
-- `distance_type`: 距离度量类型 ('euclidean' 或 'cosine')
+- `backbone`: 主干网络类型 ('cnn1d', 'channel', 'spatial', 'cbam')
+- `distance_type`: 距离度量类型 ('euclidean', 'cosine', 'relation')
+- `dropout`: Dropout比率，用于防止过拟合
 
 ### 训练配置
 - `n_way`: N-way分类数
@@ -144,10 +145,11 @@ python benchmark.py --model_path runs/protonet_XXXXXX/best_model.pth
 - `test_interval`: 测试间隔
 
 ### 优化器配置
-- `lr`: 学习率
+- `lr`: 基础学习率
 - `weight_decay`: 权重衰减
-- `step_size`: 学习率调整步长
-- `gamma`: 学习率衰减因子
+- `scheduler`: 学习率调度器类型 ('cosine' 等)
+- `warmup_epochs`: 预热训练的轮数
+- `warmup_start_lr`: 预热训练的初始学习率
 
 ## 文件说明
 
