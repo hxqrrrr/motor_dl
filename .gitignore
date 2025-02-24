@@ -1,6 +1,6 @@
 data/
 
-*.pth
+# *.pth
 __pycache__/
 *.pyc
 *.pyo
