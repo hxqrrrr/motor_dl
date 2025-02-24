@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from typing import Dict, Optional, Tuple
-
+from models.ProtoNet_attention import AttentiveEncoder
 
 class CNN1D_embed(nn.Module):
     """用于Prototypical Network的1D-CNN嵌入网络
@@ -198,6 +198,27 @@ class AttentionRelationProtoNet(nn.Module):
                 self.in_channels, 
                 self.hidden_dim, 
                 self.feature_dim
+            )
+        elif self.backbone == 'channel':
+            return AttentiveEncoder(
+                self.in_channels,
+                self.hidden_dim,
+                self.feature_dim,
+                attention_type='channel'
+            )
+        elif self.backbone == 'spatial':
+            return AttentiveEncoder(
+                self.in_channels,
+                self.hidden_dim,
+                self.feature_dim,
+                attention_type='spatial'
+            )
+        elif self.backbone == 'cbam':
+            return AttentiveEncoder(
+                self.in_channels,
+                self.hidden_dim,
+                self.feature_dim,
+                attention_type='cbam'
             )
         else:
             raise ValueError(f"Unknown backbone type: {self.backbone}")
