@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='元学习模型训练脚本')
     parser.add_argument('--model', type=str, default='all_model',
-                      help='要训练的模型名称 (protonet 或 protonet_attention 或 relationnet 或 all_model)')
+                      help='要训练的模型名称 ( all_model)')
     parser.add_argument('--pretrained', type=str, default=None,
                       help='预训练模型路径，例如: runs/protonet_20240223_194815/best_model_val_acc_0.8670.pth')
     parser.add_argument('--in_channels', type=int, default=5,
@@ -36,6 +36,9 @@ if __name__ == "__main__":
 
     # 设置超参数
     training_params = {
+
+        'model': args.model,
+
         # 任务参数
         'n_way': 5,
         'n_support': 5,
@@ -116,8 +119,12 @@ if __name__ == "__main__":
     
     # 创建模型
     model = get_model(
-        model_name=args.model,
-        **training_params
+        model_name=training_params['model'],
+        in_channels=training_params['in_channels'],
+        hidden_dim=training_params['hidden_dim'],
+        feature_dim=training_params['feature_dim'],
+        backbone=training_params['backbone'],
+        distance_type=training_params['distance_type']
     ).to(device)
     
     # 初始化训练状态

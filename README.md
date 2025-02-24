@@ -22,52 +22,52 @@
 
 ```bash
 # 1. CNN1D + Euclidean
-python train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 2. CNN1D + Cosine
-python train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 3. CNN1D + Relation
-python train.py --model all_model --backbone cnn1d --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cnn1d --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
 ```
 
 ### Channel Attention backbone
 
 ```bash
 # 4. Channel + Euclidean
-python train.py --model all_model --backbone channel --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 5. Channel + Cosine
-python train.py --model all_model --backbone channel --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 6. Channel + Relation
-python train.py --model all_model --backbone channel --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone channel --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
 ```
 
 ### Spatial Attention backbone
 
 ```bash
 # 7. Spatial + Euclidean
-python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 8. Spatial + Cosine
-python train.py --model all_model --backbone spatial --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 9. Spatial + Relation
-python train.py --model all_model --backbone spatial --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone spatial --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
 ```
 
 ### CBAM Attention backbone
 
 ```bash
 # 10. CBAM + Euclidean
-python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 11. CBAM + Cosine
-python train.py --model all_model --backbone cbam --distance_type cosine --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128
 
 # 12. CBAM + Relation
-python train.py --model all_model --backbone cbam --distance_type relation --in_channels 1 --hidden_dim 64 --feature_dim 128
+python train.py --model all_model --backbone cbam --distance_type relation --in_channels 5 --hidden_dim 64 --feature_dim 128
 ```
 
 ## train.py：
