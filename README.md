@@ -131,9 +131,8 @@ python benchmark.py --model_path runs/protonet_XXXXXX/best_model.pth
 - `in_channels`: 输入通道数
 - `hidden_dim`: 隐藏层维度
 - `feature_dim`: 特征维度
-- `backbone`: 主干网络类型 ('cnn1d', 'channel', 'spatial', 'cbam')
-- `distance_type`: 距离度量类型 ('euclidean', 'cosine', 'relation')
-- `dropout`: Dropout比率，用于防止过拟合
+- `backbone`: 主干网络类型 ('cnn1d' 或 'lstm1d')
+- `distance_type`: 距离度量类型 ('euclidean' 或 'cosine')
 
 ### 训练配置
 - `n_way`: N-way分类数
@@ -145,11 +144,10 @@ python benchmark.py --model_path runs/protonet_XXXXXX/best_model.pth
 - `test_interval`: 测试间隔
 
 ### 优化器配置
-- `lr`: 基础学习率
+- `lr`: 学习率
 - `weight_decay`: 权重衰减
-- `scheduler`: 学习率调度器类型 ('cosine' 等)
-- `warmup_epochs`: 预热训练的轮数
-- `warmup_start_lr`: 预热训练的初始学习率
+- `step_size`: 学习率调整步长
+- `gamma`: 学习率衰减因子
 
 ## 文件说明
 

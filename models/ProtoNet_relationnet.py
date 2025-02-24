@@ -126,25 +126,25 @@ class AttentionRelationModule(nn.Module):
         batch_size = query_features.size(0)
         n_query = query_features.size(1)
         n_support = support_features.size(1)
+        feature_dim = query_features.size(2)
         
         # 对每个batch单独处理
         relation_scores = []
         for i in range(batch_size):
             # 准备当前batch的特征
-            q = query_features[i].unsqueeze(1)  # [n_query, 1, feature_dim]
-            s = support_features[i].unsqueeze(1)  # [n_support, 1, feature_dim]
+            q = query_features[i]  # [n_query, feature_dim]
+            s = support_features[i]  # [n_support, feature_dim]
             
             # 计算注意力权重
             attn_output, _ = self.multihead_attn(
-                q.transpose(0, 1),  # [1, n_query, feature_dim]
-                s.transpose(0, 1),  # [1, n_support, feature_dim]
-                s.transpose(0, 1)   # [1, n_support, feature_dim]
+                q.unsqueeze(1),  # [n_query, 1, feature_dim]
+                s.unsqueeze(1),  # [n_support, 1, feature_dim]
+                s.unsqueeze(1)   # [n_support, 1, feature_dim]
             )
-            attn_output = attn_output.transpose(0, 1)  # [n_query, 1, feature_dim]
             
             # 准备关系网络的输入
-            q_expanded = q.expand(-1, n_support, -1)  # [n_query, n_support, feature_dim]
-            s_expanded = s.expand(n_query, -1, -1)    # [n_query, n_support, feature_dim]
+            q_expanded = q.unsqueeze(1).expand(-1, n_support, -1)  # [n_query, n_support, feature_dim]
+            s_expanded = s.unsqueeze(0).expand(n_query, -1, -1)    # [n_query, n_support, feature_dim]
             
             # 连接特征
             combined = torch.cat([
