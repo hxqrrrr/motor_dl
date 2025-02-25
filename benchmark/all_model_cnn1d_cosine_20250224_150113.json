@@ -1,0 +1,59 @@
+{
+    "model_name": "all_model",
+    "model_path": "runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth",
+    "timestamp": "20250224_221040",
+    "configs": [
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.147629795074463,
+                "accuracy": 0.8168000215291977,
+                "recall": 0.8167999998910925,
+                "f1": 0.8167999948910932
+            }
+        },
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.1391207575798035,
+                "accuracy": 0.823066685795784,
+                "recall": 0.8230666665569238,
+                "f1": 0.8230666615569242
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.5624256217479706,
+                "accuracy": 0.7044167077541351,
+                "recall": 0.699866666573351,
+                "f1": 0.701005759666967
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.5602039170265198,
+                "accuracy": 0.7205000388622284,
+                "recall": 0.7306666665692443,
+                "f1": 0.7218561983225038
+            }
+        }
+    ]
+}

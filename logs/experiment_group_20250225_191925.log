@@ -1,0 +1,300 @@
+实验组开始时间: 2025-02-25 19:19:25.432878
+实验配置:
+[
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 128 --feature_dim 64 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 128 --feature_dim 256 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 256 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 256 --feature_dim 256 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 128 --feature_dim 64 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
+开始时间: 2025-02-25 19:19:25.433995
+==================================================
+
+使用设备: cuda
+使用模型: all_model
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+训练集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 746 个样本
+类别 1: 746 个样本
+类别 2: 746 个样本
+类别 3: 746 个样本
+类别 4: 746 个样本
+类别 5: 746 个样本
+类别 6: 746 个样本
+类别 7: 746 个样本
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+正在检查数据泄露...
+数据集检查通过，未发现数据泄露。
+
+Epoch 1/80
+
+训练:   0%|                                                                  | 0/25 [00:00<?, ?it/s]
+训练:   0%| | 0/25 [00:54<?, ?it/s, loss: 1.367, acc: 0.640, recall: 0.640, f1: 0.640, lr: 1.00e-06]
+训练:   4%| | 1/25 [00:54<21:41, 54.24s/it, loss: 1.367, acc: 0.640, recall: 0.640, f1: 0.640, lr: 1
+训练:   4%| | 1/25 [01:04<21:41, 54.24s/it, loss: 1.353, acc: 0.630, recall: 0.630, f1: 0.630, lr: 1
+训练:   8%| | 2/25 [01:04<10:51, 28.31s/it, loss: 1.353, acc: 0.630, recall: 0.630, f1: 0.630, lr: 1
+训练:   8%| | 2/25 [01:13<10:51, 28.31s/it, loss: 1.375, acc: 0.715, recall: 0.715, f1: 0.715, lr: 1
+训练:  12%| | 3/25 [01:13<07:07, 19.43s/it, loss: 1.375, acc: 0.715, recall: 0.715, f1: 0.715, lr: 1
+训练:  12%| | 3/25 [01:22<07:07, 19.43s/it, loss: 1.351, acc: 0.725, recall: 0.725, f1: 0.725, lr: 1
+训练:  16%|▏| 4/25 [01:22<05:21, 15.31s/it, loss: 1.351, acc: 0.725, recall: 0.725, f1: 0.725, lr: 1
+训练:  16%|▏| 4/25 [01:31<05:21, 15.31s/it, loss: 1.362, acc: 0.685, recall: 0.685, f1: 0.685, lr: 1
+训练:  20%|▏| 5/25 [01:31<04:21, 13.07s/it, loss: 1.362, acc: 0.685, recall: 0.685, f1: 0.685, lr: 1
+训练:  20%|▏| 5/25 [01:41<04:21, 13.07s/it, loss: 1.337, acc: 0.700, recall: 0.700, f1: 0.700, lr: 1
+训练:  24%|▏| 6/25 [01:41<03:46, 11.93s/it, loss: 1.337, acc: 0.700, recall: 0.700, f1: 0.700, lr: 1
+训练:  24%|▏| 6/25 [01:50<03:46, 11.93s/it, loss: 1.352, acc: 0.670, recall: 0.670, f1: 0.670, lr: 1
+训练:  28%|▎| 7/25 [01:50<03:21, 11.17s/it, loss: 1.352, acc: 0.670, recall: 0.670, f1: 0.670, lr: 1
+训练:  28%|▎| 7/25 [02:00<03:21, 11.17s/it, loss: 1.344, acc: 0.680, recall: 0.680, f1: 0.680, lr: 1
+训练:  32%|▎| 8/25 [02:00<03:01, 10.65s/it, loss: 1.344, acc: 0.680, recall: 0.680, f1: 0.680, lr: 1
+训练:  32%|▎| 8/25 [02:10<03:01, 10.65s/it, loss: 1.361, acc: 0.715, recall: 0.715, f1: 0.715, lr: 1
+训练:  36%|▎| 9/25 [02:10<02:46, 10.38s/it, loss: 1.361, acc: 0.715, recall: 0.715, f1: 0.715, lr: 1
+训练:  36%|▎| 9/25 [02:19<02:46, 10.38s/it, loss: 1.341, acc: 0.690, recall: 0.690, f1: 0.690, lr: 1
+训练:  40%|▍| 10/25 [02:19<02:32, 10.18s/it, loss: 1.341, acc: 0.690, recall: 0.690, f1: 0.690, lr: 
+训练:  40%|▍| 10/25 [02:30<02:32, 10.18s/it, loss: 1.331, acc: 0.715, recall: 0.715, f1: 0.715, lr: 
+训练:  44%|▍| 11/25 [02:30<02:23, 10.24s/it, loss: 1.331, acc: 0.715, recall: 0.715, f1: 0.715, lr: 
+训练:  44%|▍| 11/25 [02:40<02:23, 10.24s/it, loss: 1.344, acc: 0.660, recall: 0.660, f1: 0.660, lr: 
+训练:  48%|▍| 12/25 [02:40<02:13, 10.24s/it, loss: 1.344, acc: 0.660, recall: 0.660, f1: 0.660, lr: 
+训练:  48%|▍| 12/25 [02:50<02:13, 10.24s/it, loss: 1.340, acc: 0.705, recall: 0.705, f1: 0.705, lr: 
+训练:  52%|▌| 13/25 [02:50<02:03, 10.25s/it, loss: 1.340, acc: 0.705, recall: 0.705, f1: 0.705, lr: 
+训练:  52%|▌| 13/25 [03:00<02:03, 10.25s/it, loss: 1.337, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  56%|▌| 14/25 [03:00<01:52, 10.21s/it, loss: 1.337, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  56%|▌| 14/25 [03:10<01:52, 10.21s/it, loss: 1.333, acc: 0.715, recall: 0.715, f1: 0.715, lr: 
+训练:  60%|▌| 15/25 [03:10<01:39,  9.96s/it, loss: 1.333, acc: 0.715, recall: 0.715, f1: 0.715, lr: 
+训练:  60%|▌| 15/25 [03:19<01:39,  9.96s/it, loss: 1.343, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  64%|▋| 16/25 [03:19<01:27,  9.71s/it, loss: 1.343, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  64%|▋| 16/25 [03:28<01:27,  9.71s/it, loss: 1.326, acc: 0.675, recall: 0.675, f1: 0.675, lr: 
+训练:  68%|▋| 17/25 [03:28<01:16,  9.51s/it, loss: 1.326, acc: 0.675, recall: 0.675, f1: 0.675, lr: 
+训练:  68%|▋| 17/25 [03:37<01:16,  9.51s/it, loss: 1.331, acc: 0.730, recall: 0.730, f1: 0.730, lr: 
+训练:  72%|▋| 18/25 [03:37<01:05,  9.39s/it, loss: 1.331, acc: 0.730, recall: 0.730, f1: 0.730, lr: 
+训练:  72%|▋| 18/25 [03:46<01:05,  9.39s/it, loss: 1.357, acc: 0.625, recall: 0.625, f1: 0.625, lr: 
+训练:  76%|▊| 19/25 [03:46<00:55,  9.32s/it, loss: 1.357, acc: 0.625, recall: 0.625, f1: 0.625, lr: 
+训练:  76%|▊| 19/25 [03:55<00:55,  9.32s/it, loss: 1.347, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  80%|▊| 20/25 [03:55<00:46,  9.24s/it, loss: 1.347, acc: 0.720, recall: 0.720, f1: 0.720, lr: 
+训练:  80%|▊| 20/25 [04:04<00:46,  9.24s/it, loss: 1.353, acc: 0.675, recall: 0.675, f1: 0.675, lr: 
+训练:  84%|▊| 21/25 [04:04<00:36,  9.19s/it, loss: 1.353, acc: 0.675, recall: 0.675, f1: 0.675, lr: 
+训练:  84%|▊| 21/25 [04:13<00:36,  9.19s/it, loss: 1.338, acc: 0.685, recall: 0.685, f1: 0.685, lr: 
+训练:  88%|▉| 22/25 [04:13<00:27,  9.22s/it, loss: 1.338, acc: 0.685, recall: 0.685, f1: 0.685, lr: 
+训练:  88%|▉| 22/25 [04:23<00:27,  9.22s/it, loss: 1.354, acc: 0.700, recall: 0.700, f1: 0.700, lr: 
+训练:  92%|▉| 23/25 [04:23<00:18,  9.17s/it, loss: 1.354, acc: 0.700, recall: 0.700, f1: 0.700, lr: 
+训练:  92%|▉| 23/25 [04:32<00:18,  9.17s/it, loss: 1.341, acc: 0.640, recall: 0.640, f1: 0.640, lr: 
+训练:  96%|▉| 24/25 [04:32<00:09,  9.14s/it, loss: 1.341, acc: 0.640, recall: 0.640, f1: 0.640, lr: 
+训练:  96%|▉| 24/25 [04:41<00:09,  9.14s/it, loss: 1.331, acc: 0.765, recall: 0.765, f1: 0.765, lr: 
+训练: 100%|█| 25/25 [04:41<00:00,  9.13s/it, loss: 1.331, acc: 0.765, recall: 0.765, f1: 0.765, lr: 
+训练: 100%|█| 25/25 [04:43<00:00, 11.36s/it, loss: 1.331, acc: 0.765, recall: 0.765, f1: 0.765, lr: 
+训练集 - 损失: 1.3460, 准确率: 0.6920, 召回率: 0.6920, F1分数: 0.6920
+
+评估:   0%|                                                                  | 0/25 [00:00<?, ?it/s]
+评估:   0%|               | 0/25 [00:21<?, ?it/s, loss: 1.285, acc: 0.850, recall: 0.850, f1: 0.850]
+评估:   4%|▎      | 1/25 [00:21<08:27, 21.15s/it, loss: 1.285, acc: 0.850, recall: 0.850, f1: 0.850]
+评估:   4%|▎      | 1/25 [00:21<08:27, 21.15s/it, loss: 1.343, acc: 0.765, recall: 0.765, f1: 0.765]
+评估:   8%|▌      | 2/25 [00:21<03:22,  8.79s/it, loss: 1.343, acc: 0.765, recall: 0.765, f1: 0.765]
+评估:   8%|▌      | 2/25 [00:21<03:22,  8.79s/it, loss: 1.354, acc: 0.770, recall: 0.770, f1: 0.770]
+评估:  12%|▊      | 3/25 [00:21<01:47,  4.87s/it, loss: 1.354, acc: 0.770, recall: 0.770, f1: 0.770]
+评估:  12%|▊      | 3/25 [00:21<01:47,  4.87s/it, loss: 1.291, acc: 0.730, recall: 0.730, f1: 0.730]
+评估:  16%|█      | 4/25 [00:21<01:03,  3.04s/it, loss: 1.291, acc: 0.730, recall: 0.730, f1: 0.730]
+评估:  16%|█      | 4/25 [00:22<01:03,  3.04s/it, loss: 1.332, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  20%|█▍     | 5/25 [00:22<00:41,  2.06s/it, loss: 1.332, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  20%|█▍     | 5/25 [00:22<00:41,  2.06s/it, loss: 1.330, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  24%|█▋     | 6/25 [00:22<00:27,  1.45s/it, loss: 1.330, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  24%|█▋     | 6/25 [00:22<00:27,  1.45s/it, loss: 1.365, acc: 0.765, recall: 0.765, f1: 0.765]
+评估:  28%|█▉     | 7/25 [00:22<00:19,  1.08s/it, loss: 1.365, acc: 0.765, recall: 0.765, f1: 0.765]
+评估:  28%|█▉     | 7/25 [00:22<00:19,  1.08s/it, loss: 1.306, acc: 0.780, recall: 0.780, f1: 0.780]
+评估:  32%|██▏    | 8/25 [00:22<00:13,  1.24it/s, loss: 1.306, acc: 0.780, recall: 0.780, f1: 0.780]
+评估:  32%|██▏    | 8/25 [00:23<00:13,  1.24it/s, loss: 1.310, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  36%|██▌    | 9/25 [00:23<00:09,  1.66it/s, loss: 1.310, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  36%|██▌    | 9/25 [00:23<00:09,  1.66it/s, loss: 1.345, acc: 0.660, recall: 0.660, f1: 0.660]
+评估:  40%|██▍   | 10/25 [00:23<00:06,  2.15it/s, loss: 1.345, acc: 0.660, recall: 0.660, f1: 0.660]
+评估:  40%|██▍   | 10/25 [00:23<00:06,  2.15it/s, loss: 1.314, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  44%|██▋   | 11/25 [00:23<00:05,  2.61it/s, loss: 1.314, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  44%|██▋   | 11/25 [00:23<00:05,  2.61it/s, loss: 1.333, acc: 0.635, recall: 0.635, f1: 0.635]
+评估:  48%|██▉   | 12/25 [00:23<00:04,  3.13it/s, loss: 1.333, acc: 0.635, recall: 0.635, f1: 0.635]
+评估:  48%|██▉   | 12/25 [00:23<00:04,  3.13it/s, loss: 1.325, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  52%|███   | 13/25 [00:23<00:03,  3.58it/s, loss: 1.325, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  52%|███   | 13/25 [00:23<00:03,  3.58it/s, loss: 1.296, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  56%|███▎  | 14/25 [00:23<00:02,  4.10it/s, loss: 1.296, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  56%|███▎  | 14/25 [00:24<00:02,  4.10it/s, loss: 1.317, acc: 0.730, recall: 0.730, f1: 0.730]
+评估:  60%|███▌  | 15/25 [00:24<00:02,  4.54it/s, loss: 1.317, acc: 0.730, recall: 0.730, f1: 0.730]
+评估:  60%|███▌  | 15/25 [00:24<00:02,  4.54it/s, loss: 1.299, acc: 0.755, recall: 0.755, f1: 0.755]
+评估:  64%|███▊  | 16/25 [00:24<00:01,  5.01it/s, loss: 1.299, acc: 0.755, recall: 0.755, f1: 0.755]
+评估:  64%|███▊  | 16/25 [00:24<00:01,  5.01it/s, loss: 1.327, acc: 0.705, recall: 0.705, f1: 0.705]
+评估:  68%|████  | 17/25 [00:24<00:01,  5.40it/s, loss: 1.327, acc: 0.705, recall: 0.705, f1: 0.705]
+评估:  68%|████  | 17/25 [00:24<00:01,  5.40it/s, loss: 1.353, acc: 0.675, recall: 0.675, f1: 0.675]
+评估:  72%|████▎ | 18/25 [00:24<00:01,  5.54it/s, loss: 1.353, acc: 0.675, recall: 0.675, f1: 0.675]
+评估:  72%|████▎ | 18/25 [00:24<00:01,  5.54it/s, loss: 1.358, acc: 0.615, recall: 0.615, f1: 0.615]
+评估:  76%|████▌ | 19/25 [00:24<00:01,  5.17it/s, loss: 1.358, acc: 0.615, recall: 0.615, f1: 0.615]
+评估:  76%|████▌ | 19/25 [00:24<00:01,  5.17it/s, loss: 1.327, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  80%|████▊ | 20/25 [00:24<00:00,  5.45it/s, loss: 1.327, acc: 0.775, recall: 0.775, f1: 0.775]
+评估:  80%|████▊ | 20/25 [00:25<00:00,  5.45it/s, loss: 1.341, acc: 0.675, recall: 0.675, f1: 0.675]
+评估:  84%|█████ | 21/25 [00:25<00:00,  5.68it/s, loss: 1.341, acc: 0.675, recall: 0.675, f1: 0.675]
+评估:  84%|█████ | 21/25 [00:25<00:00,  5.68it/s, loss: 1.326, acc: 0.755, recall: 0.755, f1: 0.755]
+评估:  88%|█████▎| 22/25 [00:25<00:00,  5.81it/s, loss: 1.326, acc: 0.755, recall: 0.755, f1: 0.755]
+评估:  88%|█████▎| 22/25 [00:25<00:00,  5.81it/s, loss: 1.306, acc: 0.745, recall: 0.745, f1: 0.745]
+评估:  92%|█████▌| 23/25 [00:25<00:00,  6.02it/s, loss: 1.306, acc: 0.745, recall: 0.745, f1: 0.745]
+评估:  92%|█████▌| 23/25 [00:25<00:00,  6.02it/s, loss: 1.317, acc: 0.805, recall: 0.805, f1: 0.805]
+评估:  96%|█████▊| 24/25 [00:25<00:00,  6.43it/s, loss: 1.317, acc: 0.805, recall: 0.805, f1: 0.805]
+评估:  96%|█████▊| 24/25 [00:25<00:00,  6.43it/s, loss: 1.327, acc: 0.790, recall: 0.790, f1: 0.790]
+评估: 100%|██████| 25/25 [00:25<00:00,  6.74it/s, loss: 1.327, acc: 0.790, recall: 0.790, f1: 0.790]
+评估: 100%|██████| 25/25 [00:26<00:00,  1.06s/it, loss: 1.327, acc: 0.790, recall: 0.790, f1: 0.790]
+验证集 - 损失: 1.3251, 准确率: 0.7466, 召回率: 0.7466, F1分数: 0.7466
+保存最佳模型，验证准确率: 0.7466, 召回率: 0.7466, F1分数: 0.7466
+
+Epoch 2/80
+
+训练:   0%|                                                                  | 0/25 [00:00<?, ?it/s]
+训练:   0%|                                                                  | 0/25 [00:04<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\train.py", line 223, in <module>
+    train_loss, train_acc, train_recall, train_f1 = train_epoch(model, train_loader, optimizer, device)
+  File "C:\Users\hxq11\Desktop\Project\code\utils\utils.py", line 45, in train_epoch
+    for batch_idx, (support_x, support_y, query_x, query_y) in enumerate(pbar):
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\tqdm\std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\utils\data\dataloader.py", line 484, in __iter__
+    return self._get_iterator()
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\utils\data\dataloader.py", line 415, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\utils\data\dataloader.py", line 1138, in __init__
+    w.start()
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\context.py", line 327, in _Popen
+    return Popen(process_obj)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\popen_spawn_win32.py", line 93, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+OSError: [Errno 22] Invalid argument
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\spawn.py", line 116, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\multiprocessing\spawn.py", line 126, in _main
+    self = reduction.pickle.load(from_parent)
+_pickle.UnpicklingError: pickle data was truncated
+
+==================================================
+命令执行完成时间: 2025-02-25 19:24:58.965622
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 128 --feature_dim 256 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
+开始时间: 2025-02-25 19:25:00.982956
+==================================================
+

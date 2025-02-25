@@ -16,6 +16,15 @@ import numpy as np
 from utils.utils import check_data_leakage, train_epoch, evaluate, get_model
 
 
+def load_model_params(json_path):
+    """从 JSON 文件中提取模型参数"""
+    with open(json_path, 'r', encoding='utf-8') as f:
+        params = json.load(f)
+    hidden_dim = params.get('hidden_dim', 64)  # 默认值为64
+    feature_dim = params.get('feature_dim', 128)  # 默认值为128
+    return hidden_dim, feature_dim
+
+
 if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='ProtoNet Benchmark')
@@ -67,14 +76,21 @@ if __name__ == "__main__":
         {'n_way': 8, 'n_support': 8, 'n_query': 15},
     ]
     
+    # 从模型路径中提取 training_params.json 的路径
+    training_params_path = os.path.join(os.path.dirname(args.model_path), 'training_params.json')
+
+    # 加载模型参数
+    hidden_dim, feature_dim = load_model_params(training_params_path)
+
     # 创建并加载模型
     model = get_model(
         model_name=args.model_name,
         in_channels=5,
-        hidden_dim=64,
-        feature_dim=128,
-        backbone='cnn1d',
-        distance_type='euclidean'
+        hidden_dim=hidden_dim,  # 使用从 JSON 中读取的值
+        feature_dim=feature_dim,  # 使用从 JSON 中读取的值
+        backbone='cbam',
+        distance_type='euclidean',
+        dropout=0.3
     ).to(device)
     
     # 加载预训练模型
