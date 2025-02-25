@@ -1,0 +1,221 @@
+实验组开始时间: 2025-02-24 22:07:58.729697
+实验配置:
+[
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_channel_cosine_20250224_162136/best_model_val_acc_0.7894.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_channel_euclidean_20250224_185049/best_model_val_acc_0.8546.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_cosine_20250224_153348/best_model_val_acc_0.8632.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_euclidean_20250224_181335/best_model_val_acc_0.8694.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/protonet_20250219_143734/best_model_0.8965.pth\""
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth"
+开始时间: 2025-02-24 22:07:58.731155
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:04.444785
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth"
+开始时间: 2025-02-24 22:08:06.452282
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:11.998663
+返回码: 1
+==================================================
+

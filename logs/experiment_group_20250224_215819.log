@@ -1,0 +1,809 @@
+实验组开始时间: 2025-02-24 21:58:19.813010
+实验配置:
+[
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/Scripts/tensorboard.exe\" --logdir=runs --port=6006 --host=localhost"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_cbam_euclidean_20250224_205957\best_model_val_acc_0.8616.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_channel_cosine_20250224_162136\best_model_val_acc_0.7894.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_channel_euclidean_20250224_185049\best_model_val_acc_0.8546.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_cnn1d_cosine_20250224_150113\best_model_val_acc_0.8185.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_cnn1d_cosine_20250224_153348\best_model_val_acc_0.8632.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_cnn1d_euclidean_20250224_181335\best_model_val_acc_0.8694.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\u0007ll_model_spatial_cosine_20250224_164030\best_model_val_acc_0.8272.pth"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path runs\\protonet_20250219_143734\best_model_0.8965.pth"
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/Scripts/tensorboard.exe" --logdir=runs --port=6006 --host=localhost
+开始时间: 2025-02-24 21:58:19.815008
+==================================================
+
+TensorFlow installation not found - running with reduced feature set.
+I0224 21:58:21.710638 25808 plugin.py:429] Monitor runs begin
+E0224 21:58:22.023960 31592 program.py:300] TensorBoard could not bind to port 6006, it was already in use
+ERROR: TensorBoard could not bind to port 6006, it was already in use
+
+==================================================
+命令执行完成时间: 2025-02-24 21:58:22.247165
+返回码: 4294967295
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth
+开始时间: 2025-02-24 21:58:24.248938
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 82, in <module>
+    model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Missing key(s) in state_dict: "encoder.conv1.0.weight", "encoder.conv1.0.bias", "encoder.conv1.1.weight", "encoder.conv1.1.bias", "encoder.conv1.1.running_mean", "encoder.conv1.1.running_var", "encoder.conv2.0.weight", "encoder.conv2.0.bias", "encoder.conv2.1.weight", "encoder.conv2.1.bias", "encoder.conv2.1.running_mean", "encoder.conv2.1.running_var", "encoder.conv3.0.weight", "encoder.conv3.0.bias", "encoder.conv3.1.weight", "encoder.conv3.1.bias", "encoder.conv3.1.running_mean", "encoder.conv3.1.running_var", "encoder.feature_layer.0.weight", "encoder.feature_layer.0.bias", "encoder.feature_layer.1.weight", "encoder.feature_layer.1.bias", "encoder.feature_layer.1.running_mean", "encoder.feature_layer.1.running_var". 
+	Unexpected key(s) in state_dict: "encoder.backbone.conv1.0.weight", "encoder.backbone.conv1.0.bias", "encoder.backbone.conv1.1.weight", "encoder.backbone.conv1.1.bias", "encoder.backbone.conv1.1.running_mean", "encoder.backbone.conv1.1.running_var", "encoder.backbone.conv1.1.num_batches_tracked", "encoder.backbone.conv2.0.weight", "encoder.backbone.conv2.0.bias", "encoder.backbone.conv2.1.weight", "encoder.backbone.conv2.1.bias", "encoder.backbone.conv2.1.running_mean", "encoder.backbone.conv2.1.running_var", "encoder.backbone.conv2.1.num_batches_tracked", "encoder.backbone.conv3.0.weight", "encoder.backbone.conv3.0.bias", "encoder.backbone.conv3.1.weight", "encoder.backbone.conv3.1.bias", "encoder.backbone.conv3.1.running_mean", "encoder.backbone.conv3.1.running_var", "encoder.backbone.conv3.1.num_batches_tracked", "encoder.backbone.feature_layer.0.weight", "encoder.backbone.feature_layer.0.bias", "encoder.backbone.feature_layer.1.weight", "encoder.backbone.feature_layer.1.bias", "encoder.backbone.feature_layer.1.running_mean", "encoder.backbone.feature_layer.1.running_var", "encoder.backbone.feature_layer.1.num_batches_tracked", "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+
+==================================================
+命令执行完成时间: 2025-02-24 21:58:30.371965
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_cbam_euclidean_20250224_205957est_model_val_acc_0.8616.pth
+开始时间: 2025-02-24 21:58:32.379191
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_cbam_euclidean_20250224_205957\x08est_model_val_acc_0.8616.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:58:38.452559
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_channel_cosine_20250224_162136est_model_val_acc_0.7894.pth
+开始时间: 2025-02-24 21:58:40.466632
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_channel_cosine_20250224_162136\x08est_model_val_acc_0.7894.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:58:47.252209
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_channel_euclidean_20250224_185049est_model_val_acc_0.8546.pth
+开始时间: 2025-02-24 21:58:49.268684
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_channel_euclidean_20250224_185049\x08est_model_val_acc_0.8546.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:58:55.513727
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_cnn1d_cosine_20250224_150113est_model_val_acc_0.8185.pth
+开始时间: 2025-02-24 21:58:57.527694
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_cnn1d_cosine_20250224_150113\x08est_model_val_acc_0.8185.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:59:03.876196
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_cnn1d_cosine_20250224_153348est_model_val_acc_0.8632.pth
+开始时间: 2025-02-24 21:59:05.876760
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_cnn1d_cosine_20250224_153348\x08est_model_val_acc_0.8632.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:59:11.377417
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_cnn1d_euclidean_20250224_181335est_model_val_acc_0.8694.pth
+开始时间: 2025-02-24 21:59:13.390765
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_cnn1d_euclidean_20250224_181335\x08est_model_val_acc_0.8694.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:59:19.001267
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runsll_model_spatial_cosine_20250224_164030est_model_val_acc_0.8272.pth
+开始时间: 2025-02-24 21:59:21.015303
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\x07ll_model_spatial_cosine_20250224_164030\x08est_model_val_acc_0.8272.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:59:26.770175
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path runs\protonet_20250219_143734est_model_0.8965.pth
+开始时间: 2025-02-24 21:59:28.784823
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 81, in <module>
+    checkpoint = torch.load(args.model_path)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+OSError: [Errno 22] Invalid argument: 'runs\\protonet_20250219_143734\x08est_model_0.8965.pth'
+
+==================================================
+命令执行完成时间: 2025-02-24 21:59:34.496010
+返回码: 1
+==================================================
+
+
+==================================================
+实验组结束时间: 2025-02-24 21:59:34.499010

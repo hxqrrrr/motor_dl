@@ -1,0 +1,1905 @@
+实验组开始时间: 2025-02-24 22:07:48.609613
+实验配置:
+[
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_channel_cosine_20250224_162136/best_model_val_acc_0.7894.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_channel_euclidean_20250224_185049/best_model_val_acc_0.8546.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_cosine_20250224_153348/best_model_val_acc_0.8632.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_cnn1d_euclidean_20250224_181335/best_model_val_acc_0.8694.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth\""
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" benchmark.py --model_name all_model --model_path \"runs/protonet_20250219_143734/best_model_0.8965.pth\""
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth"
+开始时间: 2025-02-24 22:07:48.609613
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:07:54.379830
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth"
+开始时间: 2025-02-24 22:07:56.394481
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:02.234150
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_channel_cosine_20250224_162136/best_model_val_acc_0.7894.pth"
+开始时间: 2025-02-24 22:08:04.245431
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.mlp.0.weight", "encoder.attention.mlp.0.bias", "encoder.attention.mlp.2.weight", "encoder.attention.mlp.2.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:09.634922
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_channel_euclidean_20250224_185049/best_model_val_acc_0.8546.pth"
+开始时间: 2025-02-24 22:08:11.649291
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Unexpected key(s) in state_dict: "encoder.attention.mlp.0.weight", "encoder.attention.mlp.0.bias", "encoder.attention.mlp.2.weight", "encoder.attention.mlp.2.bias". 
+	size mismatch for encoder.conv2.0.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([128, 64, 3]).
+	size mismatch for encoder.conv2.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv2.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for encoder.conv3.0.weight: copying a param with shape torch.Size([128, 64, 3]) from checkpoint, the shape in current model is torch.Size([256, 128, 3]).
+	size mismatch for encoder.conv3.0.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.weight: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_mean: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.conv3.1.running_var: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for encoder.feature_layer.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 256]).
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:17.522246
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth"
+开始时间: 2025-02-24 22:08:19.528808
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+
+=== ProtoNet Benchmark 测试结果 ===
+模型名称: all_model
+模型路径: runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth
+
+各配置测试结果：
+
+5-way 5-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 0.936, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:   1%|      | 1/100 [00:00<01:13,  1.34it/s, loss: 0.936, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:   1%|      | 1/100 [00:00<01:13,  1.34it/s, loss: 1.057, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   1%|      | 1/100 [00:00<01:13,  1.34it/s, loss: 1.034, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:   1%|      | 1/100 [00:00<01:13,  1.34it/s, loss: 1.006, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:   1%|      | 1/100 [00:00<01:13,  1.34it/s, loss: 0.996, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   5%|▎     | 5/100 [00:00<00:12,  7.53it/s, loss: 0.996, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   5%|▎     | 5/100 [00:00<00:12,  7.53it/s, loss: 0.925, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:   5%|▎     | 5/100 [00:00<00:12,  7.53it/s, loss: 1.076, acc: 0.600, recall: 0.600, f1: 0.600]
+评估:   5%|▎     | 5/100 [00:00<00:12,  7.53it/s, loss: 1.046, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:   5%|▎     | 5/100 [00:00<00:12,  7.53it/s, loss: 1.075, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   9%|▌     | 9/100 [00:00<00:06, 13.56it/s, loss: 1.075, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   9%|▌     | 9/100 [00:00<00:06, 13.56it/s, loss: 1.167, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:   9%|▌     | 9/100 [00:00<00:06, 13.56it/s, loss: 1.079, acc: 0.613, recall: 0.613, f1: 0.613]
+评估:   9%|▌     | 9/100 [00:01<00:06, 13.56it/s, loss: 1.033, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:   9%|▌     | 9/100 [00:01<00:06, 13.56it/s, loss: 1.068, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 1.068, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 0.965, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 1.099, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 1.004, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 0.977, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  13%|▋    | 13/100 [00:01<00:04, 19.05it/s, loss: 1.087, acc: 0.667, recall: 0.667, f1: 0.667]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.087, acc: 0.667, recall: 0.667, f1: 0.667]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.178, acc: 0.680, recall: 0.680, f1: 0.680]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.241, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.010, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.080, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  18%|▉    | 18/100 [00:01<00:03, 24.94it/s, loss: 1.209, acc: 0.653, recall: 0.653, f1: 0.653]
+评估:  23%|█▏   | 23/100 [00:01<00:02, 29.27it/s, loss: 1.209, acc: 0.653, recall: 0.653, f1: 0.653]
+评估:  23%|█▏   | 23/100 [00:01<00:02, 29.27it/s, loss: 0.951, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  23%|█▏   | 23/100 [00:01<00:02, 29.27it/s, loss: 1.043, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  23%|█▏   | 23/100 [00:01<00:02, 29.27it/s, loss: 1.074, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  23%|█▏   | 23/100 [00:01<00:02, 29.27it/s, loss: 1.159, acc: 0.547, recall: 0.547, f1: 0.547]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 1.159, acc: 0.547, recall: 0.547, f1: 0.547]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 0.976, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 1.077, acc: 0.680, recall: 0.680, f1: 0.680]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 1.110, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 1.051, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 31.65it/s, loss: 1.054, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  32%|█▌   | 32/100 [00:01<00:01, 34.52it/s, loss: 1.054, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  32%|█▌   | 32/100 [00:01<00:01, 34.52it/s, loss: 1.082, acc: 0.653, recall: 0.653, f1: 0.653]
+评估:  32%|█▌   | 32/100 [00:01<00:01, 34.52it/s, loss: 1.050, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  32%|█▌   | 32/100 [00:01<00:01, 34.52it/s, loss: 1.041, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  32%|█▌   | 32/100 [00:01<00:01, 34.52it/s, loss: 1.041, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 35.82it/s, loss: 1.041, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 35.82it/s, loss: 0.979, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 35.82it/s, loss: 1.041, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 35.82it/s, loss: 0.985, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 35.82it/s, loss: 0.981, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  40%|██   | 40/100 [00:01<00:01, 36.71it/s, loss: 0.981, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  40%|██   | 40/100 [00:01<00:01, 36.71it/s, loss: 1.106, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  40%|██   | 40/100 [00:01<00:01, 36.71it/s, loss: 1.019, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  40%|██   | 40/100 [00:01<00:01, 36.71it/s, loss: 1.141, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  40%|██   | 40/100 [00:01<00:01, 36.71it/s, loss: 0.980, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 36.55it/s, loss: 0.980, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 36.55it/s, loss: 1.081, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 36.55it/s, loss: 1.135, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 36.55it/s, loss: 1.039, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 36.55it/s, loss: 1.040, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 36.12it/s, loss: 1.040, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 36.12it/s, loss: 1.000, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 36.12it/s, loss: 1.023, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  48%|██▍  | 48/100 [00:02<00:01, 36.12it/s, loss: 1.115, acc: 0.560, recall: 0.560, f1: 0.560]
+评估:  48%|██▍  | 48/100 [00:02<00:01, 36.12it/s, loss: 1.036, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  48%|██▍  | 48/100 [00:02<00:01, 36.12it/s, loss: 1.123, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  53%|██▋  | 53/100 [00:02<00:01, 37.52it/s, loss: 1.123, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  53%|██▋  | 53/100 [00:02<00:01, 37.52it/s, loss: 1.046, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  53%|██▋  | 53/100 [00:02<00:01, 37.52it/s, loss: 1.148, acc: 0.640, recall: 0.640, f1: 0.640]
+评估:  53%|██▋  | 53/100 [00:02<00:01, 37.52it/s, loss: 1.016, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  53%|██▋  | 53/100 [00:02<00:01, 37.52it/s, loss: 0.985, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 38.13it/s, loss: 0.985, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 38.13it/s, loss: 1.061, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 38.13it/s, loss: 1.001, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 38.13it/s, loss: 1.083, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 38.13it/s, loss: 1.032, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 1.032, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 1.078, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 1.052, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 1.099, acc: 0.587, recall: 0.587, f1: 0.587]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 0.986, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  61%|███  | 61/100 [00:02<00:01, 38.29it/s, loss: 1.001, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  66%|███▎ | 66/100 [00:02<00:00, 38.99it/s, loss: 1.001, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  66%|███▎ | 66/100 [00:02<00:00, 38.99it/s, loss: 1.124, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  66%|███▎ | 66/100 [00:02<00:00, 38.99it/s, loss: 0.978, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  66%|███▎ | 66/100 [00:02<00:00, 38.99it/s, loss: 1.024, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  66%|███▎ | 66/100 [00:02<00:00, 38.99it/s, loss: 1.002, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 1.002, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 0.996, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 1.040, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 1.123, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 1.072, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 39.17it/s, loss: 1.102, acc: 0.653, recall: 0.653, f1: 0.653]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 1.102, acc: 0.653, recall: 0.653, f1: 0.653]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 1.035, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 1.148, acc: 0.627, recall: 0.627, f1: 0.627]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 1.066, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 0.974, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 39.91it/s, loss: 1.011, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 1.011, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 1.173, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 0.990, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 1.190, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 0.991, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  80%|████ | 80/100 [00:02<00:00, 40.44it/s, loss: 1.034, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 1.034, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 0.958, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 0.979, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 1.039, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 1.054, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  85%|████▎| 85/100 [00:02<00:00, 40.68it/s, loss: 0.979, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:  90%|████▌| 90/100 [00:02<00:00, 40.62it/s, loss: 0.979, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:  90%|████▌| 90/100 [00:03<00:00, 40.62it/s, loss: 1.115, acc: 0.680, recall: 0.680, f1: 0.680]
+评估:  90%|████▌| 90/100 [00:03<00:00, 40.62it/s, loss: 1.016, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  90%|████▌| 90/100 [00:03<00:00, 40.62it/s, loss: 1.007, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  90%|████▌| 90/100 [00:03<00:00, 40.62it/s, loss: 1.149, acc: 0.667, recall: 0.667, f1: 0.667]
+评估:  90%|████▌| 90/100 [00:03<00:00, 40.62it/s, loss: 1.034, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  95%|████▊| 95/100 [00:03<00:00, 38.93it/s, loss: 1.034, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  95%|████▊| 95/100 [00:03<00:00, 38.93it/s, loss: 1.149, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  95%|████▊| 95/100 [00:03<00:00, 38.93it/s, loss: 1.014, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  95%|████▊| 95/100 [00:03<00:00, 38.93it/s, loss: 0.970, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  95%|████▊| 95/100 [00:03<00:00, 38.93it/s, loss: 1.129, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  99%|████▉| 99/100 [00:03<00:00, 38.99it/s, loss: 1.129, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  99%|████▉| 99/100 [00:03<00:00, 38.99it/s, loss: 0.996, acc: 0.853, recall: 0.853, f1: 0.853]
+评估: 100%|████| 100/100 [00:03<00:00, 30.75it/s, loss: 0.996, acc: 0.853, recall: 0.853, f1: 0.853]
+平均损失: 1.0513
+平均准确率: 0.7928
+平均召回率: 0.7928
+平均F1分数: 0.7928
+--------------------------------------------------
+
+5-way 8-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.106, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.004, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.010, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.036, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   4%|▏     | 4/100 [00:00<00:02, 35.44it/s, loss: 1.036, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   4%|▏     | 4/100 [00:00<00:02, 35.44it/s, loss: 1.018, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:   4%|▏     | 4/100 [00:00<00:02, 35.44it/s, loss: 1.060, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:   4%|▏     | 4/100 [00:00<00:02, 35.44it/s, loss: 1.020, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   4%|▏     | 4/100 [00:00<00:02, 35.44it/s, loss: 1.009, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:   8%|▍     | 8/100 [00:00<00:02, 36.01it/s, loss: 1.009, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:   8%|▍     | 8/100 [00:00<00:02, 36.01it/s, loss: 0.984, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:   8%|▍     | 8/100 [00:00<00:02, 36.01it/s, loss: 0.987, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:   8%|▍     | 8/100 [00:00<00:02, 36.01it/s, loss: 1.072, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:   8%|▍     | 8/100 [00:00<00:02, 36.01it/s, loss: 0.970, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  12%|▌    | 12/100 [00:00<00:02, 36.14it/s, loss: 0.970, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  12%|▌    | 12/100 [00:00<00:02, 36.14it/s, loss: 1.060, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  12%|▌    | 12/100 [00:00<00:02, 36.14it/s, loss: 1.056, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  12%|▌    | 12/100 [00:00<00:02, 36.14it/s, loss: 1.064, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  12%|▌    | 12/100 [00:00<00:02, 36.14it/s, loss: 1.096, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  16%|▊    | 16/100 [00:00<00:02, 36.24it/s, loss: 1.096, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  16%|▊    | 16/100 [00:00<00:02, 36.24it/s, loss: 1.142, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  16%|▊    | 16/100 [00:00<00:02, 36.24it/s, loss: 1.037, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  16%|▊    | 16/100 [00:00<00:02, 36.24it/s, loss: 1.108, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  16%|▊    | 16/100 [00:00<00:02, 36.24it/s, loss: 1.001, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  20%|█    | 20/100 [00:00<00:02, 36.54it/s, loss: 1.001, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  20%|█    | 20/100 [00:00<00:02, 36.54it/s, loss: 1.058, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  20%|█    | 20/100 [00:00<00:02, 36.54it/s, loss: 0.997, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  20%|█    | 20/100 [00:00<00:02, 36.54it/s, loss: 0.964, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  20%|█    | 20/100 [00:00<00:02, 36.54it/s, loss: 1.112, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 36.29it/s, loss: 1.112, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 36.29it/s, loss: 1.067, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 36.29it/s, loss: 1.039, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 36.29it/s, loss: 0.969, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 36.29it/s, loss: 0.988, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 36.81it/s, loss: 0.988, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 36.81it/s, loss: 1.013, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 36.81it/s, loss: 1.117, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 36.81it/s, loss: 1.171, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 36.81it/s, loss: 0.970, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  32%|█▌   | 32/100 [00:00<00:01, 36.70it/s, loss: 0.970, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  32%|█▌   | 32/100 [00:00<00:01, 36.70it/s, loss: 1.075, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  32%|█▌   | 32/100 [00:00<00:01, 36.70it/s, loss: 0.969, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  32%|█▌   | 32/100 [00:00<00:01, 36.70it/s, loss: 0.991, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  32%|█▌   | 32/100 [00:00<00:01, 36.70it/s, loss: 1.017, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  36%|█▊   | 36/100 [00:00<00:01, 36.63it/s, loss: 1.017, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 36.63it/s, loss: 0.957, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 36.63it/s, loss: 0.949, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 36.63it/s, loss: 1.104, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 36.63it/s, loss: 0.977, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.99it/s, loss: 0.977, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.99it/s, loss: 1.055, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.99it/s, loss: 0.987, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.99it/s, loss: 1.100, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.99it/s, loss: 1.060, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 34.41it/s, loss: 1.060, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 34.41it/s, loss: 0.985, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 34.41it/s, loss: 0.953, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 34.41it/s, loss: 0.933, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 34.41it/s, loss: 1.055, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 34.40it/s, loss: 1.055, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 34.40it/s, loss: 1.063, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 34.40it/s, loss: 1.049, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 34.40it/s, loss: 0.940, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 34.40it/s, loss: 0.972, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 34.61it/s, loss: 0.972, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 34.61it/s, loss: 1.020, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 34.61it/s, loss: 1.053, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 34.61it/s, loss: 1.168, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 34.61it/s, loss: 1.001, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 35.44it/s, loss: 1.001, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 35.44it/s, loss: 0.932, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 35.44it/s, loss: 1.037, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 35.44it/s, loss: 1.040, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 35.44it/s, loss: 1.031, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  60%|███  | 60/100 [00:01<00:01, 35.50it/s, loss: 1.031, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  60%|███  | 60/100 [00:01<00:01, 35.50it/s, loss: 0.991, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  60%|███  | 60/100 [00:01<00:01, 35.50it/s, loss: 0.999, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  60%|███  | 60/100 [00:01<00:01, 35.50it/s, loss: 1.011, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  60%|███  | 60/100 [00:01<00:01, 35.50it/s, loss: 1.068, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 35.66it/s, loss: 1.068, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 35.66it/s, loss: 1.084, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 35.66it/s, loss: 1.088, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 35.66it/s, loss: 1.027, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 35.66it/s, loss: 1.028, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  68%|███▍ | 68/100 [00:01<00:00, 35.81it/s, loss: 1.028, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  68%|███▍ | 68/100 [00:01<00:00, 35.81it/s, loss: 1.018, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  68%|███▍ | 68/100 [00:01<00:00, 35.81it/s, loss: 1.033, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  68%|███▍ | 68/100 [00:01<00:00, 35.81it/s, loss: 0.973, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 35.81it/s, loss: 0.964, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 35.95it/s, loss: 0.964, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 35.95it/s, loss: 1.146, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 35.95it/s, loss: 1.069, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 35.95it/s, loss: 0.946, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 35.95it/s, loss: 1.012, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 36.28it/s, loss: 1.012, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 36.28it/s, loss: 1.165, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 36.28it/s, loss: 1.034, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 36.28it/s, loss: 1.004, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 36.28it/s, loss: 1.117, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  80%|████ | 80/100 [00:02<00:00, 36.39it/s, loss: 1.117, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  80%|████ | 80/100 [00:02<00:00, 36.39it/s, loss: 0.971, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  80%|████ | 80/100 [00:02<00:00, 36.39it/s, loss: 1.001, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  80%|████ | 80/100 [00:02<00:00, 36.39it/s, loss: 1.002, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  80%|████ | 80/100 [00:02<00:00, 36.39it/s, loss: 1.026, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  84%|████▏| 84/100 [00:02<00:00, 36.06it/s, loss: 1.026, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  84%|████▏| 84/100 [00:02<00:00, 36.06it/s, loss: 1.000, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  84%|████▏| 84/100 [00:02<00:00, 36.06it/s, loss: 1.026, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  84%|████▏| 84/100 [00:02<00:00, 36.06it/s, loss: 1.027, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  84%|████▏| 84/100 [00:02<00:00, 36.06it/s, loss: 1.044, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  88%|████▍| 88/100 [00:02<00:00, 35.15it/s, loss: 1.044, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  88%|████▍| 88/100 [00:02<00:00, 35.15it/s, loss: 1.082, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  88%|████▍| 88/100 [00:02<00:00, 35.15it/s, loss: 0.970, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  88%|████▍| 88/100 [00:02<00:00, 35.15it/s, loss: 1.096, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  88%|████▍| 88/100 [00:02<00:00, 35.15it/s, loss: 0.947, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.47it/s, loss: 0.947, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.47it/s, loss: 0.995, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.47it/s, loss: 1.057, acc: 0.707, recall: 0.707, f1: 0.707]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.47it/s, loss: 1.031, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.47it/s, loss: 1.042, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.48it/s, loss: 1.042, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.48it/s, loss: 1.140, acc: 0.667, recall: 0.667, f1: 0.667]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.48it/s, loss: 1.100, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.48it/s, loss: 0.986, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.48it/s, loss: 0.973, acc: 0.827, recall: 0.827, f1: 0.827]
+评估: 100%|████| 100/100 [00:02<00:00, 34.93it/s, loss: 0.973, acc: 0.827, recall: 0.827, f1: 0.827]
+评估: 100%|████| 100/100 [00:02<00:00, 35.54it/s, loss: 0.973, acc: 0.827, recall: 0.827, f1: 0.827]
+平均损失: 1.0307
+平均准确率: 0.8244
+平均召回率: 0.8244
+平均F1分数: 0.8244
+--------------------------------------------------
+
+8-way 5-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.446, acc: 0.708, recall: 0.587, f1: 0.652]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.463, acc: 0.725, recall: 0.787, f1: 0.766]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.460, acc: 0.650, recall: 0.640, f1: 0.632]
+评估:   3%|▏     | 3/100 [00:00<00:03, 24.69it/s, loss: 1.460, acc: 0.650, recall: 0.640, f1: 0.632]
+评估:   3%|▏     | 3/100 [00:00<00:03, 24.69it/s, loss: 1.470, acc: 0.700, recall: 0.627, f1: 0.644]
+评估:   3%|▏     | 3/100 [00:00<00:03, 24.69it/s, loss: 1.438, acc: 0.750, recall: 0.853, f1: 0.831]
+评估:   3%|▏     | 3/100 [00:00<00:03, 24.69it/s, loss: 1.419, acc: 0.708, recall: 0.587, f1: 0.682]
+评估:   6%|▎     | 6/100 [00:00<00:03, 25.67it/s, loss: 1.419, acc: 0.708, recall: 0.587, f1: 0.682]
+评估:   6%|▎     | 6/100 [00:00<00:03, 25.67it/s, loss: 1.406, acc: 0.750, recall: 0.707, f1: 0.736]
+评估:   6%|▎     | 6/100 [00:00<00:03, 25.67it/s, loss: 1.456, acc: 0.700, recall: 0.613, f1: 0.626]
+评估:   6%|▎     | 6/100 [00:00<00:03, 25.67it/s, loss: 1.438, acc: 0.742, recall: 0.693, f1: 0.693]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.23it/s, loss: 1.438, acc: 0.742, recall: 0.693, f1: 0.693]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.23it/s, loss: 1.424, acc: 0.692, recall: 0.760, f1: 0.699]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.23it/s, loss: 1.464, acc: 0.717, recall: 0.720, f1: 0.761]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.23it/s, loss: 1.408, acc: 0.733, recall: 0.827, f1: 0.765]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.44it/s, loss: 1.408, acc: 0.733, recall: 0.827, f1: 0.765]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.44it/s, loss: 1.468, acc: 0.608, recall: 0.680, f1: 0.626]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.44it/s, loss: 1.443, acc: 0.658, recall: 0.600, f1: 0.629]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.44it/s, loss: 1.426, acc: 0.758, recall: 0.733, f1: 0.743]
+评估:  15%|▊    | 15/100 [00:00<00:03, 26.39it/s, loss: 1.426, acc: 0.758, recall: 0.733, f1: 0.743]
+评估:  15%|▊    | 15/100 [00:00<00:03, 26.39it/s, loss: 1.406, acc: 0.717, recall: 0.813, f1: 0.758]
+评估:  15%|▊    | 15/100 [00:00<00:03, 26.39it/s, loss: 1.426, acc: 0.675, recall: 0.707, f1: 0.671]
+评估:  15%|▊    | 15/100 [00:00<00:03, 26.39it/s, loss: 1.456, acc: 0.675, recall: 0.547, f1: 0.621]
+评估:  18%|▉    | 18/100 [00:00<00:03, 26.53it/s, loss: 1.456, acc: 0.675, recall: 0.547, f1: 0.621]
+评估:  18%|▉    | 18/100 [00:00<00:03, 26.53it/s, loss: 1.419, acc: 0.683, recall: 0.680, f1: 0.680]
+评估:  18%|▉    | 18/100 [00:00<00:03, 26.53it/s, loss: 1.439, acc: 0.675, recall: 0.760, f1: 0.760]
+评估:  18%|▉    | 18/100 [00:00<00:03, 26.53it/s, loss: 1.456, acc: 0.758, recall: 0.653, f1: 0.695]
+评估:  21%|█    | 21/100 [00:00<00:03, 26.32it/s, loss: 1.456, acc: 0.758, recall: 0.653, f1: 0.695]
+评估:  21%|█    | 21/100 [00:00<00:03, 26.32it/s, loss: 1.450, acc: 0.675, recall: 0.733, f1: 0.710]
+评估:  21%|█    | 21/100 [00:00<00:03, 26.32it/s, loss: 1.468, acc: 0.658, recall: 0.680, f1: 0.680]
+评估:  21%|█    | 21/100 [00:00<00:03, 26.32it/s, loss: 1.432, acc: 0.683, recall: 0.853, f1: 0.780]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 26.38it/s, loss: 1.432, acc: 0.683, recall: 0.853, f1: 0.780]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 26.38it/s, loss: 1.430, acc: 0.692, recall: 0.613, f1: 0.643]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 26.38it/s, loss: 1.468, acc: 0.675, recall: 0.800, f1: 0.800]
+评估:  24%|█▏   | 24/100 [00:01<00:02, 26.38it/s, loss: 1.424, acc: 0.717, recall: 0.800, f1: 0.774]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 26.75it/s, loss: 1.424, acc: 0.717, recall: 0.800, f1: 0.774]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 26.75it/s, loss: 1.415, acc: 0.800, recall: 0.707, f1: 0.757]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 26.75it/s, loss: 1.452, acc: 0.692, recall: 0.667, f1: 0.654]
+评估:  27%|█▎   | 27/100 [00:01<00:02, 26.75it/s, loss: 1.430, acc: 0.783, recall: 0.693, f1: 0.712]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 26.53it/s, loss: 1.430, acc: 0.783, recall: 0.693, f1: 0.712]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 26.53it/s, loss: 1.447, acc: 0.683, recall: 0.787, f1: 0.733]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 26.53it/s, loss: 1.431, acc: 0.733, recall: 0.813, f1: 0.762]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 26.53it/s, loss: 1.431, acc: 0.733, recall: 0.707, f1: 0.721]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 26.71it/s, loss: 1.431, acc: 0.733, recall: 0.707, f1: 0.721]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 26.71it/s, loss: 1.426, acc: 0.717, recall: 0.653, f1: 0.695]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 26.71it/s, loss: 1.429, acc: 0.733, recall: 0.707, f1: 0.752]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 26.71it/s, loss: 1.390, acc: 0.742, recall: 0.840, f1: 0.778]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 26.98it/s, loss: 1.390, acc: 0.742, recall: 0.840, f1: 0.778]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 26.98it/s, loss: 1.438, acc: 0.658, recall: 0.813, f1: 0.731]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 26.98it/s, loss: 1.456, acc: 0.642, recall: 0.600, f1: 0.625]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 26.98it/s, loss: 1.444, acc: 0.683, recall: 0.800, f1: 0.732]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 27.18it/s, loss: 1.444, acc: 0.683, recall: 0.800, f1: 0.732]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 27.18it/s, loss: 1.462, acc: 0.600, recall: 0.613, f1: 0.622]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 27.18it/s, loss: 1.408, acc: 0.608, recall: 0.613, f1: 0.626]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 27.18it/s, loss: 1.441, acc: 0.733, recall: 0.720, f1: 0.701]
+评估:  42%|██   | 42/100 [00:01<00:02, 27.08it/s, loss: 1.441, acc: 0.733, recall: 0.720, f1: 0.701]
+评估:  42%|██   | 42/100 [00:01<00:02, 27.08it/s, loss: 1.422, acc: 0.717, recall: 0.613, f1: 0.657]
+评估:  42%|██   | 42/100 [00:01<00:02, 27.08it/s, loss: 1.436, acc: 0.617, recall: 0.667, f1: 0.662]
+评估:  42%|██   | 42/100 [00:01<00:02, 27.08it/s, loss: 1.415, acc: 0.725, recall: 0.707, f1: 0.711]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 27.01it/s, loss: 1.415, acc: 0.725, recall: 0.707, f1: 0.711]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 27.01it/s, loss: 1.463, acc: 0.750, recall: 0.787, f1: 0.761]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 27.01it/s, loss: 1.420, acc: 0.725, recall: 0.653, f1: 0.715]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 27.01it/s, loss: 1.449, acc: 0.750, recall: 0.747, f1: 0.778]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 26.56it/s, loss: 1.449, acc: 0.750, recall: 0.747, f1: 0.778]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 26.56it/s, loss: 1.468, acc: 0.608, recall: 0.627, f1: 0.635]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 26.56it/s, loss: 1.451, acc: 0.700, recall: 0.720, f1: 0.715]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 26.56it/s, loss: 1.439, acc: 0.683, recall: 0.693, f1: 0.671]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 26.76it/s, loss: 1.439, acc: 0.683, recall: 0.693, f1: 0.671]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 26.76it/s, loss: 1.420, acc: 0.675, recall: 0.547, f1: 0.612]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 26.76it/s, loss: 1.443, acc: 0.708, recall: 0.680, f1: 0.708]
+评估:  51%|██▌  | 51/100 [00:02<00:01, 26.76it/s, loss: 1.443, acc: 0.717, recall: 0.627, f1: 0.657]
+评估:  54%|██▋  | 54/100 [00:02<00:01, 26.63it/s, loss: 1.443, acc: 0.717, recall: 0.627, f1: 0.657]
+评估:  54%|██▋  | 54/100 [00:02<00:01, 26.63it/s, loss: 1.440, acc: 0.758, recall: 0.707, f1: 0.711]
+评估:  54%|██▋  | 54/100 [00:02<00:01, 26.63it/s, loss: 1.411, acc: 0.700, recall: 0.707, f1: 0.675]
+评估:  54%|██▋  | 54/100 [00:02<00:01, 26.63it/s, loss: 1.472, acc: 0.617, recall: 0.693, f1: 0.654]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 26.84it/s, loss: 1.472, acc: 0.617, recall: 0.693, f1: 0.654]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 26.84it/s, loss: 1.418, acc: 0.717, recall: 0.800, f1: 0.736]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 26.84it/s, loss: 1.420, acc: 0.650, recall: 0.547, f1: 0.562]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 26.84it/s, loss: 1.437, acc: 0.725, recall: 0.773, f1: 0.716]
+评估:  60%|███  | 60/100 [00:02<00:01, 26.49it/s, loss: 1.437, acc: 0.725, recall: 0.773, f1: 0.716]
+评估:  60%|███  | 60/100 [00:02<00:01, 26.49it/s, loss: 1.450, acc: 0.742, recall: 0.787, f1: 0.756]
+评估:  60%|███  | 60/100 [00:02<00:01, 26.49it/s, loss: 1.440, acc: 0.683, recall: 0.707, f1: 0.671]
+评估:  60%|███  | 60/100 [00:02<00:01, 26.49it/s, loss: 1.429, acc: 0.708, recall: 0.747, f1: 0.709]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 26.77it/s, loss: 1.429, acc: 0.708, recall: 0.747, f1: 0.709]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 26.77it/s, loss: 1.436, acc: 0.675, recall: 0.680, f1: 0.654]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 26.77it/s, loss: 1.439, acc: 0.708, recall: 0.640, f1: 0.676]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 26.77it/s, loss: 1.439, acc: 0.683, recall: 0.800, f1: 0.741]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 27.06it/s, loss: 1.439, acc: 0.683, recall: 0.800, f1: 0.741]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 27.06it/s, loss: 1.445, acc: 0.683, recall: 0.747, f1: 0.723]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 27.06it/s, loss: 1.431, acc: 0.725, recall: 0.707, f1: 0.716]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 27.06it/s, loss: 1.433, acc: 0.733, recall: 0.867, f1: 0.778]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 26.95it/s, loss: 1.433, acc: 0.733, recall: 0.867, f1: 0.778]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 26.95it/s, loss: 1.423, acc: 0.767, recall: 0.773, f1: 0.758]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 26.95it/s, loss: 1.446, acc: 0.575, recall: 0.707, f1: 0.631]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 26.95it/s, loss: 1.440, acc: 0.667, recall: 0.613, f1: 0.639]
+评估:  72%|███▌ | 72/100 [00:02<00:01, 26.91it/s, loss: 1.440, acc: 0.667, recall: 0.613, f1: 0.639]
+评估:  72%|███▌ | 72/100 [00:02<00:01, 26.91it/s, loss: 1.455, acc: 0.675, recall: 0.587, f1: 0.615]
+评估:  72%|███▌ | 72/100 [00:02<00:01, 26.91it/s, loss: 1.450, acc: 0.717, recall: 0.720, f1: 0.725]
+评估:  72%|███▌ | 72/100 [00:02<00:01, 26.91it/s, loss: 1.450, acc: 0.600, recall: 0.627, f1: 0.595]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 27.10it/s, loss: 1.450, acc: 0.600, recall: 0.627, f1: 0.595]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 27.10it/s, loss: 1.436, acc: 0.717, recall: 0.627, f1: 0.648]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 27.10it/s, loss: 1.440, acc: 0.683, recall: 0.733, f1: 0.692]
+评估:  75%|███▊ | 75/100 [00:02<00:00, 27.10it/s, loss: 1.447, acc: 0.725, recall: 0.720, f1: 0.706]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 27.33it/s, loss: 1.447, acc: 0.725, recall: 0.720, f1: 0.706]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 27.33it/s, loss: 1.440, acc: 0.650, recall: 0.627, f1: 0.644]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 27.33it/s, loss: 1.450, acc: 0.642, recall: 0.573, f1: 0.593]
+评估:  78%|███▉ | 78/100 [00:03<00:00, 27.33it/s, loss: 1.438, acc: 0.742, recall: 0.693, f1: 0.712]
+评估:  81%|████ | 81/100 [00:03<00:00, 27.00it/s, loss: 1.438, acc: 0.742, recall: 0.693, f1: 0.712]
+评估:  81%|████ | 81/100 [00:03<00:00, 27.00it/s, loss: 1.422, acc: 0.717, recall: 0.813, f1: 0.744]
+评估:  81%|████ | 81/100 [00:03<00:00, 27.00it/s, loss: 1.440, acc: 0.700, recall: 0.667, f1: 0.685]
+评估:  81%|████ | 81/100 [00:03<00:00, 27.00it/s, loss: 1.441, acc: 0.683, recall: 0.653, f1: 0.690]
+评估:  84%|████▏| 84/100 [00:03<00:00, 26.95it/s, loss: 1.441, acc: 0.683, recall: 0.653, f1: 0.690]
+评估:  84%|████▏| 84/100 [00:03<00:00, 26.95it/s, loss: 1.427, acc: 0.733, recall: 0.627, f1: 0.653]
+评估:  84%|████▏| 84/100 [00:03<00:00, 26.95it/s, loss: 1.446, acc: 0.683, recall: 0.693, f1: 0.662]
+评估:  84%|████▏| 84/100 [00:03<00:00, 26.95it/s, loss: 1.417, acc: 0.742, recall: 0.773, f1: 0.748]
+评估:  87%|████▎| 87/100 [00:03<00:00, 27.09it/s, loss: 1.417, acc: 0.742, recall: 0.773, f1: 0.748]
+评估:  87%|████▎| 87/100 [00:03<00:00, 27.09it/s, loss: 1.445, acc: 0.725, recall: 0.773, f1: 0.748]
+评估:  87%|████▎| 87/100 [00:03<00:00, 27.09it/s, loss: 1.453, acc: 0.700, recall: 0.640, f1: 0.636]
+评估:  87%|████▎| 87/100 [00:03<00:00, 27.09it/s, loss: 1.444, acc: 0.733, recall: 0.613, f1: 0.648]
+评估:  90%|████▌| 90/100 [00:03<00:00, 26.05it/s, loss: 1.444, acc: 0.733, recall: 0.613, f1: 0.648]
+评估:  90%|████▌| 90/100 [00:03<00:00, 26.05it/s, loss: 1.449, acc: 0.683, recall: 0.613, f1: 0.672]
+评估:  90%|████▌| 90/100 [00:03<00:00, 26.05it/s, loss: 1.451, acc: 0.700, recall: 0.853, f1: 0.790]
+评估:  90%|████▌| 90/100 [00:03<00:00, 26.05it/s, loss: 1.404, acc: 0.792, recall: 0.827, f1: 0.810]
+评估:  93%|████▋| 93/100 [00:03<00:00, 26.02it/s, loss: 1.404, acc: 0.792, recall: 0.827, f1: 0.810]
+评估:  93%|████▋| 93/100 [00:03<00:00, 26.02it/s, loss: 1.437, acc: 0.658, recall: 0.667, f1: 0.685]
+评估:  93%|████▋| 93/100 [00:03<00:00, 26.02it/s, loss: 1.455, acc: 0.683, recall: 0.680, f1: 0.713]
+评估:  93%|████▋| 93/100 [00:03<00:00, 26.02it/s, loss: 1.456, acc: 0.675, recall: 0.573, f1: 0.597]
+评估:  96%|████▊| 96/100 [00:03<00:00, 25.64it/s, loss: 1.456, acc: 0.675, recall: 0.573, f1: 0.597]
+评估:  96%|████▊| 96/100 [00:03<00:00, 25.64it/s, loss: 1.471, acc: 0.625, recall: 0.600, f1: 0.647]
+评估:  96%|████▊| 96/100 [00:03<00:00, 25.64it/s, loss: 1.487, acc: 0.708, recall: 0.693, f1: 0.698]
+评估:  96%|████▊| 96/100 [00:03<00:00, 25.64it/s, loss: 1.439, acc: 0.717, recall: 0.573, f1: 0.619]
+评估:  99%|████▉| 99/100 [00:03<00:00, 25.93it/s, loss: 1.439, acc: 0.717, recall: 0.573, f1: 0.619]
+评估:  99%|████▉| 99/100 [00:03<00:00, 25.93it/s, loss: 1.423, acc: 0.708, recall: 0.693, f1: 0.703]
+评估: 100%|████| 100/100 [00:03<00:00, 26.59it/s, loss: 1.423, acc: 0.708, recall: 0.693, f1: 0.703]
+平均损失: 1.4393
+平均准确率: 0.6983
+平均召回率: 0.6979
+平均F1分数: 0.6953
+--------------------------------------------------
+
+8-way 8-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.443, acc: 0.625, recall: 0.613, f1: 0.613]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.440, acc: 0.683, recall: 0.707, f1: 0.679]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.426, acc: 0.675, recall: 0.587, f1: 0.607]
+评估:   3%|▏     | 3/100 [00:00<00:04, 23.05it/s, loss: 1.426, acc: 0.675, recall: 0.587, f1: 0.607]
+评估:   3%|▏     | 3/100 [00:00<00:04, 23.05it/s, loss: 1.451, acc: 0.717, recall: 0.707, f1: 0.707]
+评估:   3%|▏     | 3/100 [00:00<00:04, 23.05it/s, loss: 1.426, acc: 0.675, recall: 0.787, f1: 0.698]
+评估:   3%|▏     | 3/100 [00:00<00:04, 23.05it/s, loss: 1.419, acc: 0.692, recall: 0.613, f1: 0.676]
+评估:   6%|▎     | 6/100 [00:00<00:03, 23.77it/s, loss: 1.419, acc: 0.692, recall: 0.613, f1: 0.676]
+评估:   6%|▎     | 6/100 [00:00<00:03, 23.77it/s, loss: 1.443, acc: 0.733, recall: 0.707, f1: 0.697]
+评估:   6%|▎     | 6/100 [00:00<00:03, 23.77it/s, loss: 1.444, acc: 0.650, recall: 0.573, f1: 0.623]
+评估:   6%|▎     | 6/100 [00:00<00:03, 23.77it/s, loss: 1.416, acc: 0.717, recall: 0.627, f1: 0.635]
+评估:   9%|▌     | 9/100 [00:00<00:03, 24.14it/s, loss: 1.416, acc: 0.717, recall: 0.627, f1: 0.635]
+评估:   9%|▌     | 9/100 [00:00<00:03, 24.14it/s, loss: 1.454, acc: 0.675, recall: 0.667, f1: 0.658]
+评估:   9%|▌     | 9/100 [00:00<00:03, 24.14it/s, loss: 1.439, acc: 0.692, recall: 0.747, f1: 0.691]
+评估:   9%|▌     | 9/100 [00:00<00:03, 24.14it/s, loss: 1.450, acc: 0.717, recall: 0.653, f1: 0.681]
+评估:  12%|▌    | 12/100 [00:00<00:03, 23.89it/s, loss: 1.450, acc: 0.717, recall: 0.653, f1: 0.681]
+评估:  12%|▌    | 12/100 [00:00<00:03, 23.89it/s, loss: 1.418, acc: 0.775, recall: 0.880, f1: 0.805]
+评估:  12%|▌    | 12/100 [00:00<00:03, 23.89it/s, loss: 1.441, acc: 0.717, recall: 0.600, f1: 0.677]
+评估:  12%|▌    | 12/100 [00:00<00:03, 23.89it/s, loss: 1.448, acc: 0.725, recall: 0.653, f1: 0.695]
+评估:  15%|▊    | 15/100 [00:00<00:03, 23.90it/s, loss: 1.448, acc: 0.725, recall: 0.653, f1: 0.695]
+评估:  15%|▊    | 15/100 [00:00<00:03, 23.90it/s, loss: 1.425, acc: 0.700, recall: 0.747, f1: 0.718]
+评估:  15%|▊    | 15/100 [00:00<00:03, 23.90it/s, loss: 1.421, acc: 0.725, recall: 0.667, f1: 0.685]
+评估:  15%|▊    | 15/100 [00:00<00:03, 23.90it/s, loss: 1.436, acc: 0.642, recall: 0.507, f1: 0.559]
+评估:  18%|▉    | 18/100 [00:00<00:03, 23.88it/s, loss: 1.436, acc: 0.642, recall: 0.507, f1: 0.559]
+评估:  18%|▉    | 18/100 [00:00<00:03, 23.88it/s, loss: 1.442, acc: 0.675, recall: 0.627, f1: 0.644]
+评估:  18%|▉    | 18/100 [00:00<00:03, 23.88it/s, loss: 1.453, acc: 0.683, recall: 0.773, f1: 0.734]
+评估:  18%|▉    | 18/100 [00:00<00:03, 23.88it/s, loss: 1.438, acc: 0.683, recall: 0.507, f1: 0.580]
+评估:  21%|█    | 21/100 [00:00<00:03, 22.92it/s, loss: 1.438, acc: 0.683, recall: 0.507, f1: 0.580]
+评估:  21%|█    | 21/100 [00:00<00:03, 22.92it/s, loss: 1.445, acc: 0.733, recall: 0.747, f1: 0.767]
+评估:  21%|█    | 21/100 [00:00<00:03, 22.92it/s, loss: 1.424, acc: 0.733, recall: 0.653, f1: 0.700]
+评估:  21%|█    | 21/100 [00:01<00:03, 22.92it/s, loss: 1.442, acc: 0.708, recall: 0.627, f1: 0.639]
+评估:  24%|█▏   | 24/100 [00:01<00:03, 22.38it/s, loss: 1.442, acc: 0.708, recall: 0.627, f1: 0.639]
+评估:  24%|█▏   | 24/100 [00:01<00:03, 22.38it/s, loss: 1.441, acc: 0.675, recall: 0.800, f1: 0.745]
+评估:  24%|█▏   | 24/100 [00:01<00:03, 22.38it/s, loss: 1.424, acc: 0.750, recall: 0.760, f1: 0.750]
+评估:  24%|█▏   | 24/100 [00:01<00:03, 22.38it/s, loss: 1.444, acc: 0.675, recall: 0.587, f1: 0.642]
+评估:  27%|█▎   | 27/100 [00:01<00:03, 23.09it/s, loss: 1.444, acc: 0.675, recall: 0.587, f1: 0.642]
+评估:  27%|█▎   | 27/100 [00:01<00:03, 23.09it/s, loss: 1.443, acc: 0.650, recall: 0.573, f1: 0.632]
+评估:  27%|█▎   | 27/100 [00:01<00:03, 23.09it/s, loss: 1.423, acc: 0.750, recall: 0.653, f1: 0.695]
+评估:  27%|█▎   | 27/100 [00:01<00:03, 23.09it/s, loss: 1.448, acc: 0.650, recall: 0.693, f1: 0.693]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 23.55it/s, loss: 1.448, acc: 0.650, recall: 0.693, f1: 0.693]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 23.55it/s, loss: 1.422, acc: 0.742, recall: 0.787, f1: 0.747]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 23.55it/s, loss: 1.441, acc: 0.683, recall: 0.720, f1: 0.675]
+评估:  30%|█▌   | 30/100 [00:01<00:02, 23.55it/s, loss: 1.468, acc: 0.717, recall: 0.667, f1: 0.654]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 23.83it/s, loss: 1.468, acc: 0.717, recall: 0.667, f1: 0.654]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 23.83it/s, loss: 1.442, acc: 0.750, recall: 0.640, f1: 0.696]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 23.83it/s, loss: 1.429, acc: 0.733, recall: 0.640, f1: 0.711]
+评估:  33%|█▋   | 33/100 [00:01<00:02, 23.83it/s, loss: 1.429, acc: 0.692, recall: 0.707, f1: 0.731]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 23.89it/s, loss: 1.429, acc: 0.692, recall: 0.707, f1: 0.731]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 23.89it/s, loss: 1.441, acc: 0.717, recall: 0.800, f1: 0.779]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 23.89it/s, loss: 1.462, acc: 0.650, recall: 0.613, f1: 0.630]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 23.89it/s, loss: 1.444, acc: 0.692, recall: 0.720, f1: 0.715]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 23.90it/s, loss: 1.444, acc: 0.692, recall: 0.720, f1: 0.715]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 23.90it/s, loss: 1.420, acc: 0.750, recall: 0.693, f1: 0.748]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 23.90it/s, loss: 1.398, acc: 0.767, recall: 0.907, f1: 0.829]
+评估:  39%|█▉   | 39/100 [00:01<00:02, 23.90it/s, loss: 1.436, acc: 0.767, recall: 0.733, f1: 0.738]
+评估:  42%|██   | 42/100 [00:01<00:02, 23.82it/s, loss: 1.436, acc: 0.767, recall: 0.733, f1: 0.738]
+评估:  42%|██   | 42/100 [00:01<00:02, 23.82it/s, loss: 1.437, acc: 0.733, recall: 0.627, f1: 0.671]
+评估:  42%|██   | 42/100 [00:01<00:02, 23.82it/s, loss: 1.443, acc: 0.658, recall: 0.840, f1: 0.741]
+评估:  42%|██   | 42/100 [00:01<00:02, 23.82it/s, loss: 1.434, acc: 0.750, recall: 0.840, f1: 0.818]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 24.11it/s, loss: 1.434, acc: 0.750, recall: 0.840, f1: 0.818]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 24.11it/s, loss: 1.446, acc: 0.667, recall: 0.827, f1: 0.729]
+评估:  45%|██▎  | 45/100 [00:01<00:02, 24.11it/s, loss: 1.424, acc: 0.717, recall: 0.773, f1: 0.744]
+评估:  45%|██▎  | 45/100 [00:02<00:02, 24.11it/s, loss: 1.424, acc: 0.683, recall: 0.693, f1: 0.722]
+评估:  48%|██▍  | 48/100 [00:02<00:02, 23.93it/s, loss: 1.424, acc: 0.683, recall: 0.693, f1: 0.722]
+评估:  48%|██▍  | 48/100 [00:02<00:02, 23.93it/s, loss: 1.446, acc: 0.700, recall: 0.640, f1: 0.667]
+评估:  48%|██▍  | 48/100 [00:02<00:02, 23.93it/s, loss: 1.430, acc: 0.742, recall: 0.760, f1: 0.722]
+评估:  48%|██▍  | 48/100 [00:02<00:02, 23.93it/s, loss: 1.443, acc: 0.708, recall: 0.613, f1: 0.692]
+评估:  51%|██▌  | 51/100 [00:02<00:02, 23.68it/s, loss: 1.443, acc: 0.708, recall: 0.613, f1: 0.692]
+评估:  51%|██▌  | 51/100 [00:02<00:02, 23.68it/s, loss: 1.412, acc: 0.675, recall: 0.747, f1: 0.709]
+评估:  51%|██▌  | 51/100 [00:02<00:02, 23.68it/s, loss: 1.458, acc: 0.600, recall: 0.427, f1: 0.467]
+评估:  51%|██▌  | 51/100 [00:02<00:02, 23.68it/s, loss: 1.439, acc: 0.683, recall: 0.693, f1: 0.680]
+评估:  54%|██▋  | 54/100 [00:02<00:02, 22.80it/s, loss: 1.439, acc: 0.683, recall: 0.693, f1: 0.680]
+评估:  54%|██▋  | 54/100 [00:02<00:02, 22.80it/s, loss: 1.447, acc: 0.742, recall: 0.667, f1: 0.671]
+评估:  54%|██▋  | 54/100 [00:02<00:02, 22.80it/s, loss: 1.436, acc: 0.700, recall: 0.880, f1: 0.805]
+评估:  54%|██▋  | 54/100 [00:02<00:02, 22.80it/s, loss: 1.435, acc: 0.708, recall: 0.787, f1: 0.787]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 22.71it/s, loss: 1.435, acc: 0.708, recall: 0.787, f1: 0.787]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 22.71it/s, loss: 1.430, acc: 0.683, recall: 0.640, f1: 0.676]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 22.71it/s, loss: 1.453, acc: 0.658, recall: 0.613, f1: 0.676]
+评估:  57%|██▊  | 57/100 [00:02<00:01, 22.71it/s, loss: 1.445, acc: 0.767, recall: 0.787, f1: 0.803]
+评估:  60%|███  | 60/100 [00:02<00:01, 23.11it/s, loss: 1.445, acc: 0.767, recall: 0.787, f1: 0.803]
+评估:  60%|███  | 60/100 [00:02<00:01, 23.11it/s, loss: 1.436, acc: 0.675, recall: 0.760, f1: 0.704]
+评估:  60%|███  | 60/100 [00:02<00:01, 23.11it/s, loss: 1.444, acc: 0.658, recall: 0.667, f1: 0.658]
+评估:  60%|███  | 60/100 [00:02<00:01, 23.11it/s, loss: 1.456, acc: 0.692, recall: 0.613, f1: 0.662]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 23.56it/s, loss: 1.456, acc: 0.692, recall: 0.613, f1: 0.662]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 23.56it/s, loss: 1.450, acc: 0.683, recall: 0.653, f1: 0.662]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 23.56it/s, loss: 1.435, acc: 0.692, recall: 0.640, f1: 0.658]
+评估:  63%|███▏ | 63/100 [00:02<00:01, 23.56it/s, loss: 1.427, acc: 0.742, recall: 0.907, f1: 0.795]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 23.82it/s, loss: 1.427, acc: 0.742, recall: 0.907, f1: 0.795]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 23.82it/s, loss: 1.437, acc: 0.667, recall: 0.760, f1: 0.722]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 23.82it/s, loss: 1.446, acc: 0.658, recall: 0.480, f1: 0.558]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 23.82it/s, loss: 1.458, acc: 0.600, recall: 0.627, f1: 0.623]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 23.90it/s, loss: 1.458, acc: 0.600, recall: 0.627, f1: 0.623]
+评估:  69%|███▍ | 69/100 [00:02<00:01, 23.90it/s, loss: 1.439, acc: 0.717, recall: 0.640, f1: 0.667]
+评估:  69%|███▍ | 69/100 [00:03<00:01, 23.90it/s, loss: 1.424, acc: 0.725, recall: 0.813, f1: 0.787]
+评估:  69%|███▍ | 69/100 [00:03<00:01, 23.90it/s, loss: 1.449, acc: 0.658, recall: 0.733, f1: 0.659]
+评估:  72%|███▌ | 72/100 [00:03<00:01, 23.76it/s, loss: 1.449, acc: 0.658, recall: 0.733, f1: 0.659]
+评估:  72%|███▌ | 72/100 [00:03<00:01, 23.76it/s, loss: 1.460, acc: 0.700, recall: 0.640, f1: 0.662]
+评估:  72%|███▌ | 72/100 [00:03<00:01, 23.76it/s, loss: 1.440, acc: 0.750, recall: 0.720, f1: 0.715]
+评估:  72%|███▌ | 72/100 [00:03<00:01, 23.76it/s, loss: 1.441, acc: 0.658, recall: 0.613, f1: 0.617]
+评估:  75%|███▊ | 75/100 [00:03<00:01, 23.64it/s, loss: 1.441, acc: 0.658, recall: 0.613, f1: 0.617]
+评估:  75%|███▊ | 75/100 [00:03<00:01, 23.64it/s, loss: 1.432, acc: 0.742, recall: 0.800, f1: 0.779]
+评估:  75%|███▊ | 75/100 [00:03<00:01, 23.64it/s, loss: 1.447, acc: 0.792, recall: 0.813, f1: 0.813]
+评估:  75%|███▊ | 75/100 [00:03<00:01, 23.64it/s, loss: 1.436, acc: 0.692, recall: 0.707, f1: 0.702]
+评估:  78%|███▉ | 78/100 [00:03<00:00, 23.59it/s, loss: 1.436, acc: 0.692, recall: 0.707, f1: 0.702]
+评估:  78%|███▉ | 78/100 [00:03<00:00, 23.59it/s, loss: 1.441, acc: 0.750, recall: 0.627, f1: 0.681]
+评估:  78%|███▉ | 78/100 [00:03<00:00, 23.59it/s, loss: 1.468, acc: 0.675, recall: 0.707, f1: 0.693]
+评估:  78%|███▉ | 78/100 [00:03<00:00, 23.59it/s, loss: 1.447, acc: 0.742, recall: 0.613, f1: 0.697]
+评估:  81%|████ | 81/100 [00:03<00:00, 23.41it/s, loss: 1.447, acc: 0.742, recall: 0.613, f1: 0.697]
+评估:  81%|████ | 81/100 [00:03<00:00, 23.41it/s, loss: 1.446, acc: 0.658, recall: 0.693, f1: 0.658]
+评估:  81%|████ | 81/100 [00:03<00:00, 23.41it/s, loss: 1.428, acc: 0.642, recall: 0.493, f1: 0.548]
+评估:  81%|████ | 81/100 [00:03<00:00, 23.41it/s, loss: 1.415, acc: 0.758, recall: 0.773, f1: 0.753]
+评估:  84%|████▏| 84/100 [00:03<00:00, 23.33it/s, loss: 1.415, acc: 0.758, recall: 0.773, f1: 0.753]
+评估:  84%|████▏| 84/100 [00:03<00:00, 23.33it/s, loss: 1.446, acc: 0.742, recall: 0.640, f1: 0.716]
+评估:  84%|████▏| 84/100 [00:03<00:00, 23.33it/s, loss: 1.431, acc: 0.742, recall: 0.773, f1: 0.758]
+评估:  84%|████▏| 84/100 [00:03<00:00, 23.33it/s, loss: 1.448, acc: 0.675, recall: 0.800, f1: 0.755]
+评估:  87%|████▎| 87/100 [00:03<00:00, 23.31it/s, loss: 1.448, acc: 0.675, recall: 0.800, f1: 0.755]
+评估:  87%|████▎| 87/100 [00:03<00:00, 23.31it/s, loss: 1.424, acc: 0.700, recall: 0.587, f1: 0.647]
+评估:  87%|████▎| 87/100 [00:03<00:00, 23.31it/s, loss: 1.459, acc: 0.692, recall: 0.787, f1: 0.771]
+评估:  87%|████▎| 87/100 [00:03<00:00, 23.31it/s, loss: 1.427, acc: 0.642, recall: 0.573, f1: 0.593]
+评估:  90%|████▌| 90/100 [00:03<00:00, 23.24it/s, loss: 1.427, acc: 0.642, recall: 0.573, f1: 0.593]
+评估:  90%|████▌| 90/100 [00:03<00:00, 23.24it/s, loss: 1.430, acc: 0.750, recall: 0.813, f1: 0.758]
+评估:  90%|████▌| 90/100 [00:03<00:00, 23.24it/s, loss: 1.449, acc: 0.733, recall: 0.827, f1: 0.770]
+评估:  90%|████▌| 90/100 [00:03<00:00, 23.24it/s, loss: 1.427, acc: 0.758, recall: 0.680, f1: 0.723]
+评估:  93%|████▋| 93/100 [00:03<00:00, 22.91it/s, loss: 1.427, acc: 0.758, recall: 0.680, f1: 0.723]
+评估:  93%|████▋| 93/100 [00:04<00:00, 22.91it/s, loss: 1.440, acc: 0.683, recall: 0.653, f1: 0.695]
+评估:  93%|████▋| 93/100 [00:04<00:00, 22.91it/s, loss: 1.475, acc: 0.667, recall: 0.773, f1: 0.725]
+评估:  93%|████▋| 93/100 [00:04<00:00, 22.91it/s, loss: 1.441, acc: 0.700, recall: 0.693, f1: 0.689]
+评估:  96%|████▊| 96/100 [00:04<00:00, 23.26it/s, loss: 1.441, acc: 0.700, recall: 0.693, f1: 0.689]
+评估:  96%|████▊| 96/100 [00:04<00:00, 23.26it/s, loss: 1.462, acc: 0.692, recall: 0.613, f1: 0.652]
+评估:  96%|████▊| 96/100 [00:04<00:00, 23.26it/s, loss: 1.418, acc: 0.658, recall: 0.707, f1: 0.702]
+评估:  96%|████▊| 96/100 [00:04<00:00, 23.26it/s, loss: 1.447, acc: 0.608, recall: 0.533, f1: 0.537]
+评估:  99%|████▉| 99/100 [00:04<00:00, 23.16it/s, loss: 1.447, acc: 0.608, recall: 0.533, f1: 0.537]
+评估:  99%|████▉| 99/100 [00:04<00:00, 23.16it/s, loss: 1.430, acc: 0.775, recall: 0.867, f1: 0.807]
+评估: 100%|████| 100/100 [00:04<00:00, 23.46it/s, loss: 1.430, acc: 0.775, recall: 0.867, f1: 0.807]
+平均损失: 1.4388
+平均准确率: 0.7008
+平均召回率: 0.6933
+平均F1分数: 0.6953
+--------------------------------------------------
+
+结果已保存到: benchmark\all_model_cnn1d_cosine_20250224_150113.json
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:39.340607
+返回码: 0
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_cosine_20250224_153348/best_model_val_acc_0.8632.pth"
+开始时间: 2025-02-24 22:08:41.354823
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Missing key(s) in state_dict: "encoder.backbone.conv1.0.weight", "encoder.backbone.conv1.0.bias", "encoder.backbone.conv1.1.weight", "encoder.backbone.conv1.1.bias", "encoder.backbone.conv1.1.running_mean", "encoder.backbone.conv1.1.running_var", "encoder.backbone.conv2.0.weight", "encoder.backbone.conv2.0.bias", "encoder.backbone.conv2.1.weight", "encoder.backbone.conv2.1.bias", "encoder.backbone.conv2.1.running_mean", "encoder.backbone.conv2.1.running_var", "encoder.backbone.conv3.0.weight", "encoder.backbone.conv3.0.bias", "encoder.backbone.conv3.1.weight", "encoder.backbone.conv3.1.bias", "encoder.backbone.conv3.1.running_mean", "encoder.backbone.conv3.1.running_var", "encoder.backbone.feature_layer.0.weight", "encoder.backbone.feature_layer.0.bias", "encoder.backbone.feature_layer.1.weight", "encoder.backbone.feature_layer.1.bias", "encoder.backbone.feature_layer.1.running_mean", "encoder.backbone.feature_layer.1.running_var", "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	Unexpected key(s) in state_dict: "encoder.conv1.0.weight", "encoder.conv1.0.bias", "encoder.conv1.1.weight", "encoder.conv1.1.bias", "encoder.conv1.1.running_mean", "encoder.conv1.1.running_var", "encoder.conv1.1.num_batches_tracked", "encoder.conv2.0.weight", "encoder.conv2.0.bias", "encoder.conv2.1.weight", "encoder.conv2.1.bias", "encoder.conv2.1.running_mean", "encoder.conv2.1.running_var", "encoder.conv2.1.num_batches_tracked", "encoder.conv3.0.weight", "encoder.conv3.0.bias", "encoder.conv3.1.weight", "encoder.conv3.1.bias", "encoder.conv3.1.running_mean", "encoder.conv3.1.running_var", "encoder.conv3.1.num_batches_tracked", "encoder.feature_layer.0.weight", "encoder.feature_layer.0.bias", "encoder.feature_layer.1.weight", "encoder.feature_layer.1.bias", "encoder.feature_layer.1.running_mean", "encoder.feature_layer.1.running_var", "encoder.feature_layer.1.num_batches_tracked". 
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:47.136485
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_euclidean_20250224_181335/best_model_val_acc_0.8694.pth"
+开始时间: 2025-02-24 22:08:49.146924
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 92, in <module>
+    model.load_state_dict(new_state_dict)
+  File "C:\Users\hxq11\anaconda3\envs\CLIP-LoRA\lib\site-packages\torch\nn\modules\module.py", line 2584, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for AllModel:
+	Missing key(s) in state_dict: "encoder.backbone.conv1.0.weight", "encoder.backbone.conv1.0.bias", "encoder.backbone.conv1.1.weight", "encoder.backbone.conv1.1.bias", "encoder.backbone.conv1.1.running_mean", "encoder.backbone.conv1.1.running_var", "encoder.backbone.conv2.0.weight", "encoder.backbone.conv2.0.bias", "encoder.backbone.conv2.1.weight", "encoder.backbone.conv2.1.bias", "encoder.backbone.conv2.1.running_mean", "encoder.backbone.conv2.1.running_var", "encoder.backbone.conv3.0.weight", "encoder.backbone.conv3.0.bias", "encoder.backbone.conv3.1.weight", "encoder.backbone.conv3.1.bias", "encoder.backbone.conv3.1.running_mean", "encoder.backbone.conv3.1.running_var", "encoder.backbone.feature_layer.0.weight", "encoder.backbone.feature_layer.0.bias", "encoder.backbone.feature_layer.1.weight", "encoder.backbone.feature_layer.1.bias", "encoder.backbone.feature_layer.1.running_mean", "encoder.backbone.feature_layer.1.running_var", "encoder.attention.channel_attention.mlp.0.weight", "encoder.attention.channel_attention.mlp.0.bias", "encoder.attention.channel_attention.mlp.2.weight", "encoder.attention.channel_attention.mlp.2.bias", "encoder.attention.spatial_attention.conv.weight", "encoder.attention.spatial_attention.conv.bias". 
+	Unexpected key(s) in state_dict: "encoder.conv1.0.weight", "encoder.conv1.0.bias", "encoder.conv1.1.weight", "encoder.conv1.1.bias", "encoder.conv1.1.running_mean", "encoder.conv1.1.running_var", "encoder.conv1.1.num_batches_tracked", "encoder.conv2.0.weight", "encoder.conv2.0.bias", "encoder.conv2.1.weight", "encoder.conv2.1.bias", "encoder.conv2.1.running_mean", "encoder.conv2.1.running_var", "encoder.conv2.1.num_batches_tracked", "encoder.conv3.0.weight", "encoder.conv3.0.bias", "encoder.conv3.1.weight", "encoder.conv3.1.bias", "encoder.conv3.1.running_mean", "encoder.conv3.1.running_var", "encoder.conv3.1.num_batches_tracked", "encoder.feature_layer.0.weight", "encoder.feature_layer.0.bias", "encoder.feature_layer.1.weight", "encoder.feature_layer.1.bias", "encoder.feature_layer.1.running_mean", "encoder.feature_layer.1.running_var", "encoder.feature_layer.1.num_batches_tracked". 
+
+==================================================
+命令执行完成时间: 2025-02-24 22:08:54.913003
+返回码: 1
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth"
+开始时间: 2025-02-24 22:08:56.923061
+==================================================
+
+C:\Users\hxq11\Desktop\Project\code\benchmark.py:91: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.model_path)
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+
+=== ProtoNet Benchmark 测试结果 ===
+模型名称: all_model
+模型路径: runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth
+
+各配置测试结果：
+
+5-way 5-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.100, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.100, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.018, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.117, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.097, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.098, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   1%|      | 1/100 [00:00<00:38,  2.58it/s, loss: 1.023, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.023, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.032, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.108, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.111, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.093, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.022, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   6%|▎     | 6/100 [00:00<00:06, 15.28it/s, loss: 1.018, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.018, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.094, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.098, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.028, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.123, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.016, acc: 0.987, recall: 0.987, f1: 0.987]
+评估:  12%|▌    | 12/100 [00:00<00:03, 26.28it/s, loss: 1.109, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.109, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.097, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.109, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.180, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.091, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  18%|▉    | 18/100 [00:00<00:02, 33.98it/s, loss: 1.033, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.033, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.021, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.045, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.106, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.013, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  23%|█▏   | 23/100 [00:00<00:02, 37.78it/s, loss: 1.020, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 41.10it/s, loss: 1.020, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 41.10it/s, loss: 1.021, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 41.10it/s, loss: 1.093, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  28%|█▍   | 28/100 [00:00<00:01, 41.10it/s, loss: 1.026, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  28%|█▍   | 28/100 [00:01<00:01, 41.10it/s, loss: 1.028, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  28%|█▍   | 28/100 [00:01<00:01, 41.10it/s, loss: 1.251, acc: 0.680, recall: 0.680, f1: 0.680]
+评估:  28%|█▍   | 28/100 [00:01<00:01, 41.10it/s, loss: 1.029, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.029, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.094, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.173, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.106, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.093, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  34%|█▋   | 34/100 [00:01<00:01, 44.31it/s, loss: 1.017, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.017, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.048, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.025, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.101, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.175, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  39%|█▉   | 39/100 [00:01<00:01, 45.78it/s, loss: 1.101, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.101, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.018, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.040, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.103, acc: 0.587, recall: 0.587, f1: 0.587]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.172, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 46.93it/s, loss: 1.037, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.037, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.110, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.038, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.098, acc: 0.613, recall: 0.613, f1: 0.613]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.040, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  49%|██▍  | 49/100 [00:01<00:01, 46.48it/s, loss: 1.027, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.027, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.014, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.158, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.246, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.050, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.106, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  54%|██▋  | 54/100 [00:01<00:00, 46.92it/s, loss: 1.122, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.122, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.178, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.108, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.248, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.172, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  60%|███  | 60/100 [00:01<00:00, 48.36it/s, loss: 1.158, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.158, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.095, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.120, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.203, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.024, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.057, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 48.63it/s, loss: 1.103, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.103, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.091, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.092, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.030, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.037, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.021, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  71%|███▌ | 71/100 [00:01<00:00, 49.79it/s, loss: 1.047, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  77%|███▊ | 77/100 [00:01<00:00, 50.66it/s, loss: 1.047, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  77%|███▊ | 77/100 [00:01<00:00, 50.66it/s, loss: 1.094, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  77%|███▊ | 77/100 [00:01<00:00, 50.66it/s, loss: 1.248, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  77%|███▊ | 77/100 [00:01<00:00, 50.66it/s, loss: 1.204, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  77%|███▊ | 77/100 [00:01<00:00, 50.66it/s, loss: 1.019, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  77%|███▊ | 77/100 [00:02<00:00, 50.66it/s, loss: 1.108, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  77%|███▊ | 77/100 [00:02<00:00, 50.66it/s, loss: 1.172, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.172, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.096, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.023, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.101, acc: 0.640, recall: 0.640, f1: 0.640]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.027, acc: 0.973, recall: 0.973, f1: 0.973]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.093, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  83%|████▏| 83/100 [00:02<00:00, 50.94it/s, loss: 1.179, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.179, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.039, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.016, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.020, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.093, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.020, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  89%|████▍| 89/100 [00:02<00:00, 50.18it/s, loss: 1.020, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.020, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.037, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.104, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.130, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.095, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  95%|████▊| 95/100 [00:02<00:00, 50.92it/s, loss: 1.016, acc: 0.907, recall: 0.907, f1: 0.907]
+评估: 100%|████| 100/100 [00:02<00:00, 42.37it/s, loss: 1.016, acc: 0.907, recall: 0.907, f1: 0.907]
+平均损失: 1.0852
+平均准确率: 0.8272
+平均召回率: 0.8272
+平均F1分数: 0.8272
+--------------------------------------------------
+
+5-way 8-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.030, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.158, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.248, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.021, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.095, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.095, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.095, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.097, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.090, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.096, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:   5%|▎     | 5/100 [00:00<00:02, 44.20it/s, loss: 1.128, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.128, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.015, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.168, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.018, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.045, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  10%|▌    | 10/100 [00:00<00:01, 46.00it/s, loss: 1.095, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.095, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.019, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.100, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.117, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.050, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  15%|▊    | 15/100 [00:00<00:02, 40.94it/s, loss: 1.095, acc: 0.600, recall: 0.600, f1: 0.600]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.095, acc: 0.600, recall: 0.600, f1: 0.600]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.021, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.092, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.064, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.063, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  20%|█    | 20/100 [00:00<00:01, 41.77it/s, loss: 1.021, acc: 1.000, recall: 1.000, f1: 1.000]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.021, acc: 1.000, recall: 1.000, f1: 1.000]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.102, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.110, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.091, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.095, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  25%|█▎   | 25/100 [00:00<00:01, 41.43it/s, loss: 1.029, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.029, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.045, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.017, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.089, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.027, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  30%|█▌   | 30/100 [00:00<00:01, 42.78it/s, loss: 1.027, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.027, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.117, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.110, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.158, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.015, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  35%|█▊   | 35/100 [00:00<00:01, 44.47it/s, loss: 1.123, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  40%|██   | 40/100 [00:00<00:01, 45.41it/s, loss: 1.123, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  40%|██   | 40/100 [00:00<00:01, 45.41it/s, loss: 1.177, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  40%|██   | 40/100 [00:00<00:01, 45.41it/s, loss: 1.094, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  40%|██   | 40/100 [00:00<00:01, 45.41it/s, loss: 1.021, acc: 0.920, recall: 0.920, f1: 0.920]
+评估:  40%|██   | 40/100 [00:00<00:01, 45.41it/s, loss: 1.114, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  40%|██   | 40/100 [00:01<00:01, 45.41it/s, loss: 1.018, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.018, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.206, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.046, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.193, acc: 0.880, recall: 0.880, f1: 0.880]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.161, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  45%|██▎  | 45/100 [00:01<00:01, 46.31it/s, loss: 1.165, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.165, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.022, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.092, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.103, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.026, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  50%|██▌  | 50/100 [00:01<00:01, 46.73it/s, loss: 1.097, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.097, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.246, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.022, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.093, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.108, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  55%|██▊  | 55/100 [00:01<00:00, 47.13it/s, loss: 1.041, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.041, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.174, acc: 0.773, recall: 0.773, f1: 0.773]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.097, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.022, acc: 0.947, recall: 0.947, f1: 0.947]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.124, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  60%|███  | 60/100 [00:01<00:00, 47.62it/s, loss: 1.042, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.042, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.176, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.029, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.032, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.167, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  65%|███▎ | 65/100 [00:01<00:00, 47.32it/s, loss: 1.031, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.031, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.096, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.099, acc: 0.787, recall: 0.787, f1: 0.787]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.042, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.031, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  70%|███▌ | 70/100 [00:01<00:00, 46.86it/s, loss: 1.020, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.020, acc: 0.960, recall: 0.960, f1: 0.960]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.029, acc: 0.973, recall: 0.973, f1: 0.973]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.027, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.127, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.096, acc: 0.573, recall: 0.573, f1: 0.573]
+评估:  75%|███▊ | 75/100 [00:01<00:00, 44.79it/s, loss: 1.032, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.032, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.246, acc: 0.520, recall: 0.520, f1: 0.520]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.021, acc: 0.933, recall: 0.933, f1: 0.933]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.194, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.252, acc: 0.720, recall: 0.720, f1: 0.720]
+评估:  80%|████ | 80/100 [00:01<00:00, 42.59it/s, loss: 1.177, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  85%|████▎| 85/100 [00:01<00:00, 43.07it/s, loss: 1.177, acc: 0.813, recall: 0.813, f1: 0.813]
+评估:  85%|████▎| 85/100 [00:01<00:00, 43.07it/s, loss: 1.103, acc: 0.760, recall: 0.760, f1: 0.760]
+评估:  85%|████▎| 85/100 [00:01<00:00, 43.07it/s, loss: 1.091, acc: 0.800, recall: 0.800, f1: 0.800]
+评估:  85%|████▎| 85/100 [00:01<00:00, 43.07it/s, loss: 1.156, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  85%|████▎| 85/100 [00:01<00:00, 43.07it/s, loss: 1.131, acc: 0.747, recall: 0.747, f1: 0.747]
+评估:  85%|████▎| 85/100 [00:02<00:00, 43.07it/s, loss: 1.074, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.074, acc: 0.867, recall: 0.867, f1: 0.867]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.098, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.022, acc: 0.893, recall: 0.893, f1: 0.893]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.030, acc: 0.853, recall: 0.853, f1: 0.853]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.093, acc: 0.693, recall: 0.693, f1: 0.693]
+评估:  90%|████▌| 90/100 [00:02<00:00, 44.47it/s, loss: 1.159, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.159, acc: 0.907, recall: 0.907, f1: 0.907]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.124, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.041, acc: 0.840, recall: 0.840, f1: 0.840]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.095, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.114, acc: 0.827, recall: 0.827, f1: 0.827]
+评估:  95%|████▊| 95/100 [00:02<00:00, 45.08it/s, loss: 1.158, acc: 0.840, recall: 0.840, f1: 0.840]
+评估: 100%|████| 100/100 [00:02<00:00, 45.61it/s, loss: 1.158, acc: 0.840, recall: 0.840, f1: 0.840]
+评估: 100%|████| 100/100 [00:02<00:00, 44.87it/s, loss: 1.158, acc: 0.840, recall: 0.840, f1: 0.840]
+平均损失: 1.0912
+平均准确率: 0.8260
+平均召回率: 0.8260
+平均F1分数: 0.8260
+--------------------------------------------------
+
+8-way 5-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.486, acc: 0.750, recall: 0.747, f1: 0.696]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.504, acc: 0.742, recall: 0.733, f1: 0.738]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.498, acc: 0.700, recall: 0.747, f1: 0.752]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.493, acc: 0.700, recall: 0.747, f1: 0.723]
+评估:   4%|▏     | 4/100 [00:00<00:02, 33.62it/s, loss: 1.493, acc: 0.700, recall: 0.747, f1: 0.723]
+评估:   4%|▏     | 4/100 [00:00<00:02, 33.62it/s, loss: 1.493, acc: 0.783, recall: 0.867, f1: 0.844]
+评估:   4%|▏     | 4/100 [00:00<00:02, 33.62it/s, loss: 1.497, acc: 0.650, recall: 0.787, f1: 0.698]
+评估:   4%|▏     | 4/100 [00:00<00:02, 33.62it/s, loss: 1.505, acc: 0.575, recall: 0.507, f1: 0.490]
+评估:   4%|▏     | 4/100 [00:00<00:02, 33.62it/s, loss: 1.498, acc: 0.767, recall: 0.707, f1: 0.721]
+评估:   8%|▍     | 8/100 [00:00<00:02, 34.59it/s, loss: 1.498, acc: 0.767, recall: 0.707, f1: 0.721]
+评估:   8%|▍     | 8/100 [00:00<00:02, 34.59it/s, loss: 1.491, acc: 0.717, recall: 0.707, f1: 0.726]
+评估:   8%|▍     | 8/100 [00:00<00:02, 34.59it/s, loss: 1.511, acc: 0.725, recall: 0.733, f1: 0.733]
+评估:   8%|▍     | 8/100 [00:00<00:02, 34.59it/s, loss: 1.495, acc: 0.683, recall: 0.560, f1: 0.618]
+评估:   8%|▍     | 8/100 [00:00<00:02, 34.59it/s, loss: 1.496, acc: 0.667, recall: 0.573, f1: 0.667]
+评估:  12%|▌    | 12/100 [00:00<00:02, 35.09it/s, loss: 1.496, acc: 0.667, recall: 0.573, f1: 0.667]
+评估:  12%|▌    | 12/100 [00:00<00:02, 35.09it/s, loss: 1.497, acc: 0.708, recall: 0.840, f1: 0.750]
+评估:  12%|▌    | 12/100 [00:00<00:02, 35.09it/s, loss: 1.505, acc: 0.708, recall: 0.627, f1: 0.662]
+评估:  12%|▌    | 12/100 [00:00<00:02, 35.09it/s, loss: 1.498, acc: 0.792, recall: 0.813, f1: 0.824]
+评估:  12%|▌    | 12/100 [00:00<00:02, 35.09it/s, loss: 1.499, acc: 0.783, recall: 0.760, f1: 0.765]
+评估:  16%|▊    | 16/100 [00:00<00:02, 35.26it/s, loss: 1.499, acc: 0.783, recall: 0.760, f1: 0.765]
+评估:  16%|▊    | 16/100 [00:00<00:02, 35.26it/s, loss: 1.492, acc: 0.717, recall: 0.840, f1: 0.773]
+评估:  16%|▊    | 16/100 [00:00<00:02, 35.26it/s, loss: 1.501, acc: 0.733, recall: 0.653, f1: 0.737]
+评估:  16%|▊    | 16/100 [00:00<00:02, 35.26it/s, loss: 1.491, acc: 0.733, recall: 0.667, f1: 0.709]
+评估:  16%|▊    | 16/100 [00:00<00:02, 35.26it/s, loss: 1.493, acc: 0.758, recall: 0.720, f1: 0.761]
+评估:  20%|█    | 20/100 [00:00<00:02, 35.33it/s, loss: 1.493, acc: 0.758, recall: 0.720, f1: 0.761]
+评估:  20%|█    | 20/100 [00:00<00:02, 35.33it/s, loss: 1.506, acc: 0.592, recall: 0.560, f1: 0.604]
+评估:  20%|█    | 20/100 [00:00<00:02, 35.33it/s, loss: 1.494, acc: 0.692, recall: 0.720, f1: 0.692]
+评估:  20%|█    | 20/100 [00:00<00:02, 35.33it/s, loss: 1.491, acc: 0.767, recall: 0.773, f1: 0.773]
+评估:  20%|█    | 20/100 [00:00<00:02, 35.33it/s, loss: 1.486, acc: 0.750, recall: 0.787, f1: 0.761]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 33.74it/s, loss: 1.486, acc: 0.750, recall: 0.787, f1: 0.761]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 33.74it/s, loss: 1.499, acc: 0.742, recall: 0.720, f1: 0.730]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 33.74it/s, loss: 1.489, acc: 0.600, recall: 0.493, f1: 0.493]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 33.74it/s, loss: 1.495, acc: 0.767, recall: 0.733, f1: 0.753]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 33.74it/s, loss: 1.507, acc: 0.683, recall: 0.707, f1: 0.736]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 33.38it/s, loss: 1.507, acc: 0.683, recall: 0.707, f1: 0.736]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 33.38it/s, loss: 1.502, acc: 0.725, recall: 0.693, f1: 0.722]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 33.38it/s, loss: 1.504, acc: 0.742, recall: 0.707, f1: 0.757]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 33.38it/s, loss: 1.488, acc: 0.783, recall: 0.867, f1: 0.833]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 33.38it/s, loss: 1.499, acc: 0.733, recall: 0.773, f1: 0.800]
+评估:  32%|█▌   | 32/100 [00:00<00:02, 33.49it/s, loss: 1.499, acc: 0.733, recall: 0.773, f1: 0.800]
+评估:  32%|█▌   | 32/100 [00:00<00:02, 33.49it/s, loss: 1.505, acc: 0.792, recall: 0.880, f1: 0.805]
+评估:  32%|█▌   | 32/100 [00:00<00:02, 33.49it/s, loss: 1.491, acc: 0.758, recall: 0.853, f1: 0.790]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 33.49it/s, loss: 1.494, acc: 0.733, recall: 0.653, f1: 0.671]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 33.49it/s, loss: 1.500, acc: 0.708, recall: 0.760, f1: 0.731]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 33.51it/s, loss: 1.500, acc: 0.708, recall: 0.760, f1: 0.731]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 33.51it/s, loss: 1.495, acc: 0.708, recall: 0.800, f1: 0.745]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 33.51it/s, loss: 1.495, acc: 0.717, recall: 0.733, f1: 0.738]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 33.51it/s, loss: 1.491, acc: 0.792, recall: 0.867, f1: 0.833]
+评估:  36%|█▊   | 36/100 [00:01<00:01, 33.51it/s, loss: 1.497, acc: 0.725, recall: 0.733, f1: 0.738]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.07it/s, loss: 1.497, acc: 0.725, recall: 0.733, f1: 0.738]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.07it/s, loss: 1.498, acc: 0.725, recall: 0.760, f1: 0.731]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.07it/s, loss: 1.507, acc: 0.808, recall: 0.947, f1: 0.877]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.07it/s, loss: 1.497, acc: 0.700, recall: 0.653, f1: 0.710]
+评估:  40%|██   | 40/100 [00:01<00:01, 34.07it/s, loss: 1.489, acc: 0.625, recall: 0.507, f1: 0.551]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 32.44it/s, loss: 1.489, acc: 0.625, recall: 0.507, f1: 0.551]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 32.44it/s, loss: 1.499, acc: 0.767, recall: 0.747, f1: 0.762]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 32.44it/s, loss: 1.498, acc: 0.675, recall: 0.640, f1: 0.686]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 32.44it/s, loss: 1.494, acc: 0.708, recall: 0.733, f1: 0.701]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 32.44it/s, loss: 1.496, acc: 0.700, recall: 0.653, f1: 0.705]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 33.06it/s, loss: 1.496, acc: 0.700, recall: 0.653, f1: 0.705]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 33.06it/s, loss: 1.502, acc: 0.700, recall: 0.800, f1: 0.714]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 33.06it/s, loss: 1.497, acc: 0.567, recall: 0.520, f1: 0.545]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 33.06it/s, loss: 1.494, acc: 0.792, recall: 0.827, f1: 0.816]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 33.06it/s, loss: 1.490, acc: 0.733, recall: 0.747, f1: 0.713]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 32.64it/s, loss: 1.490, acc: 0.733, recall: 0.747, f1: 0.713]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 32.64it/s, loss: 1.493, acc: 0.700, recall: 0.693, f1: 0.698]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 32.64it/s, loss: 1.505, acc: 0.808, recall: 0.773, f1: 0.795]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 32.64it/s, loss: 1.491, acc: 0.700, recall: 0.760, f1: 0.726]
+评估:  52%|██▌  | 52/100 [00:01<00:01, 32.64it/s, loss: 1.501, acc: 0.725, recall: 0.693, f1: 0.743]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 33.31it/s, loss: 1.501, acc: 0.725, recall: 0.693, f1: 0.743]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 33.31it/s, loss: 1.497, acc: 0.742, recall: 0.853, f1: 0.771]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 33.31it/s, loss: 1.498, acc: 0.667, recall: 0.587, f1: 0.638]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 33.31it/s, loss: 1.503, acc: 0.742, recall: 0.773, f1: 0.739]
+评估:  56%|██▊  | 56/100 [00:01<00:01, 33.31it/s, loss: 1.495, acc: 0.742, recall: 0.693, f1: 0.722]
+评估:  60%|███  | 60/100 [00:01<00:01, 33.22it/s, loss: 1.495, acc: 0.742, recall: 0.693, f1: 0.722]
+评估:  60%|███  | 60/100 [00:01<00:01, 33.22it/s, loss: 1.499, acc: 0.775, recall: 0.693, f1: 0.770]
+评估:  60%|███  | 60/100 [00:01<00:01, 33.22it/s, loss: 1.499, acc: 0.733, recall: 0.680, f1: 0.685]
+评估:  60%|███  | 60/100 [00:01<00:01, 33.22it/s, loss: 1.488, acc: 0.733, recall: 0.667, f1: 0.667]
+评估:  60%|███  | 60/100 [00:01<00:01, 33.22it/s, loss: 1.497, acc: 0.783, recall: 0.840, f1: 0.803]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 31.96it/s, loss: 1.497, acc: 0.783, recall: 0.840, f1: 0.803]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 31.96it/s, loss: 1.502, acc: 0.767, recall: 0.747, f1: 0.747]
+评估:  64%|███▏ | 64/100 [00:01<00:01, 31.96it/s, loss: 1.494, acc: 0.700, recall: 0.693, f1: 0.703]
+评估:  64%|███▏ | 64/100 [00:02<00:01, 31.96it/s, loss: 1.503, acc: 0.650, recall: 0.627, f1: 0.662]
+评估:  64%|███▏ | 64/100 [00:02<00:01, 31.96it/s, loss: 1.495, acc: 0.733, recall: 0.640, f1: 0.667]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 32.63it/s, loss: 1.495, acc: 0.733, recall: 0.640, f1: 0.667]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 32.63it/s, loss: 1.494, acc: 0.708, recall: 0.813, f1: 0.772]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 32.63it/s, loss: 1.500, acc: 0.658, recall: 0.600, f1: 0.600]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 32.63it/s, loss: 1.497, acc: 0.767, recall: 0.893, f1: 0.859]
+评估:  68%|███▍ | 68/100 [00:02<00:00, 32.63it/s, loss: 1.492, acc: 0.692, recall: 0.680, f1: 0.671]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 32.40it/s, loss: 1.492, acc: 0.692, recall: 0.680, f1: 0.671]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 32.40it/s, loss: 1.492, acc: 0.650, recall: 0.547, f1: 0.569]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 32.40it/s, loss: 1.487, acc: 0.650, recall: 0.653, f1: 0.645]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 32.40it/s, loss: 1.498, acc: 0.733, recall: 0.720, f1: 0.701]
+评估:  72%|███▌ | 72/100 [00:02<00:00, 32.40it/s, loss: 1.500, acc: 0.808, recall: 0.880, f1: 0.825]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 33.03it/s, loss: 1.500, acc: 0.808, recall: 0.880, f1: 0.825]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 33.03it/s, loss: 1.500, acc: 0.600, recall: 0.587, f1: 0.591]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 33.03it/s, loss: 1.493, acc: 0.758, recall: 0.760, f1: 0.786]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 33.03it/s, loss: 1.497, acc: 0.625, recall: 0.813, f1: 0.685]
+评估:  76%|███▊ | 76/100 [00:02<00:00, 33.03it/s, loss: 1.507, acc: 0.733, recall: 0.813, f1: 0.777]
+评估:  80%|████ | 80/100 [00:02<00:00, 33.37it/s, loss: 1.507, acc: 0.733, recall: 0.813, f1: 0.777]
+评估:  80%|████ | 80/100 [00:02<00:00, 33.37it/s, loss: 1.495, acc: 0.758, recall: 0.800, f1: 0.755]
+评估:  80%|████ | 80/100 [00:02<00:00, 33.37it/s, loss: 1.507, acc: 0.700, recall: 0.653, f1: 0.705]
+评估:  80%|████ | 80/100 [00:02<00:00, 33.37it/s, loss: 1.502, acc: 0.583, recall: 0.707, f1: 0.684]
+评估:  80%|████ | 80/100 [00:02<00:00, 33.37it/s, loss: 1.502, acc: 0.658, recall: 0.627, f1: 0.627]
+评估:  84%|████▏| 84/100 [00:02<00:00, 33.27it/s, loss: 1.502, acc: 0.658, recall: 0.627, f1: 0.627]
+评估:  84%|████▏| 84/100 [00:02<00:00, 33.27it/s, loss: 1.490, acc: 0.725, recall: 0.680, f1: 0.703]
+评估:  84%|████▏| 84/100 [00:02<00:00, 33.27it/s, loss: 1.499, acc: 0.575, recall: 0.587, f1: 0.595]
+评估:  84%|████▏| 84/100 [00:02<00:00, 33.27it/s, loss: 1.494, acc: 0.617, recall: 0.387, f1: 0.472]
+评估:  84%|████▏| 84/100 [00:02<00:00, 33.27it/s, loss: 1.492, acc: 0.733, recall: 0.813, f1: 0.762]
+评估:  88%|████▍| 88/100 [00:02<00:00, 33.93it/s, loss: 1.492, acc: 0.733, recall: 0.813, f1: 0.762]
+评估:  88%|████▍| 88/100 [00:02<00:00, 33.93it/s, loss: 1.499, acc: 0.683, recall: 0.800, f1: 0.750]
+评估:  88%|████▍| 88/100 [00:02<00:00, 33.93it/s, loss: 1.492, acc: 0.775, recall: 0.800, f1: 0.789]
+评估:  88%|████▍| 88/100 [00:02<00:00, 33.93it/s, loss: 1.501, acc: 0.625, recall: 0.733, f1: 0.679]
+评估:  88%|████▍| 88/100 [00:02<00:00, 33.93it/s, loss: 1.505, acc: 0.758, recall: 0.773, f1: 0.795]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.26it/s, loss: 1.505, acc: 0.758, recall: 0.773, f1: 0.795]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.26it/s, loss: 1.499, acc: 0.733, recall: 0.813, f1: 0.739]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.26it/s, loss: 1.491, acc: 0.758, recall: 0.773, f1: 0.773]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.26it/s, loss: 1.496, acc: 0.792, recall: 0.827, f1: 0.775]
+评估:  92%|████▌| 92/100 [00:02<00:00, 34.26it/s, loss: 1.508, acc: 0.717, recall: 0.547, f1: 0.661]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.25it/s, loss: 1.508, acc: 0.717, recall: 0.547, f1: 0.661]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.25it/s, loss: 1.495, acc: 0.733, recall: 0.773, f1: 0.763]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.25it/s, loss: 1.491, acc: 0.692, recall: 0.627, f1: 0.662]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.25it/s, loss: 1.497, acc: 0.708, recall: 0.853, f1: 0.753]
+评估:  96%|████▊| 96/100 [00:02<00:00, 34.25it/s, loss: 1.495, acc: 0.708, recall: 0.667, f1: 0.662]
+评估: 100%|████| 100/100 [00:02<00:00, 34.72it/s, loss: 1.495, acc: 0.708, recall: 0.667, f1: 0.662]
+评估: 100%|████| 100/100 [00:02<00:00, 33.63it/s, loss: 1.495, acc: 0.708, recall: 0.667, f1: 0.662]
+平均损失: 1.4970
+平均准确率: 0.7152
+平均召回率: 0.7209
+平均F1分数: 0.7173
+--------------------------------------------------
+
+8-way 8-shot测试:
+
+评估:   0%|                                                                 | 0/100 [00:00<?, ?it/s]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.497, acc: 0.758, recall: 0.773, f1: 0.800]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.495, acc: 0.742, recall: 0.813, f1: 0.787]
+评估:   0%|              | 0/100 [00:00<?, ?it/s, loss: 1.502, acc: 0.750, recall: 0.747, f1: 0.713]
+评估:   3%|▏     | 3/100 [00:00<00:03, 26.09it/s, loss: 1.502, acc: 0.750, recall: 0.747, f1: 0.713]
+评估:   3%|▏     | 3/100 [00:00<00:03, 26.09it/s, loss: 1.489, acc: 0.750, recall: 0.773, f1: 0.800]
+评估:   3%|▏     | 3/100 [00:00<00:03, 26.09it/s, loss: 1.499, acc: 0.758, recall: 0.720, f1: 0.720]
+评估:   3%|▏     | 3/100 [00:00<00:03, 26.09it/s, loss: 1.502, acc: 0.675, recall: 0.773, f1: 0.725]
+评估:   6%|▎     | 6/100 [00:00<00:03, 27.14it/s, loss: 1.502, acc: 0.675, recall: 0.773, f1: 0.725]
+评估:   6%|▎     | 6/100 [00:00<00:03, 27.14it/s, loss: 1.504, acc: 0.683, recall: 0.760, f1: 0.683]
+评估:   6%|▎     | 6/100 [00:00<00:03, 27.14it/s, loss: 1.490, acc: 0.675, recall: 0.733, f1: 0.679]
+评估:   6%|▎     | 6/100 [00:00<00:03, 27.14it/s, loss: 1.496, acc: 0.750, recall: 0.813, f1: 0.767]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.59it/s, loss: 1.496, acc: 0.750, recall: 0.813, f1: 0.767]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.59it/s, loss: 1.498, acc: 0.675, recall: 0.560, f1: 0.571]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.59it/s, loss: 1.506, acc: 0.775, recall: 0.813, f1: 0.787]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.59it/s, loss: 1.498, acc: 0.692, recall: 0.800, f1: 0.769]
+评估:   9%|▌     | 9/100 [00:00<00:03, 26.59it/s, loss: 1.495, acc: 0.667, recall: 0.733, f1: 0.705]
+评估:  13%|▋    | 13/100 [00:00<00:03, 28.26it/s, loss: 1.495, acc: 0.667, recall: 0.733, f1: 0.705]
+评估:  13%|▋    | 13/100 [00:00<00:03, 28.26it/s, loss: 1.503, acc: 0.617, recall: 0.627, f1: 0.570]
+评估:  13%|▋    | 13/100 [00:00<00:03, 28.26it/s, loss: 1.490, acc: 0.833, recall: 0.813, f1: 0.853]
+评估:  13%|▋    | 13/100 [00:00<00:03, 28.26it/s, loss: 1.496, acc: 0.633, recall: 0.653, f1: 0.645]
+评估:  13%|▋    | 13/100 [00:00<00:03, 28.26it/s, loss: 1.493, acc: 0.775, recall: 0.680, f1: 0.739]
+评估:  17%|▊    | 17/100 [00:00<00:02, 29.20it/s, loss: 1.493, acc: 0.775, recall: 0.680, f1: 0.739]
+评估:  17%|▊    | 17/100 [00:00<00:02, 29.20it/s, loss: 1.499, acc: 0.700, recall: 0.640, f1: 0.711]
+评估:  17%|▊    | 17/100 [00:00<00:02, 29.20it/s, loss: 1.494, acc: 0.775, recall: 0.773, f1: 0.773]
+评估:  17%|▊    | 17/100 [00:00<00:02, 29.20it/s, loss: 1.495, acc: 0.758, recall: 0.667, f1: 0.775]
+评估:  20%|█    | 20/100 [00:00<00:02, 29.07it/s, loss: 1.495, acc: 0.758, recall: 0.667, f1: 0.775]
+评估:  20%|█    | 20/100 [00:00<00:02, 29.07it/s, loss: 1.496, acc: 0.742, recall: 0.707, f1: 0.697]
+评估:  20%|█    | 20/100 [00:00<00:02, 29.07it/s, loss: 1.501, acc: 0.808, recall: 0.827, f1: 0.810]
+评估:  20%|█    | 20/100 [00:00<00:02, 29.07it/s, loss: 1.493, acc: 0.742, recall: 0.813, f1: 0.777]
+评估:  20%|█    | 20/100 [00:00<00:02, 29.07it/s, loss: 1.496, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 29.91it/s, loss: 1.496, acc: 0.733, recall: 0.733, f1: 0.733]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 29.91it/s, loss: 1.494, acc: 0.842, recall: 0.827, f1: 0.805]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 29.91it/s, loss: 1.498, acc: 0.692, recall: 0.693, f1: 0.693]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 29.91it/s, loss: 1.493, acc: 0.750, recall: 0.840, f1: 0.773]
+评估:  24%|█▏   | 24/100 [00:00<00:02, 29.91it/s, loss: 1.495, acc: 0.742, recall: 0.800, f1: 0.779]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 30.36it/s, loss: 1.495, acc: 0.742, recall: 0.800, f1: 0.779]
+评估:  28%|█▍   | 28/100 [00:00<00:02, 30.36it/s, loss: 1.496, acc: 0.767, recall: 0.693, f1: 0.707]
+评估:  28%|█▍   | 28/100 [00:01<00:02, 30.36it/s, loss: 1.499, acc: 0.725, recall: 0.760, f1: 0.755]
+评估:  28%|█▍   | 28/100 [00:01<00:02, 30.36it/s, loss: 1.497, acc: 0.792, recall: 0.867, f1: 0.850]
+评估:  28%|█▍   | 28/100 [00:01<00:02, 30.36it/s, loss: 1.496, acc: 0.683, recall: 0.813, f1: 0.709]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 30.63it/s, loss: 1.496, acc: 0.683, recall: 0.813, f1: 0.709]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 30.63it/s, loss: 1.503, acc: 0.658, recall: 0.640, f1: 0.667]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 30.63it/s, loss: 1.503, acc: 0.800, recall: 0.787, f1: 0.825]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 30.63it/s, loss: 1.494, acc: 0.825, recall: 0.867, f1: 0.828]
+评估:  32%|█▌   | 32/100 [00:01<00:02, 30.63it/s, loss: 1.493, acc: 0.683, recall: 0.627, f1: 0.644]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 31.10it/s, loss: 1.493, acc: 0.683, recall: 0.627, f1: 0.644]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 31.10it/s, loss: 1.495, acc: 0.717, recall: 0.787, f1: 0.761]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 31.10it/s, loss: 1.497, acc: 0.750, recall: 0.653, f1: 0.681]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 31.10it/s, loss: 1.500, acc: 0.692, recall: 0.720, f1: 0.688]
+评估:  36%|█▊   | 36/100 [00:01<00:02, 31.10it/s, loss: 1.491, acc: 0.717, recall: 0.787, f1: 0.766]
+评估:  40%|██   | 40/100 [00:01<00:01, 31.25it/s, loss: 1.491, acc: 0.717, recall: 0.787, f1: 0.766]
+评估:  40%|██   | 40/100 [00:01<00:01, 31.25it/s, loss: 1.496, acc: 0.717, recall: 0.680, f1: 0.699]
+评估:  40%|██   | 40/100 [00:01<00:01, 31.25it/s, loss: 1.498, acc: 0.767, recall: 0.853, f1: 0.815]
+评估:  40%|██   | 40/100 [00:01<00:01, 31.25it/s, loss: 1.492, acc: 0.750, recall: 0.800, f1: 0.745]
+评估:  40%|██   | 40/100 [00:01<00:01, 31.25it/s, loss: 1.497, acc: 0.742, recall: 0.707, f1: 0.768]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 30.11it/s, loss: 1.497, acc: 0.742, recall: 0.707, f1: 0.768]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 30.11it/s, loss: 1.491, acc: 0.783, recall: 0.813, f1: 0.792]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 30.11it/s, loss: 1.497, acc: 0.717, recall: 0.653, f1: 0.721]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 30.11it/s, loss: 1.496, acc: 0.700, recall: 0.627, f1: 0.635]
+评估:  44%|██▏  | 44/100 [00:01<00:01, 30.11it/s, loss: 1.492, acc: 0.750, recall: 0.773, f1: 0.734]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 29.35it/s, loss: 1.492, acc: 0.750, recall: 0.773, f1: 0.734]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 29.35it/s, loss: 1.496, acc: 0.708, recall: 0.773, f1: 0.758]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 29.35it/s, loss: 1.497, acc: 0.725, recall: 0.707, f1: 0.711]
+评估:  48%|██▍  | 48/100 [00:01<00:01, 29.35it/s, loss: 1.505, acc: 0.750, recall: 0.787, f1: 0.771]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 29.08it/s, loss: 1.505, acc: 0.750, recall: 0.787, f1: 0.771]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 29.08it/s, loss: 1.499, acc: 0.667, recall: 0.573, f1: 0.623]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 29.08it/s, loss: 1.499, acc: 0.808, recall: 0.747, f1: 0.794]
+评估:  51%|██▌  | 51/100 [00:01<00:01, 29.08it/s, loss: 1.494, acc: 0.700, recall: 0.707, f1: 0.697]
+评估:  54%|██▋  | 54/100 [00:01<00:01, 29.30it/s, loss: 1.494, acc: 0.700, recall: 0.707, f1: 0.697]
+评估:  54%|██▋  | 54/100 [00:01<00:01, 29.30it/s, loss: 1.491, acc: 0.792, recall: 0.800, f1: 0.800]
+评估:  54%|██▋  | 54/100 [00:01<00:01, 29.30it/s, loss: 1.501, acc: 0.758, recall: 0.653, f1: 0.726]
+评估:  54%|██▋  | 54/100 [00:01<00:01, 29.30it/s, loss: 1.495, acc: 0.675, recall: 0.667, f1: 0.714]
+评估:  54%|██▋  | 54/100 [00:01<00:01, 29.30it/s, loss: 1.498, acc: 0.717, recall: 0.693, f1: 0.671]
+评估:  58%|██▉  | 58/100 [00:01<00:01, 29.86it/s, loss: 1.498, acc: 0.717, recall: 0.693, f1: 0.671]
+评估:  58%|██▉  | 58/100 [00:01<00:01, 29.86it/s, loss: 1.504, acc: 0.750, recall: 0.640, f1: 0.696]
+评估:  58%|██▉  | 58/100 [00:02<00:01, 29.86it/s, loss: 1.499, acc: 0.708, recall: 0.613, f1: 0.672]
+评估:  58%|██▉  | 58/100 [00:02<00:01, 29.86it/s, loss: 1.494, acc: 0.742, recall: 0.787, f1: 0.766]
+评估:  58%|██▉  | 58/100 [00:02<00:01, 29.86it/s, loss: 1.495, acc: 0.708, recall: 0.667, f1: 0.709]
+评估:  62%|███  | 62/100 [00:02<00:01, 30.05it/s, loss: 1.495, acc: 0.708, recall: 0.667, f1: 0.709]
+评估:  62%|███  | 62/100 [00:02<00:01, 30.05it/s, loss: 1.492, acc: 0.758, recall: 0.813, f1: 0.813]
+评估:  62%|███  | 62/100 [00:02<00:01, 30.05it/s, loss: 1.492, acc: 0.825, recall: 0.787, f1: 0.831]
+评估:  62%|███  | 62/100 [00:02<00:01, 30.05it/s, loss: 1.498, acc: 0.758, recall: 0.787, f1: 0.733]
+评估:  62%|███  | 62/100 [00:02<00:01, 30.05it/s, loss: 1.497, acc: 0.692, recall: 0.547, f1: 0.607]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 30.36it/s, loss: 1.497, acc: 0.692, recall: 0.547, f1: 0.607]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 30.36it/s, loss: 1.508, acc: 0.675, recall: 0.653, f1: 0.705]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 30.36it/s, loss: 1.491, acc: 0.675, recall: 0.693, f1: 0.703]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 30.36it/s, loss: 1.502, acc: 0.683, recall: 0.827, f1: 0.738]
+评估:  66%|███▎ | 66/100 [00:02<00:01, 30.36it/s, loss: 1.515, acc: 0.767, recall: 0.653, f1: 0.748]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 30.15it/s, loss: 1.515, acc: 0.767, recall: 0.653, f1: 0.748]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 30.15it/s, loss: 1.490, acc: 0.800, recall: 0.813, f1: 0.813]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 30.15it/s, loss: 1.495, acc: 0.725, recall: 0.733, f1: 0.687]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 30.15it/s, loss: 1.500, acc: 0.700, recall: 0.827, f1: 0.805]
+评估:  70%|███▌ | 70/100 [00:02<00:00, 30.15it/s, loss: 1.498, acc: 0.775, recall: 0.813, f1: 0.787]
+评估:  74%|███▋ | 74/100 [00:02<00:00, 30.61it/s, loss: 1.498, acc: 0.775, recall: 0.813, f1: 0.787]
+评估:  74%|███▋ | 74/100 [00:02<00:00, 30.61it/s, loss: 1.494, acc: 0.750, recall: 0.813, f1: 0.797]
+评估:  74%|███▋ | 74/100 [00:02<00:00, 30.61it/s, loss: 1.500, acc: 0.733, recall: 0.867, f1: 0.802]
+评估:  74%|███▋ | 74/100 [00:02<00:00, 30.61it/s, loss: 1.496, acc: 0.717, recall: 0.693, f1: 0.717]
+评估:  74%|███▋ | 74/100 [00:02<00:00, 30.61it/s, loss: 1.497, acc: 0.758, recall: 0.747, f1: 0.727]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 31.05it/s, loss: 1.497, acc: 0.758, recall: 0.747, f1: 0.727]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 31.05it/s, loss: 1.491, acc: 0.742, recall: 0.773, f1: 0.744]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 31.05it/s, loss: 1.500, acc: 0.733, recall: 0.693, f1: 0.722]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 31.05it/s, loss: 1.496, acc: 0.758, recall: 0.787, f1: 0.808]
+评估:  78%|███▉ | 78/100 [00:02<00:00, 31.05it/s, loss: 1.497, acc: 0.708, recall: 0.707, f1: 0.736]
+评估:  82%|████ | 82/100 [00:02<00:00, 31.17it/s, loss: 1.497, acc: 0.708, recall: 0.707, f1: 0.736]
+评估:  82%|████ | 82/100 [00:02<00:00, 31.17it/s, loss: 1.500, acc: 0.733, recall: 0.867, f1: 0.823]
+评估:  82%|████ | 82/100 [00:02<00:00, 31.17it/s, loss: 1.499, acc: 0.817, recall: 0.773, f1: 0.800]
+评估:  82%|████ | 82/100 [00:02<00:00, 31.17it/s, loss: 1.501, acc: 0.725, recall: 0.707, f1: 0.741]
+评估:  82%|████ | 82/100 [00:02<00:00, 31.17it/s, loss: 1.500, acc: 0.783, recall: 0.693, f1: 0.743]
+评估:  86%|████▎| 86/100 [00:02<00:00, 30.91it/s, loss: 1.500, acc: 0.783, recall: 0.693, f1: 0.743]
+评估:  86%|████▎| 86/100 [00:02<00:00, 30.91it/s, loss: 1.497, acc: 0.717, recall: 0.667, f1: 0.645]
+评估:  86%|████▎| 86/100 [00:02<00:00, 30.91it/s, loss: 1.496, acc: 0.733, recall: 0.667, f1: 0.735]
+评估:  86%|████▎| 86/100 [00:02<00:00, 30.91it/s, loss: 1.499, acc: 0.725, recall: 0.693, f1: 0.759]
+评估:  86%|████▎| 86/100 [00:03<00:00, 30.91it/s, loss: 1.497, acc: 0.708, recall: 0.627, f1: 0.707]
+评估:  90%|████▌| 90/100 [00:03<00:00, 30.02it/s, loss: 1.497, acc: 0.708, recall: 0.627, f1: 0.707]
+评估:  90%|████▌| 90/100 [00:03<00:00, 30.02it/s, loss: 1.493, acc: 0.792, recall: 0.840, f1: 0.829]
+评估:  90%|████▌| 90/100 [00:03<00:00, 30.02it/s, loss: 1.506, acc: 0.633, recall: 0.427, f1: 0.520]
+评估:  90%|████▌| 90/100 [00:03<00:00, 30.02it/s, loss: 1.500, acc: 0.700, recall: 0.720, f1: 0.740]
+评估:  90%|████▌| 90/100 [00:03<00:00, 30.02it/s, loss: 1.499, acc: 0.750, recall: 0.747, f1: 0.767]
+评估:  94%|████▋| 94/100 [00:03<00:00, 29.91it/s, loss: 1.499, acc: 0.750, recall: 0.747, f1: 0.767]
+评估:  94%|████▋| 94/100 [00:03<00:00, 29.91it/s, loss: 1.507, acc: 0.733, recall: 0.707, f1: 0.716]
+评估:  94%|████▋| 94/100 [00:03<00:00, 29.91it/s, loss: 1.495, acc: 0.717, recall: 0.693, f1: 0.717]
+评估:  94%|████▋| 94/100 [00:03<00:00, 29.91it/s, loss: 1.492, acc: 0.767, recall: 0.840, f1: 0.773]
+评估:  94%|████▋| 94/100 [00:03<00:00, 29.91it/s, loss: 1.500, acc: 0.700, recall: 0.760, f1: 0.770]
+评估:  98%|████▉| 98/100 [00:03<00:00, 30.24it/s, loss: 1.500, acc: 0.700, recall: 0.760, f1: 0.770]
+评估:  98%|████▉| 98/100 [00:03<00:00, 30.24it/s, loss: 1.499, acc: 0.742, recall: 0.853, f1: 0.795]
+评估:  98%|████▉| 98/100 [00:03<00:00, 30.24it/s, loss: 1.497, acc: 0.783, recall: 0.720, f1: 0.777]
+评估: 100%|████| 100/100 [00:03<00:00, 29.98it/s, loss: 1.497, acc: 0.783, recall: 0.720, f1: 0.777]
+平均损失: 1.4972
+平均准确率: 0.7343
+平均召回率: 0.7365
+平均F1分数: 0.7393
+--------------------------------------------------
+
+结果已保存到: benchmark\all_model_spatial_cosine_20250224_164030.json
+
+==================================================
+命令执行完成时间: 2025-02-24 22:09:13.724722
+返回码: 0
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" benchmark.py --model_name all_model --model_path "runs/protonet_20250219_143734/best_model_0.8965.pth"
+开始时间: 2025-02-24 22:09:15.730459
+==================================================
+
+使用设备: cuda
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+数据集中的类别数量: 8
+可用的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+Traceback (most recent call last):
+  File "C:\Users\hxq11\Desktop\Project\code\benchmark.py", line 80, in <module>
+    model = get_model(
+  File "C:\Users\hxq11\Desktop\Project\code\utils\utils.py", line 25, in get_model
+    return model_dict[model_name](
+  File "C:\Users\hxq11\Desktop\Project\code\models\ProtoNet_relationnet.py", line 193, in __init__
+    self.encoder = self._build_encoder()
+  File "C:\Users\hxq11\Desktop\Project\code\models\ProtoNet_relationnet.py", line 217, in _build_encoder
+    raise ValueError(f"Unknown backbone type: {self.backbone}")
+ValueError: Unknown backbone type: 143734
+
+==================================================
+命令执行完成时间: 2025-02-24 22:09:21.409007
+返回码: 1
+==================================================
+
+
+==================================================
+实验组结束时间: 2025-02-24 22:09:21.410005

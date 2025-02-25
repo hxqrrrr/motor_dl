@@ -1,0 +1,59 @@
+{
+    "model_name": "all_model",
+    "model_path": "runs/all_model_channel_euclidean_20250224_185049/best_model_val_acc_0.8546.pth",
+    "timestamp": "20250224_221021",
+    "configs": [
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.0182370299100876,
+                "accuracy": 0.8522666877508164,
+                "recall": 0.8522666665530306,
+                "f1": 0.8522666615530312
+            }
+        },
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.0173382347822189,
+                "accuracy": 0.8549333548545838,
+                "recall": 0.8549333332193416,
+                "f1": 0.854933328219343
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.4135185956954956,
+                "accuracy": 0.756916708946228,
+                "recall": 0.743066666567591,
+                "f1": 0.746479423497112
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.4116626799106597,
+                "accuracy": 0.7535000437498093,
+                "recall": 0.7522666665663641,
+                "f1": 0.7524311260800565
+            }
+        }
+    ]
+}

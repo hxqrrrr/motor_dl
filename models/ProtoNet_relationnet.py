@@ -86,22 +86,15 @@ class CNN1D_embed(nn.Module):
         return x
 
 
-class AttentionRelationModule(nn.Module):
-    """基于注意力机制的关系模块
+class RelationModule(nn.Module):
+    """简单的关系网络模块
     
     参数:
         feature_dim: 输入特征维度
-        hidden_dim: 注意力机制的隐藏层维度
+        hidden_dim: 隐藏层维度
     """
     def __init__(self, feature_dim: int, hidden_dim: int):
-        super(AttentionRelationModule, self).__init__()
-        
-        # 多头注意力层
-        self.multihead_attn = nn.MultiheadAttention(
-            embed_dim=feature_dim,
-            num_heads=4,
-            dropout=0.1
-        )
+        super(RelationModule, self).__init__()
         
         # 关系网络
         self.relation_net = nn.Sequential(
@@ -111,7 +104,8 @@ class AttentionRelationModule(nn.Module):
             nn.Linear(hidden_dim, hidden_dim // 2),
             nn.ReLU(),
             nn.Dropout(0.1),
-            nn.Linear(hidden_dim // 2, 1)
+            nn.Linear(hidden_dim // 2, 1),
+            nn.Sigmoid()  # 将关系分数归一化到[0,1]区间
         )
         
     def forward(self, query_features: torch.Tensor, support_features: torch.Tensor) -> torch.Tensor:
@@ -126,38 +120,23 @@ class AttentionRelationModule(nn.Module):
         batch_size = query_features.size(0)
         n_query = query_features.size(1)
         n_support = support_features.size(1)
-        feature_dim = query_features.size(2)
         
-        # 对每个batch单独处理
-        relation_scores = []
-        for i in range(batch_size):
-            # 准备当前batch的特征
-            q = query_features[i]  # [n_query, feature_dim]
-            s = support_features[i]  # [n_support, feature_dim]
-            
-            # 计算注意力权重
-            attn_output, _ = self.multihead_attn(
-                q.unsqueeze(1),  # [n_query, 1, feature_dim]
-                s.unsqueeze(1),  # [n_support, 1, feature_dim]
-                s.unsqueeze(1)   # [n_support, 1, feature_dim]
-            )
-            
-            # 准备关系网络的输入
-            q_expanded = q.unsqueeze(1).expand(-1, n_support, -1)  # [n_query, n_support, feature_dim]
-            s_expanded = s.unsqueeze(0).expand(n_query, -1, -1)    # [n_query, n_support, feature_dim]
-            
-            # 连接特征
-            combined = torch.cat([
-                q_expanded,
-                attn_output.expand(-1, n_support, -1)
-            ], dim=-1)  # [n_query, n_support, feature_dim*2]
-            
-            # 计算关系分数
-            scores = self.relation_net(combined).squeeze(-1)  # [n_query, n_support]
-            relation_scores.append(scores)
+        # 准备特征对
+        q_expanded = query_features.unsqueeze(2).expand(-1, -1, n_support, -1)    # [batch_size, n_query, n_support, feature_dim]
+        s_expanded = support_features.unsqueeze(1).expand(-1, n_query, -1, -1)    # [batch_size, n_query, n_support, feature_dim]
         
-        # 堆叠所有batch的结果
-        relation_scores = torch.stack(relation_scores)  # [batch_size, n_query, n_support]
+        # 连接特征
+        paired_features = torch.cat([q_expanded, s_expanded], dim=-1)  # [batch_size, n_query, n_support, feature_dim*2]
+        
+        # 重塑tensor以便输入关系网络
+        paired_features = paired_features.view(-1, paired_features.size(-1))  # [batch_size*n_query*n_support, feature_dim*2]
+        
+        # 计算关系分数
+        relation_scores = self.relation_net(paired_features)  # [batch_size*n_query*n_support, 1]
+        
+        # 重塑回原始维度
+        relation_scores = relation_scores.view(batch_size, n_query, n_support)  # [batch_size, n_query, n_support]
+        
         return relation_scores
 
 
@@ -194,7 +173,7 @@ class AllModel(nn.Module):
         
         # 初始化关系模块
         if distance_type == 'relation':
-            self.relation_module = AttentionRelationModule(feature_dim, hidden_dim)
+            self.relation_module = RelationModule(feature_dim, hidden_dim)
     
     def _build_encoder(self) -> nn.Module:
         """构建特征提取器"""

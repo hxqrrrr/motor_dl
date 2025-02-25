@@ -1,0 +1,160 @@
+实验组开始时间: 2025-02-24 23:13:22.887142
+实验配置:
+[
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cnn1d --distance_type cosine --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 64 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 128 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 256 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  },
+  {
+    "command": "\"C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe\" train.py --model all_model --backbone cbam --distance_type euclidean --in_channels 5 --hidden_dim 32 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001"
+  }
+]
+==================================================
+
+
+==================================================
+执行命令: "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe" train.py --model all_model --backbone cnn1d --distance_type euclidean --in_channels 5 --hidden_dim 64 --feature_dim 128 --dropout 0.3 --scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001
+开始时间: 2025-02-24 23:13:22.888658
+==================================================
+
+使用设备: cuda
+使用模型: all_model
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+训练集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 746 个样本
+类别 1: 746 个样本
+类别 2: 746 个样本
+类别 3: 746 个样本
+类别 4: 746 个样本
+类别 5: 746 个样本
+类别 6: 746 个样本
+类别 7: 746 个样本
+正在加载文件夹: data/h5data
+
+原始标签形状: (7464, 8)
+标签示例（前5个）:
+[[1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 0. 0. 0. 0. 0. 0. 0.]]
+
+标签名称: ['NORMAL' 'SC' 'HR' 'RB' 'BF-I' 'BF-O' 'BF-R' 'BF-C']
+
+数据集划分情况:
+类别 0:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 1:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 2:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 3:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 4:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 5:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 6:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+类别 7:
+  - 总样本数: 933
+  - 训练集: 746 个样本
+  - 测试集: 187 个样本
+
+测试集信息:
+包含的类别: [0, 1, 2, 3, 4, 5, 6, 7]
+类别 0: 187 个样本
+类别 1: 187 个样本
+类别 2: 187 个样本
+类别 3: 187 个样本
+类别 4: 187 个样本
+类别 5: 187 个样本
+类别 6: 187 个样本
+类别 7: 187 个样本
+
+正在检查数据泄露...
+数据集检查通过，未发现数据泄露。
+
+Epoch 1/80
+
+训练:   0%|                                                                  | 0/25 [00:00<?, ?it/s]
+训练:   0%| | 0/25 [00:23<?, ?it/s, loss: 1.346, acc: 0.655, recall: 0.655, f1: 0.655, lr: 1.00e-06]
+训练:   4%| | 1/25 [00:23<09:21, 23.38s/it, loss: 1.346, acc: 0.655, recall: 0.655, f1: 0.655, lr: 1
+训练:   4%| | 1/25 [00:24<09:21, 23.38s/it, loss: 1.329, acc: 0.800, recall: 0.800, f1: 0.800, lr: 1
+训练:   8%| | 2/25 [00:24<03:57, 10.32s/it, loss: 1.329, acc: 0.800, recall: 0.800, f1: 0.800, lr: 1
+训练:   8%| | 2/25 [00:25<03:57, 10.32s/it, loss: 1.353, acc: 0.685, recall: 0.685, f1: 0.685, lr: 1
+训练:  12%| | 3/25 [00:25<02:14,  6.14s/it, loss: 1.353, acc: 0.685, recall: 0.685, f1: 0.685, lr: 1
+训练:  12%| | 3/25 [00:26<02:14,  6.14s/it, loss: 1.343, acc: 0.690, recall: 0.690, f1: 0.690, lr: 1
+训练:  16%|▏| 4/25 [00:26<01:27,  4.16s/it, loss: 1.343, acc: 0.690, recall: 0.690, f1: 0.690, lr: 1
+训练:  16%|▏| 4/25 [00:28<01:27,  4.16s/it, loss: 1.340, acc: 0.745, recall: 0.745, f1: 0.745, lr: 1
