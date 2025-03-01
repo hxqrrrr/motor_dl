@@ -20,7 +20,7 @@ import h5py
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import LinearLR, SequentialLR
 from sklearn.metrics import recall_score, f1_score
-from utils.utils import check_data_leakage, train_epoch, evaluate, plot_training_curves, save_training_info, get_model, split_dataset
+from utils.utils_train import check_data_leakage, train_epoch, evaluate, plot_training_curves, save_training_info, get_model, split_dataset
 
 
 
