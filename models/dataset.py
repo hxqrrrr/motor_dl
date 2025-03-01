@@ -20,30 +20,35 @@ class h5Dataset(Dataset):
         if not self.h5_files:
             raise ValueError(f"在 {folder_path} 中没有找到任何 .h5 或 .h5data 文件")
         
-        # 加载数据
-        file_path = os.path.join(folder_path, self.h5_files[0])
-        with h5py.File(file_path, 'r') as f:
-            self.data = f['data'][:]
-            self.labels = f['labels'][:]
+        # 获取文件路径
+        self.file_path = os.path.join(folder_path, self.h5_files[0])
+        
+        # 打开H5文件获取必要信息，然后关闭
+        with h5py.File(self.file_path, 'r') as f:
+            # 获取数据和标签的形状
+            data_shape = f['data'].shape
+            labels_shape = f['labels'].shape
+            
             # 打印标签信息
-            print("\n原始标签形状:", self.labels.shape)
+            print("\n原始标签形状:", labels_shape)
             print("标签示例（前5个）:")
-            print(self.labels[:5])
+            print(f['labels'][:5])
             if 'labelName' in f:
                 label_names = f['labelName'].asstr()[:]
                 print("\n标签名称:", label_names)
-        
-        # 将one-hot标签转换为类别索引
-        self.labels = torch.argmax(torch.tensor(self.labels, dtype=torch.float32), dim=1).numpy()
+            
+            # 将one-hot标签转换为类别索引 - 只处理标签数据
+            labels_sample = f['labels'][:]  # 这里需要加载标签数据
+            self.labels_indices = torch.argmax(torch.tensor(labels_sample, dtype=torch.float32), dim=1).numpy()
         
         # 分层采样
-        unique_labels = np.unique(self.labels)
+        unique_labels = np.unique(self.labels_indices)
         train_indices = []
         test_indices = []
         
         print("\n数据集划分情况:")
         for label in unique_labels:
-            label_indices = np.where(self.labels == label)[0]
+            label_indices = np.where(self.labels_indices == label)[0]
             np.random.shuffle(label_indices)  # 随机打乱
             split_idx = int(len(label_indices) * train_ratio)
             
@@ -59,29 +64,25 @@ class h5Dataset(Dataset):
         np.random.shuffle(train_indices)
         np.random.shuffle(test_indices)
         
-        # 计算标准化参数（只使用训练数据）
-        if train:
-            self.mean = np.mean(self.data, axis=0, keepdims=True)
-            self.std = np.std(self.data, axis=0, keepdims=True) + 1e-10
-        else:
-            # 如果是测试集，使用原始数据计算训练集的统计信息
-            train_data = self.data[train_indices]
-            self.mean = np.mean(train_data, axis=0, keepdims=True)
-            self.std = np.std(train_data, axis=0, keepdims=True) + 1e-10
+        # 计算标准化参数 - 只使用训练数据的一部分样本计算统计信息
+        sample_size = min(1000, len(train_indices))  # 使用最多1000个样本计算统计信息
+        sample_indices = np.random.choice(train_indices, sample_size, replace=False)
         
-        # 对数据进行标准化
-        self.data = (self.data - self.mean) / self.std
+        # 加载样本数据计算统计信息
+        sample_data = []
+        with h5py.File(self.file_path, 'r') as f:
+            for i in sample_indices:
+                sample_data.append(f['data'][i])
+        sample_data = np.array(sample_data)
         
-        # 选择相应的数据集
-        if train:
-            self.data = self.data[train_indices]
-            self.labels = self.labels[train_indices]
-        else:
-            self.data = self.data[test_indices]
-            self.labels = self.labels[test_indices]
+        self.mean = np.mean(sample_data, axis=0, keepdims=True)
+        self.std = np.std(sample_data, axis=0, keepdims=True) + 1e-10
         
-        # 将标签转换为tensor
-        self.labels = torch.tensor(self.labels, dtype=torch.long)
+        # 选择相应的数据集索引
+        self.indices = train_indices if train else test_indices
+        
+        # 将标签索引转换为tensor
+        self.labels = torch.tensor([self.labels_indices[i] for i in self.indices], dtype=torch.long)
         
         print(f"\n{('训练' if train else '测试')}集信息:")
         unique_labels = torch.unique(self.labels)
@@ -90,12 +91,22 @@ class h5Dataset(Dataset):
             count = (self.labels == label).sum().item()
             print(f"类别 {label}: {count} 个样本")
         
+        # 预加载数据到内存中
+        print(f"预加载数据到内存中，共 {len(self.indices)} 个样本...")
+        self.data_cache = []
+        with h5py.File(self.file_path, 'r') as f:
+            for idx in self.indices:
+                # 读取数据并标准化
+                data = (f['data'][idx] - self.mean) / self.std
+                self.data_cache.append(torch.tensor(data, dtype=torch.float32))
+        print("数据预加载完成")
+    
     def __len__(self):
-        return len(self.data)
+        return len(self.indices)
 
     def __getitem__(self, index):
-        return torch.tensor(self.data[index], dtype=torch.float32), \
-               self.labels[index].clone().detach()
+        # 直接从缓存中获取数据
+        return self.data_cache[index], self.labels[index].clone().detach()
 
     def get_all_samples(self):
         """
@@ -104,9 +115,10 @@ class h5Dataset(Dataset):
         """
         # 使用数据和标签的组合作为唯一标识符
         identifiers = []
-        for i in range(len(self.data)):
+        for i in range(len(self.indices)):
             # 使用数据的哈希值和标签作为唯一标识符
-            data_hash = hash(self.data[i].tobytes())
+            data = self.data_cache[i]
+            data_hash = hash(data.numpy().tobytes())
             label = self.labels[i].item()
             identifier = f"{data_hash}_{label}"
             identifiers.append(identifier)
@@ -114,22 +126,50 @@ class h5Dataset(Dataset):
 
 
 class SourceDomainDataset(Dataset):
-    """源域数据集类"""
+    """源域数据集类，支持多进程加载"""
     def __init__(self, h5_file_path, indices=None):
         self.h5_file_path = h5_file_path
         
-        # 加载数据
+        # 只打开文件获取信息，然后关闭
         with h5py.File(h5_file_path, 'r') as f:
-            self.data = f['data'][:]
-            self.labels = f['labels'][:]
+            # 获取数据形状和标签信息
+            self.data_shape = f['data'].shape
+            self.labels_shape = f['labels'].shape
+            # 获取唯一标签
+            labels_data = f['labels'][:]
+            if len(labels_data.shape) > 1 and labels_data.shape[1] > 1:
+                # 如果是one-hot编码，转换为类别索引
+                labels_indices = np.argmax(labels_data, axis=1)
+            else:
+                # 如果已经是类别索引
+                labels_indices = labels_data
+            unique_labels = np.unique(labels_indices)
             
             # 打印数据信息
-            print(f"数据形状: {self.data.shape}")
-            print(f"标签形状: {self.labels.shape}")
-            print(f"唯一标签: {np.unique(self.labels)}")
+            print(f"数据形状: {self.data_shape}")
+            print(f"标签形状: {self.labels_shape}")
+            print(f"唯一标签: {unique_labels}")
         
         # 如果提供了索引，则只使用这些索引对应的数据
-        self.indices = indices if indices is not None else np.arange(len(self.data))
+        self.indices = indices if indices is not None else np.arange(self.data_shape[0])
+        
+        # 缓存标签数据，避免每次都读取文件
+        with h5py.File(h5_file_path, 'r') as f:
+            # 只加载需要的标签
+            labels_data = f['labels'][:]
+            if len(labels_data.shape) > 1 and labels_data.shape[1] > 1:
+                # 如果是one-hot编码，转换为类别索引
+                self.labels_cache = np.array([np.argmax(labels_data[i]) for i in self.indices])
+            else:
+                # 如果已经是类别索引
+                self.labels_cache = np.array([labels_data[i] for i in self.indices])
+            
+            # 预加载数据到内存中
+            print(f"预加载数据到内存中，共 {len(self.indices)} 个样本...")
+            self.data_cache = []
+            for idx in self.indices:
+                self.data_cache.append(f['data'][idx])
+            print("数据预加载完成")
         
         print(f"数据集大小: {len(self.indices)}")
     
@@ -137,8 +177,27 @@ class SourceDomainDataset(Dataset):
         return len(self.indices)
     
     def __getitem__(self, index):
-        idx = self.indices[index]
-        return torch.tensor(self.data[idx], dtype=torch.float32), self.labels[idx]
+        # 直接从缓存中获取数据和标签
+        data = self.data_cache[index]
+        label = self.labels_cache[index]
+        
+        return torch.tensor(data, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
+        
+    def get_all_samples(self):
+        """
+        获取数据集中所有样本的唯一标识符
+        返回：包含所有样本标识符的列表
+        """
+        # 使用数据和标签的组合作为唯一标识符
+        identifiers = []
+        for i in range(len(self.indices)):
+            # 使用数据的哈希值和标签作为唯一标识符
+            data = self.data_cache[i]
+            label = self.labels_cache[i]
+            data_hash = hash(data.tobytes())
+            identifier = f"{data_hash}_{label}"
+            identifiers.append(identifier)
+        return identifiers
 
 
 class ProtoNetDataset(Dataset):
@@ -176,6 +235,33 @@ class ProtoNetDataset(Dataset):
         
         # 打印数据集信息
         self._print_dataset_info()
+        
+        # 预生成所有episode的类别选择
+        # 这样可以确保多进程加载时每个worker看到相同的episode结构
+        np.random.seed(42)  # 使用固定种子以确保可重现性
+        self.episodes = []
+        for _ in range(self.num_episodes):
+            # 如果类别数量不足，则使用所有可用类别
+            if len(self.labels) < self.n_way:
+                episode_classes = self.labels
+            else:
+                episode_classes = np.random.choice(self.labels, self.n_way, replace=False)
+            self.episodes.append(episode_classes)
+        np.random.seed(None)  # 重置随机种子
+        
+        # 预加载所有数据，避免在多进程中使用h5py文件句柄
+        self._preload_data()
+    
+    def _preload_data(self):
+        """预加载所有数据到内存中，避免在多进程中使用h5py文件句柄"""
+        print("预加载数据到内存中...")
+        self.data_cache = {}
+        for label, indices in self.label_to_indices.items():
+            self.data_cache[label] = []
+            for idx in indices:
+                x, _ = self.base_dataset[idx]
+                self.data_cache[label].append(x)
+        print("数据预加载完成")
     
     def _check_data_sufficiency(self):
         """检查每个类别的样本是否足够构建元学习任务"""
@@ -196,64 +282,64 @@ class ProtoNetDataset(Dataset):
         print("\n类别样本分布:")
         for label in self.labels:
             print(f"  - 类别 {label}: {len(self.label_to_indices[label])} 个样本")
-        
+    
     def __len__(self):
         # 返回可能的episode数量
         return self.num_episodes
         
     def __getitem__(self, index):
         """
-        返回一个episode的数据
+        获取一个episode
         
+        参数:
+            index: episode索引
+            
         返回:
-            support_x: 支持集数据 [n_way * n_support, ...]
-            support_y: 支持集标签 [n_way * n_support]
-            query_x: 查询集数据 [n_way * n_query, ...]
-            query_y: 查询集标签 [n_way * n_query]
+            support_x: 支持集样本
+            support_y: 支持集标签
+            query_x: 查询集样本
+            query_y: 查询集标签
         """
-        # 随机选择n_way个类别
-        available_classes = len(self.labels)
-        if available_classes < self.n_way:
-            raise ValueError(f"可用类别数量 ({available_classes}) 小于 N-way ({self.n_way})")
-        
-        selected_classes = torch.randperm(available_classes)[:self.n_way]
+        # 使用预生成的类别选择
+        episode_classes = self.episodes[index]
         
         support_x = []
         support_y = []
         query_x = []
         query_y = []
         
-        for i, class_idx in enumerate(selected_classes):
-            # 获取当前类别的所有样本索引
-            current_class = self.labels[class_idx]
-            indices = self.label_to_indices[current_class]
+        for i, cls in enumerate(episode_classes):
+            # 获取当前类别的所有样本
+            samples = self.data_cache[cls]
             
-            # 确保样本数量足够
-            if len(indices) < self.n_support + self.n_query:
-                raise ValueError(f"类别 {current_class} 的样本数量 ({len(indices)}) 不足以构建元学习任务")
+            # 确保有足够的样本
+            if len(samples) < self.n_support + self.n_query:
+                # 如果样本不足，则使用重复采样
+                selected_indices = np.random.choice(len(samples), self.n_support + self.n_query, replace=True)
+            else:
+                # 随机选择不重复的样本
+                selected_indices = np.random.choice(len(samples), self.n_support + self.n_query, replace=False)
             
-            # 随机选择support和query样本
-            selected_indices = torch.randperm(len(indices))
+            # 分割为支持集和查询集
             support_indices = selected_indices[:self.n_support]
             query_indices = selected_indices[self.n_support:self.n_support + self.n_query]
             
-            # 收集support样本
+            # 获取样本和标签
             for idx in support_indices:
-                x, _ = self.base_dataset[indices[idx]]
+                x = samples[idx]
                 support_x.append(x)
-                support_y.append(i)  # 使用0到n_way-1作为新的类别标签
+                support_y.append(i)  # 使用类别的索引作为标签
                 
-            # 收集query样本
             for idx in query_indices:
-                x, _ = self.base_dataset[indices[idx]]
+                x = samples[idx]
                 query_x.append(x)
-                query_y.append(i)
-                
+                query_y.append(i)  # 使用类别的索引作为标签
+        
         # 转换为tensor
         support_x = torch.stack(support_x)
-        support_y = torch.tensor(support_y)
+        support_y = torch.tensor(support_y, dtype=torch.long)
         query_x = torch.stack(query_x)
-        query_y = torch.tensor(query_y)
+        query_y = torch.tensor(query_y, dtype=torch.long)
         
         return support_x, support_y, query_x, query_y
 
@@ -392,15 +478,15 @@ class EpisodeGenerator(Dataset):
         
         for cls in unique_labels:
             # 获取当前类别的所有样本索引
-            label_indices = np.where(self.dataset.labels == cls)[0]
+            cls_indices = [i for i, label in enumerate(self.dataset.labels) if label == cls]
             # 随机选择 n 个示例作为支持集
-            support_examples = np.random.choice(label_indices, self.n_support, replace=False)
+            support_examples = np.random.choice(cls_indices, self.n_support, replace=False)
             # 从剩余的示例中随机选择 m 个示例作为查询集
-            remaining_examples = list(set(label_indices) - set(support_examples))
+            remaining_examples = list(set(cls_indices) - set(support_examples))
             query_examples = np.random.choice(remaining_examples, self.n_query, replace=False)
             
-            support_set[cls] = support_examples.tolist()
-            query_set[cls] = query_examples.tolist()
+            support_set[cls.item()] = support_examples.tolist()
+            query_set[cls.item()] = query_examples.tolist()
         
         return support_set, query_set
 
