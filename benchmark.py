@@ -27,11 +27,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='目标域元学习模型测试脚本')
     parser.add_argument('--model_path', type=str, help='模型路径')
     parser.add_argument('--target_data', type=str, default='data/h5data/remaining_data.h5', help='目标域数据路径 (h5文件或文件夹)')
-    parser.add_argument('--model_name', type=str, default='protonet', help='模型名称')
+    parser.add_argument('--model_name', type=str, default='all_model', help='模型名称')
     parser.add_argument('--test_all_models', action='store_true', help='是否测试所有模型')
-    parser.add_argument('--n_way', type=int, default=4, help='N-way分类任务中的类别数')
-    parser.add_argument('--n_support', type=int, default=5, help='每个类别的支持集样本数')
-    parser.add_argument('--n_query', type=int, default=15, help='每个类别的查询集样本数')
     parser.add_argument('--num_episodes', type=int, default=100, help='测试的episode数量')
     parser.add_argument('--force_cpu', action='store_true', help='强制使用CPU，即使有GPU可用')
     parser.add_argument('--batch_size', type=int, default=4, help='批处理大小，GPU模式下可以设置更大')
@@ -92,6 +89,8 @@ if __name__ == "__main__":
     test_configs = [
         {'n_way': 4, 'n_support': 1, 'n_query': 15},
         {'n_way': 4, 'n_support': 5, 'n_query': 15},
+        {'n_way': 4, 'n_support': 10, 'n_query': 15},
+        {'n_way': 4, 'n_support': 20, 'n_query': 15},
     ]
     
     # 创建保存目录
@@ -112,6 +111,16 @@ if __name__ == "__main__":
         print(f"找到 {len(best_model_paths)} 个模型进行测试")
         
         for model_path in best_model_paths:
+            # 获取模型完整路径，去掉"runs"部分
+            model_full_path = model_path
+            if "runs/" in model_full_path:
+                model_save_path = model_full_path.split("runs/")[1]
+            elif "runs\\" in model_full_path:
+                model_save_path = model_full_path.split("runs\\")[1]
+            else:
+                model_save_path = model_full_path
+                
+            # 直接使用模型保存路径，不需要额外的目录
             model_results = test_model(
                 model_path=model_path,
                 target_data_path=args.target_data,
@@ -119,13 +128,22 @@ if __name__ == "__main__":
                 test_configs=test_configs,
                 num_episodes=args.num_episodes,
                 batch_size=args.batch_size,
-                save_dir=os.path.join(save_dir, os.path.basename(os.path.dirname(model_path))),
+                save_dir=f'benchmark/{model_save_path}',
                 optimize_memory=args.optimize_memory
             )
             all_results.append(model_results)
     
     elif args.model_path:
         # 测试单个模型
+        # 获取模型完整路径，去掉"runs"部分
+        model_full_path = args.model_path
+        if "runs/" in model_full_path:
+            model_save_path = model_full_path.split("runs/")[1]
+        elif "runs\\" in model_full_path:
+            model_save_path = model_full_path.split("runs\\")[1]
+        else:
+            model_save_path = model_full_path
+            
         model_results = test_model(
             model_path=args.model_path,
             target_data_path=args.target_data,
@@ -133,7 +151,7 @@ if __name__ == "__main__":
             test_configs=test_configs,
             num_episodes=args.num_episodes,
             batch_size=args.batch_size,
-            save_dir=save_dir,
+            save_dir=f'benchmark/{model_save_path}',
             optimize_memory=args.optimize_memory
         )
         all_results.append(model_results)

@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import argparse
-from models.ProtoNet_attention import ProtoNetWithAttention
+from models.ProtoNet_backbone import ProtoNetWithAttention
 import h5py
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import LinearLR, SequentialLR
@@ -46,8 +46,8 @@ if __name__ == "__main__":
                       choices=['cnn1d', 'channel', 'spatial', 'cbam'],
                       help='骨干网络类型: cnn1d, channel, spatial, cbam')
     parser.add_argument('--distance', type=str, default='euclidean', 
-                      choices=['euclidean', 'cosine', 'relation'],
-                      help='距离度量类型: euclidean, cosine, relation')
+                      choices=['euclidean', 'cosine', 'relation', 'relation_selfattention'],
+                      help='距离度量类型: euclidean, cosine, relation, relation_selfattention')
     parser.add_argument('--dropout', type=float, default=0.3, help='Dropout比率')
     parser.add_argument('--scheduler', type=str, default='cosine',
                       choices=['step', 'cosine'],
@@ -59,6 +59,7 @@ if __name__ == "__main__":
     parser.add_argument('--source_data', type=str, default='data/h5data/selected_data.h5', help='源域数据文件路径')
     parser.add_argument('--train_ratio', type=float, default=0.8, help='训练集比例')
     parser.add_argument('--seed', type=int, default=42, help='随机种子')
+    parser.add_argument('--num_episodes', type=int, default=200, help='训练时的episode数量')
     args = parser.parse_args()
 
     # 设置训练参数
@@ -141,7 +142,7 @@ if __name__ == "__main__":
         n_way=training_params['n_way'], 
         n_support=training_params['n_support'],
         n_query=training_params['n_query'],
-        num_episodes=500  # 设置训练时的episode数量
+        num_episodes=args.num_episodes  # 设置训练时的episode数量
     )
     
     val_dataset = ProtoNetDataset(
@@ -149,7 +150,7 @@ if __name__ == "__main__":
         n_way=training_params['n_way'],  
         n_support=training_params['n_support'],
         n_query=training_params['n_query'],
-        num_episodes=100  # 设置验证时的episode数量
+        num_episodes=args.num_episodes  # 设置验证时的episode数量
     )
     
     # 创建数据加载器

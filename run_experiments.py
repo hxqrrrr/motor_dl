@@ -126,55 +126,27 @@ if __name__ == "__main__":
     # 定义要执行的实验列表
     experiments_benchmark = [
       
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_cosine_20250224_172035/best_model_val_acc_0.8530.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_channel_cosine_20250224_162136/best_model_val_acc_0.7894.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_channel_euclidean_20250224_185049/best_model_val_acc_0.8546.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_cosine_20250224_150113/best_model_val_acc_0.8185.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_cosine_20250224_153348/best_model_val_acc_0.8632.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_cnn1d_euclidean_20250224_181335/best_model_val_acc_0.8694.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth"'
-        },
-        {
-            "command": f'"{python_path}" benchmark.py --model_name all_model --model_path "runs/protonet_20250219_143734/best_model_0.8965.pth"'
+        
         }
     ]
     experiments_train = [
         {
-            "command": f'"{python_path}" train.py --model all_model --backbone cnn1d --distance_type euclidean '
-                      f'--in_channels 5 --hidden_dim 128 --feature_dim 64 --dropout 0.3 '
-                      f'--scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001'
+            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance cosine --feature_dim 128 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
         },
         {
-            "command": f'"{python_path}" train.py --model all_model --backbone cnn1d --distance_type cosine '
-                      f'--in_channels 5 --hidden_dim 128 --feature_dim 256 --dropout 0.3 '
-                      f'--scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001'
+            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 64 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
         },
         {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance_type euclidean '
-                      f'--in_channels 5 --hidden_dim 256 --feature_dim 128 --dropout 0.3 '
-                      f'--scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001'
+            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 256 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
         },
         {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance_type euclidean '
-                      f'--in_channels 5 --hidden_dim 256 --feature_dim 256 --dropout 0.3 '
-                      f'--scheduler cosine --warmup_epochs 5 --warmup_start_lr 1e-6 --lr 0.001'
+            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 128 --hidden_dim 256 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
         },
+        {
+            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 256 --hidden_dim 256 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
+        },
+      
+        
         
     ]
     # 执行实验
