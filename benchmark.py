@@ -90,8 +90,8 @@ if __name__ == "__main__":
     
     # 测试配置
     test_configs = [
-        {'n_way': 4, 'n_support': 1, 'n_query': 5},
-        {'n_way': 4, 'n_support': 5, 'n_query': 5},
+        {'n_way': 4, 'n_support': 1, 'n_query': 15},
+        {'n_way': 4, 'n_support': 5, 'n_query': 15},
     ]
     
     # 创建保存目录
