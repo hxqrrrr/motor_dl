@@ -31,7 +31,7 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
         dropout=dropout
     )
 
-def train_epoch(model, train_loader, optimizer, device):
+def train_epoch(model, train_loader, optimizer, device,n_way):
     """训练一个epoch"""
     model.train()
     total_loss = 0
@@ -39,7 +39,6 @@ def train_epoch(model, train_loader, optimizer, device):
     total_recall = 0
     total_f1 = 0
     n_batches = len(train_loader)
-    n_way = 5  # 固定的n_way值
     
     with tqdm(train_loader, desc="训练", ncols=100, leave=True) as pbar:
         for batch_idx, (support_x, support_y, query_x, query_y) in enumerate(pbar):
@@ -48,11 +47,13 @@ def train_epoch(model, train_loader, optimizer, device):
             support_y = support_y.to(device)  # [batch_size, n_support]
             query_x = query_x.to(device)      # [batch_size, n_query, channels, length]
             query_y = query_y.to(device)      # [batch_size, n_query]
+
             
             optimizer.zero_grad()
             logits = model(support_x, support_y, query_x)  # [batch_size, n_query, n_way]
             
-            # 重塑维度以计算损失
+
+            
             loss = torch.nn.functional.cross_entropy(
                 logits.reshape(-1, logits.size(-1)), 
                 query_y.reshape(-1)
@@ -260,3 +261,51 @@ def save_training_info(model_info, training_params, save_dir, is_best_model=Fals
     
     torch.save(save_dict, model_path)
     return params_file
+
+def split_dataset(data_path, train_ratio=0.8, seed=42):
+    """
+    将数据集划分为训练集和测试集，确保只进行一次划分
+    
+    参数:
+        data_path: 数据文件路径
+        train_ratio: 训练集比例
+        seed: 随机种子
+    
+    返回:
+        train_indices: 训练集索引
+        test_indices: 测试集索引
+    """
+    # 设置随机种子
+    np.random.seed(seed)
+    
+    # 加载数据
+    with h5py.File(data_path, 'r') as f:
+        labels = f['labels'][:]
+    
+    # 分层采样
+    unique_labels = np.unique(labels)
+    train_indices = []
+    test_indices = []
+    
+    print("\n数据集划分情况:")
+    for label in unique_labels:
+        label_indices = np.where(labels == label)[0]
+        np.random.shuffle(label_indices)  # 随机打乱
+        split_idx = int(len(label_indices) * train_ratio)
+        
+        train_indices.extend(label_indices[:split_idx])
+        test_indices.extend(label_indices[split_idx:])
+        
+        print(f"类别 {label}:")
+        print(f"  - 总样本数: {len(label_indices)}")
+        print(f"  - 训练集: {split_idx} 个样本")
+        print(f"  - 测试集: {len(label_indices) - split_idx} 个样本")
+    
+    # 随机打乱索引
+    np.random.shuffle(train_indices)
+    np.random.shuffle(test_indices)
+    
+    print(f"\n训练集大小: {len(train_indices)}")
+    print(f"测试集大小: {len(test_indices)}")
+    
+    return train_indices, test_indices

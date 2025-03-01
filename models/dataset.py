@@ -3,8 +3,9 @@ import torch
 from torch.utils.data import Dataset
 import scipy.io as sio
 import os
-from data.dataloader.cwru_dataset import CWRUDataset
 import numpy as np
+from typing import Dict, List, Tuple
+import random
 
 # DataLoader
 class h5Dataset(Dataset):
@@ -112,44 +113,36 @@ class h5Dataset(Dataset):
         return identifiers
 
 
-class KATDataset(Dataset):
-    def __init__(self, folder_path):
-        """
-        初始化KAT数据集
-        Args:
-            folder_path (str): 文件夹路径
-        """
-        self.folder_path = folder_path
-        print(f"加载文件夹: {folder_path}")
-        # 遍历文件夹，找到所有.mat结尾的文件
-        self.mat_files = [f for f in os.listdir(folder_path) if f.endswith('.mat')]
+class SourceDomainDataset(Dataset):
+    """源域数据集类"""
+    def __init__(self, h5_file_path, indices=None):
+        self.h5_file_path = h5_file_path
         
+        # 加载数据
+        with h5py.File(h5_file_path, 'r') as f:
+            self.data = f['data'][:]
+            self.labels = f['labels'][:]
+            
+            # 打印数据信息
+            print(f"数据形状: {self.data.shape}")
+            print(f"标签形状: {self.labels.shape}")
+            print(f"唯一标签: {np.unique(self.labels)}")
+        
+        # 如果提供了索引，则只使用这些索引对应的数据
+        self.indices = indices if indices is not None else np.arange(len(self.data))
+        
+        print(f"数据集大小: {len(self.indices)}")
+    
     def __len__(self):
-        """返回数据集中的样本总数"""
-        print(f"数据集中的样本总数: {len(self.mat_files)}")
-        return len(self.mat_files)
+        return len(self.indices)
     
     def __getitem__(self, index):
-        """
-        获取指定索引的样本和标签
-        Args:
-            index (int): 样本索引
-        Returns:
-            tuple: (样本数据, 标签)
-        """
-        # 根据索引获取.mat文件的路径
-        file_path = os.path.join(self.folder_path, self.mat_files[index])
-        # 加载.mat文件
-        data = sio.loadmat(file_path)
-        # 假设.mat文件中的数据和标签的键名分别为'data'和'label'
-        sample = torch.tensor(data['data'], dtype=torch.float32)  # 预期形状: (样本数, 通道数, 序列长度)
-        label = torch.tensor(data['label'], dtype=torch.long)  # 预期形状: (样本数,)
-        
-        return sample, label
+        idx = self.indices[index]
+        return torch.tensor(self.data[idx], dtype=torch.float32), self.labels[idx]
 
 
 class ProtoNetDataset(Dataset):
-    def __init__(self, base_dataset, n_way, n_support, n_query):
+    def __init__(self, base_dataset, n_way, n_support, n_query, num_episodes=100):
         """
         ProtoNet数据集包装器
         
@@ -158,25 +151,55 @@ class ProtoNetDataset(Dataset):
             n_way: 每个episode中的类别数
             n_support: 每个类别的support样本数
             n_query: 每个类别的query样本数
+            num_episodes: 生成的episode数量，默认为100
         """
         self.base_dataset = base_dataset
         self.n_way = n_way
         self.n_support = n_support
         self.n_query = n_query
+        self.num_episodes = num_episodes
         
         # 按类别组织数据
         self.label_to_indices = {}
         for idx in range(len(self.base_dataset)):
             _, label = self.base_dataset[idx]
-            if label.item() not in self.label_to_indices:
-                self.label_to_indices[label.item()] = []
-            self.label_to_indices[label.item()].append(idx)
+            if isinstance(label, torch.Tensor):
+                label = label.item()
+            if label not in self.label_to_indices:
+                self.label_to_indices[label] = []
+            self.label_to_indices[label].append(idx)
             
         self.labels = list(self.label_to_indices.keys())
         
+        # 检查数据是否足够
+        self._check_data_sufficiency()
+        
+        # 打印数据集信息
+        self._print_dataset_info()
+    
+    def _check_data_sufficiency(self):
+        """检查每个类别的样本是否足够构建元学习任务"""
+        for label, indices in self.label_to_indices.items():
+            if len(indices) < self.n_support + self.n_query:
+                print(f"警告: 类别 {label} 的样本数量 ({len(indices)}) 不足以构建元学习任务 (需要 {self.n_support + self.n_query} 个样本)")
+    
+    def _print_dataset_info(self):
+        """打印数据集信息"""
+        print(f"\nProtoNetDataset 信息:")
+        print(f"  - 类别数量: {len(self.labels)}")
+        print(f"  - N-way: {self.n_way}")
+        print(f"  - N-support: {self.n_support}")
+        print(f"  - N-query: {self.n_query}")
+        print(f"  - Episode数量: {self.num_episodes}")
+        
+        # 打印每个类别的样本数量
+        print("\n类别样本分布:")
+        for label in self.labels:
+            print(f"  - 类别 {label}: {len(self.label_to_indices[label])} 个样本")
+        
     def __len__(self):
         # 返回可能的episode数量
-        return 100  # 可以设置为更大的数字
+        return self.num_episodes
         
     def __getitem__(self, index):
         """
@@ -189,7 +212,11 @@ class ProtoNetDataset(Dataset):
             query_y: 查询集标签 [n_way * n_query]
         """
         # 随机选择n_way个类别
-        selected_classes = torch.randperm(len(self.labels))[:self.n_way]
+        available_classes = len(self.labels)
+        if available_classes < self.n_way:
+            raise ValueError(f"可用类别数量 ({available_classes}) 小于 N-way ({self.n_way})")
+        
+        selected_classes = torch.randperm(available_classes)[:self.n_way]
         
         support_x = []
         support_y = []
@@ -200,6 +227,10 @@ class ProtoNetDataset(Dataset):
             # 获取当前类别的所有样本索引
             current_class = self.labels[class_idx]
             indices = self.label_to_indices[current_class]
+            
+            # 确保样本数量足够
+            if len(indices) < self.n_support + self.n_query:
+                raise ValueError(f"类别 {current_class} 的样本数量 ({len(indices)}) 不足以构建元学习任务")
             
             # 随机选择support和query样本
             selected_indices = torch.randperm(len(indices))
@@ -226,87 +257,199 @@ class ProtoNetDataset(Dataset):
         
         return support_x, support_y, query_x, query_y
 
-
-class DynamicWayProtoNetDataset(Dataset):
-    def __init__(self, base_dataset, start_way, end_way, n_support, n_query, way_interval=1):
-        """
-        支持动态n_way的ProtoNet数据集
-        
-        参数:
-            base_dataset: 基础数据集
-            start_way: 起始类别数
-            end_way: 结束类别数
-            n_support: 每个类别的support样本数
-            n_query: 每个类别的query样本数
-            way_interval: n_way的增长间隔
-        """
+class TaskProtoNetDataset(Dataset):
+    def __init__(self, base_dataset, n_way, n_support, n_query, selected_labels, selected_classes=None, is_train=True):
         self.base_dataset = base_dataset
-        self.start_way = start_way
-        self.end_way = end_way
+        self.n_way = n_way
         self.n_support = n_support
         self.n_query = n_query
-        self.way_interval = way_interval
-        
-        # 计算总的way数量
-        self.n_way_steps = (end_way - start_way) // way_interval + 1
-        
+        self.selected_labels = selected_labels
+        self.selected_classes = selected_classes
+        self.is_train = is_train
+
         # 按类别组织数据
-        self.label_to_indices = {}
+        self.label_to_indices = self._organize_labels()
+        self.labels = list(self.label_to_indices.keys())
+
+        # 打印标签信息
+        self._print_label_info()
+
+        # 划分训练集和验证集
+        self.data_indices = self._split_dataset()  
+
+    def _organize_labels(self):
+        label_to_indices = {}
         for idx in range(len(self.base_dataset)):
             _, label = self.base_dataset[idx]
-            if label.item() not in self.label_to_indices:
-                self.label_to_indices[label.item()] = []
-            self.label_to_indices[label.item()].append(idx)
-            
-        self.labels = list(self.label_to_indices.keys())
-        
+            if label.item() in self.selected_labels:
+                if label.item() not in label_to_indices:
+                    label_to_indices[label.item()] = []
+                label_to_indices[label.item()].append(idx)
+        return label_to_indices
+
+    def _print_label_info(self):
+        print(f"可用标签: {self.labels}")
+        print(f"标签范围: {min(self.labels)} 到 {max(self.labels)}")
+
+    def _split_dataset(self):
+        indices = []
+        for label in self.labels:
+            label_indices = self.label_to_indices[label]
+            split_idx = int(len(label_indices) * 0.8)  # 80%作为训练集
+            if self.is_train:
+                indices.extend(label_indices[:split_idx])
+            else:
+                indices.extend(label_indices[split_idx:])
+        return indices
+
     def __len__(self):
-        # 每个n_way配置返回固定数量的episode
-        return 1000 * self.n_way_steps
-        
+        return len(self.data_indices)
+
     def __getitem__(self, index):
-        # 确定当前的n_way
-        way_step = index // 1000
-        current_n_way = self.start_way + way_step * self.way_interval
-        
-        # 随机选择current_n_way个类别
-        selected_classes = torch.randperm(len(self.labels))[:current_n_way]
-        
-        support_x = []
-        support_y = []
-        query_x = []
-        query_y = []
-        
-        for i, class_idx in enumerate(selected_classes):
-            # 获取当前类别的所有样本索引
-            current_class = self.labels[class_idx]
-            indices = self.label_to_indices[current_class]
-            
-            # 随机选择support和query样本
-            selected_indices = torch.randperm(len(indices))
+        if index < 0 or index >= len(self.data_indices):
+            raise IndexError("索引超出范围")
+        idx = self.data_indices[index]
+        return self.get_episode_data(idx)
+
+    def get_episode_data(self, idx):
+        _, label = self.base_dataset[idx]
+        label = label.item()
+
+        # 检查标签是否在 selected_labels 中
+        if label not in self.selected_labels:
+            raise ValueError(f"标签 {label} 不在选择的标签中")
+
+        # 获取当前类别的所有样本索引
+        indices = self.label_to_indices[label]
+        if len(indices) < self.n_support + self.n_query:
+            raise ValueError("样本数量不足以满足支持和查询的要求")
+
+        # 随机选择支持和查询样本
+        selected_classes = self.selected_classes if self.selected_classes else [label]
+        support_x, support_y, query_x, query_y = [], [], [], []
+
+        for selected_class in selected_classes:
+            if selected_class not in self.label_to_indices:
+                raise ValueError(f"选择的类别 {selected_class} 不在数据集中")
+            class_indices = self.label_to_indices[selected_class]
+            selected_indices = torch.randperm(len(class_indices))
             support_indices = selected_indices[:self.n_support]
             query_indices = selected_indices[self.n_support:self.n_support + self.n_query]
-            
-            # 收集support样本
-            for idx in support_indices:
-                x, _ = self.base_dataset[indices[idx]]
-                support_x.append(x)
-                support_y.append(i)
-                
-            # 收集query样本
-            for idx in query_indices:
-                x, _ = self.base_dataset[indices[idx]]
-                query_x.append(x)
-                query_y.append(i)
-                
-        # 转换为tensor
-        support_x = torch.stack(support_x)
-        support_y = torch.tensor(support_y)
-        query_x = torch.stack(query_x)
-        query_y = torch.tensor(query_y)
+
+            # 收集支持样本和查询样本
+            support_x_class, support_y_class = self._collect_samples(class_indices, support_indices, selected_class)
+            query_x_class, query_y_class = self._collect_samples(class_indices, query_indices, selected_class)
+
+            support_x.append(support_x_class)
+            support_y.append(support_y_class)
+            query_x.append(query_x_class)
+            query_y.append(query_y_class)
+
+        return torch.cat(support_x), torch.cat(support_y), torch.cat(query_x), torch.cat(query_y)
+
+    def _collect_samples(self, indices, selected_indices, label):
+        x_samples = []
+        y_samples = []
+        for idx in selected_indices:
+            x, _ = self.base_dataset[indices[idx]]
+            x_samples.append(x)
+            y_samples.append(label)  # 使用原始标签
+        return torch.stack(x_samples), torch.tensor(y_samples)
+
+
+
+class EpisodeGenerator(Dataset):
+    def __init__(self, dataset: h5Dataset, n_way: int, n_support: int, n_query: int, selected_labels: List[int]):
+        """
+        初始化剧集生成器。
         
-        # 不再返回current_n_way
-        return support_x, support_y, query_x, query_y
+        参数:
+            dataset: 一个 h5Dataset 实例。
+            k: 每集的类数。
+            n: 支持集中每个类的示例数。
+            m: 查询集中每个类的示例数。
+        """
+        self.dataset = dataset  # 存储数据集
+        self.n_way = n_way  # 每集的类数
+        self.n_support = n_support  # 支持集中每个类的示例数
+        self.n_query = n_query  # 查询集中每个类的示例数
+        self.selected_labels = selected_labels
+        # 划分支持集和查询集
+        self.support_set, self.query_set = self.split_dataset()
+
+    def split_dataset(self) -> Tuple[Dict[int, List[int]], Dict[int, List[int]]]:
+        """
+        划分支持集和查询集。
+        
+        返回:
+            支持集和查询集的字典。
+        """
+        support_set = {}
+        query_set = {}
+        
+        # 获取所有标签
+        unique_labels = np.unique(self.dataset.labels)
+        
+        for cls in unique_labels:
+            # 获取当前类别的所有样本索引
+            label_indices = np.where(self.dataset.labels == cls)[0]
+            # 随机选择 n 个示例作为支持集
+            support_examples = np.random.choice(label_indices, self.n_support, replace=False)
+            # 从剩余的示例中随机选择 m 个示例作为查询集
+            remaining_examples = list(set(label_indices) - set(support_examples))
+            query_examples = np.random.choice(remaining_examples, self.n_query, replace=False)
+            
+            support_set[cls] = support_examples.tolist()
+            query_set[cls] = query_examples.tolist()
+        
+        return support_set, query_set
+
+    def __len__(self):
+        """返回数据集中可能的剧集数量。"""
+        return 100
+
+    def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        根据索引返回支持集和查询集的样本。
+        
+        参数:
+            index: 要获取的剧集索引。
+        
+        返回:
+            支持集样本和查询集样本的元组。
+        """
+        # 生成一个剧集
+        support_set, support_labels, query_set, query_labels = self.generate_episode()
+        
+        return support_set, support_labels, query_set, query_labels
+
+    def generate_episode(self) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        classes = random.sample(self.selected_labels, self.n_way)
+        
+        support_set = []
+        support_labels = []
+        query_set = []
+        query_labels = []
+        
+        for cls in classes:
+            support_indices = self.support_set[cls]
+            query_indices = self.query_set[cls]
+            
+            for idx in support_indices:
+                x, _ = self.dataset[idx]
+                support_set.append(x)
+                support_labels.append(cls)
+            
+            for idx in query_indices:
+                x, _ = self.dataset[idx]
+                query_set.append(x)
+                query_labels.append(cls)
+        
+        return torch.stack(support_set), torch.tensor(support_labels), torch.stack(query_set), torch.tensor(query_labels)
+
+
+
+
 
 
 

@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 from models.ProtoNet_attention import AttentiveEncoder
+import random
 
 class CNN1D_embed(nn.Module):
     """用于Prototypical Network的1D-CNN嵌入网络
@@ -196,22 +197,13 @@ class AllModel(nn.Module):
             raise ValueError(f"Unknown backbone type: {self.backbone}")
         
     def _compute_prototypes(self, support_features: torch.Tensor, support_labels: torch.Tensor) -> torch.Tensor:
-        """计算每个类别的原型，支持batch处理
-        
-        参数:
-            support_features: support set的特征向量 [batch_size, n_support, feature_dim]
-            support_labels: support set的标签 [batch_size, n_support]
-            
-        返回:
-            prototypes: 类别原型向量 [batch_size, n_way, feature_dim]
-        """
+        """计算每个类别的原型，支持batch处理"""
         batch_size = support_features.size(0)
-        n_way = len(torch.unique(support_labels[0]))  # 假设每个batch的类别数相同
         feature_dim = support_features.size(-1)
         device = support_features.device
         
         # 初始化原型tensor
-        prototypes = torch.zeros(batch_size, n_way, feature_dim, device=device)
+        prototypes = []
         
         # 对每个batch分别计算原型
         for i in range(batch_size):
@@ -221,13 +213,22 @@ class AllModel(nn.Module):
             # 获取当前batch的类别
             classes = torch.unique(batch_labels)
             
+            # 检查类别数量
+            n_way = len(classes)
+            if n_way == 0:
+                raise ValueError("当前批次没有有效的类别，无法计算原型。")
+            
+            # 初始化当前batch的原型
+            current_prototypes = torch.zeros(n_way, feature_dim, device=device)
+            
             # 对每个类别计算原型
             for j, cls in enumerate(classes):
                 mask = batch_labels == cls
                 class_features = batch_features[mask]
-                prototypes[i, j] = torch.mean(class_features, dim=0)
-                
-        return prototypes
+                current_prototypes[j] = torch.mean(class_features, dim=0)
+            prototypes.append(current_prototypes)
+        
+        return torch.stack(prototypes)  # 返回 [batch_size, n_way, feature_dim]
         
     def _compute_distances(self, query_features: torch.Tensor, prototypes: torch.Tensor) -> torch.Tensor:
         """计算查询样本与原型之间的距离或关系分数
@@ -267,31 +268,31 @@ class AllModel(nn.Module):
     
     def forward(
         self,
-        support_images: torch.Tensor,
+        support_t: torch.Tensor,
         support_labels: torch.Tensor,
-        query_images: torch.Tensor
+        query_t: torch.Tensor
     ) -> torch.Tensor:
         """前向传播，支持batch处理
         
         参数:
-            support_images: support set图像 [batch_size, n_way * n_support, channels, length]
-            support_labels: support set标签 [batch_size, n_way * n_support]
-            query_images: query set图像 [batch_size, n_way * n_query, channels, length]
+            support_t: 支持集数据 [batch_size, n_way * n_support, length]
+            support_labels: 支持集标签 [batch_size, n_way * n_support]
+            query_t: 查询集数据 [batch_size, n_way * n_query, length]
             
         返回:
             logits: 预测的类别概率 [batch_size, n_query, n_way]
         """
-        batch_size = support_images.size(0)
-        n_support = support_images.size(1)
-        n_query = query_images.size(1)
+        batch_size = support_t.size(0)
+        n_support = support_t.size(1)
+        n_query = query_t.size(1)
         
         # 重新整理维度用于特征提取
-        support_images = support_images.reshape(batch_size * n_support, *support_images.shape[2:])
-        query_images = query_images.reshape(batch_size * n_query, *query_images.shape[2:])
+        support_t = support_t.reshape(batch_size * n_support, *support_t.shape[2:])
+        query_t = query_t.reshape(batch_size * n_query, *query_t.shape[2:])
         
         # 1. 提取特征
-        support_features = self.encoder(support_images)
-        query_features = self.encoder(query_images)
+        support_features = self.encoder(support_t)
+        query_features = self.encoder(query_t)
         
         # 恢复batch维度
         support_features = support_features.view(batch_size, n_support, -1)
@@ -311,3 +312,4 @@ class AllModel(nn.Module):
             logits = -distances
         
         return logits
+
