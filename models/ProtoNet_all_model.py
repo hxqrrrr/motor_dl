@@ -3,8 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from typing import Dict, Optional, Tuple, List
-from models.ProtoNet_attention import AttentiveEncoder
+from models.ProtoNet_backbone import AttentiveEncoder
 import random
+from models.relation import RelationModule, RelationModuleWithAttention
+
 
 class CNN1D_embed(nn.Module):
     """用于Prototypical Network的1D-CNN嵌入网络
@@ -87,58 +89,6 @@ class CNN1D_embed(nn.Module):
         return x
 
 
-class RelationModule(nn.Module):
-    """简单的关系网络模块
-    
-    参数:
-        feature_dim: 输入特征维度
-        hidden_dim: 隐藏层维度
-    """
-    def __init__(self, feature_dim: int, hidden_dim: int):
-        super(RelationModule, self).__init__()
-        
-        # 关系网络
-        self.relation_net = nn.Sequential(
-            nn.Linear(feature_dim * 2, hidden_dim),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(hidden_dim, hidden_dim // 2),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(hidden_dim // 2, 1),
-            nn.Sigmoid()  # 将关系分数归一化到[0,1]区间
-        )
-        
-    def forward(self, query_features: torch.Tensor, support_features: torch.Tensor) -> torch.Tensor:
-        """
-        参数:
-            query_features: [batch_size, n_query, feature_dim]
-            support_features: [batch_size, n_support, feature_dim]
-            
-        返回:
-            relation_scores: [batch_size, n_query, n_support]
-        """
-        batch_size = query_features.size(0)
-        n_query = query_features.size(1)
-        n_support = support_features.size(1)
-        
-        # 准备特征对
-        q_expanded = query_features.unsqueeze(2).expand(-1, -1, n_support, -1)    # [batch_size, n_query, n_support, feature_dim]
-        s_expanded = support_features.unsqueeze(1).expand(-1, n_query, -1, -1)    # [batch_size, n_query, n_support, feature_dim]
-        
-        # 连接特征
-        paired_features = torch.cat([q_expanded, s_expanded], dim=-1)  # [batch_size, n_query, n_support, feature_dim*2]
-        
-        # 重塑tensor以便输入关系网络
-        paired_features = paired_features.view(-1, paired_features.size(-1))  # [batch_size*n_query*n_support, feature_dim*2]
-        
-        # 计算关系分数
-        relation_scores = self.relation_net(paired_features)  # [batch_size*n_query*n_support, 1]
-        
-        # 重塑回原始维度
-        relation_scores = relation_scores.view(batch_size, n_query, n_support)  # [batch_size, n_query, n_support]
-        
-        return relation_scores
 
 
 class AllModel(nn.Module):
@@ -149,7 +99,7 @@ class AllModel(nn.Module):
         hidden_dim (int): 嵌入网络的隐藏层维度
         feature_dim (int): 最终特征向量的维度
         backbone (str): 特征提取器的类型 ('cnn1d', 'cnn2d', 'lstm')
-        distance_type (str): 距离度量方式 ('euclidean', 'cosine', 'relation')
+        distance_type (str): 距离度量方式 ('euclidean', 'cosine', 'relation', 'relation_selfattention')
         dropout (float): Dropout比率
     """
     def __init__(
@@ -158,10 +108,21 @@ class AllModel(nn.Module):
         hidden_dim: int,
         feature_dim: int,
         backbone: str = 'cnn1d',
-        distance_type: str = 'relation',
-        dropout: float = 0.5
+        distance_type: str = 'euclidean',
+        dropout: float = 0.2
     ):
+        """初始化模型
+        
+        参数:
+            in_channels: 输入通道数
+            hidden_dim: 隐藏层维度
+            feature_dim: 特征维度
+            backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam']
+            distance_type: 距离度量类型，可选['euclidean', 'cosine', 'relation', 'relation_selfattention']
+            dropout: Dropout比率
+        """
         super(AllModel, self).__init__()
+        
         self.in_channels = in_channels
         self.hidden_dim = hidden_dim
         self.feature_dim = feature_dim
@@ -174,7 +135,9 @@ class AllModel(nn.Module):
         
         # 初始化关系模块
         if distance_type == 'relation':
-            self.relation_module = RelationModule(feature_dim, hidden_dim)
+            self.relation_module = RelationModule(feature_dim, hidden_dim, dropout)
+        elif distance_type == 'relation_selfattention':
+            self.relation_module = RelationModuleWithAttention(feature_dim, hidden_dim, dropout)
     
     def _build_encoder(self) -> nn.Module:
         """构建特征提取器"""
@@ -240,10 +203,6 @@ class AllModel(nn.Module):
         返回:
             distances/scores: 距离矩阵或关系分数 [batch_size, n_query, n_way]
         """
-        if self.distance_type == 'relation':
-            # 使用注意力关系模块计算关系分数
-            return self.relation_module(query_features, prototypes)
-        
         batch_size = query_features.size(0)
         n_query = query_features.size(1)
         n_way = prototypes.size(1)
@@ -298,13 +257,13 @@ class AllModel(nn.Module):
         support_features = support_features.view(batch_size, n_support, -1)
         query_features = query_features.view(batch_size, n_query, -1)
         
-        if self.distance_type == 'relation':
-            # 2. 直接计算关系分数
-            logits = self._compute_distances(query_features, support_features)
+        # 2. 计算原型 (对所有距离类型都计算)
+        prototypes = self._compute_prototypes(support_features, support_labels)
+        
+        if self.distance_type in ['relation', 'relation_selfattention']:
+            # 3. 使用关系网络计算查询样本与原型的关系分数
+            logits = self.relation_module(query_features, prototypes)
         else:
-            # 2. 计算原型
-            prototypes = self._compute_prototypes(support_features, support_labels)
-            
             # 3. 计算距离
             distances = self._compute_distances(query_features, prototypes)
             

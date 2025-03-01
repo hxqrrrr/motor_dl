@@ -4,8 +4,8 @@ import h5py
 from tqdm import tqdm
 from models.dataset import h5Dataset
 from models.ProtoNet import ProtoNet
-from models.ProtoNet_attention import ProtoNetWithAttention
-from models.ProtoNet_relationnet import  AllModel
+from models.ProtoNet_backbone import ProtoNetWithAttention
+from models.ProtoNet_all_model import  AllModel
 import matplotlib.pyplot as plt
 import os
 import json
@@ -14,6 +14,18 @@ import json
 def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distance_type, dropout=0.5):
     """
     根据模型名称返回相应的模型实例
+    
+    参数:
+        model_name: 模型名称，可选['protonet', 'protonet_attention', 'all_model']
+        in_channels: 输入通道数
+        hidden_dim: 隐藏层维度
+        feature_dim: 特征维度
+        backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam']
+        distance_type: 距离度量类型，可选['euclidean', 'cosine', 'relation', 'relation_selfattention']
+        dropout: Dropout比率
+    
+    返回:
+        model: 模型实例
     """
     model_dict = {
         'protonet': ProtoNet,
@@ -23,6 +35,11 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
     
     if model_name not in model_dict:
         raise ValueError(f"不支持的模型名称: {model_name}，可用的模型有: {list(model_dict.keys())}")
+    
+    # 检查距离类型是否有效
+    valid_distance_types = ['euclidean', 'cosine', 'relation', 'relation_selfattention']
+    if distance_type not in valid_distance_types:
+        raise ValueError(f"不支持的距离类型: {distance_type}，可用的距离类型有: {valid_distance_types}")
     
     return model_dict[model_name](
         in_channels=in_channels,

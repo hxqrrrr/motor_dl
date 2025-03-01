@@ -133,10 +133,19 @@ def test_model(model_path, target_data_path, device, test_configs, num_episodes=
     
     # 创建结果目录
     if save_dir is None:
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        model_name = os.path.basename(os.path.dirname(model_path))
-        save_dir = f'benchmark/target_domain_{model_name}_{timestamp}'
+        # 获取模型完整路径，去掉"runs"部分
+        model_full_path = model_path
+        if "runs/" in model_full_path:
+            model_save_path = model_full_path.split("runs/")[1]
+        elif "runs\\" in model_full_path:
+            model_save_path = model_full_path.split("runs\\")[1]
+        else:
+            model_save_path = model_full_path
+            
+        save_dir = f'benchmark/{model_save_path}'
     
+    # 确保目录存在，包括所有父目录
+    os.makedirs(os.path.dirname(save_dir), exist_ok=True)
     os.makedirs(save_dir, exist_ok=True)
     
     # 保存测试结果
