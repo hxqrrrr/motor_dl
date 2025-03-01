@@ -127,7 +127,7 @@ if __name__ == "__main__":
     experiments_benchmark = [
       
         
-        }
+        
     ]
     experiments_train = [
         {

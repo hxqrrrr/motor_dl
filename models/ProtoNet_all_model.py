@@ -89,6 +89,104 @@ class CNN1D_embed(nn.Module):
         return x
 
 
+class EnhancedCNN1D_embed(nn.Module):
+    """优化版的CNN1D_embed，结合enhance的优点和embed的元学习特性
+    
+    参数:
+        in_channels: 输入通道数
+        hidden_dim: 隐藏层维度
+        feature_dim: 输出特征维度
+        use_l2_norm: 是否使用L2归一化
+        dropout_rate: Dropout比率
+    """
+    def __init__(
+        self,
+        in_channels: int,
+        hidden_dim: int,
+        feature_dim: int,
+        use_l2_norm: bool = True,
+        dropout_rate: float = 0.3
+    ):
+        super(EnhancedCNN1D_embed, self).__init__()
+        
+        # 输入标准化层
+        self.norm = nn.BatchNorm1d(in_channels)
+        
+        # 第一个卷积块 - 16通道，无BN
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(in_channels, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第二个卷积块 - 32通道，有BN
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(16, 32, kernel_size=3, padding=1),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第三个卷积块 - 64通道，有BN
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(32, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第四个卷积块 - 64通道，有BN
+        self.conv4 = nn.Sequential(
+            nn.Conv1d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.MaxPool1d(2)
+        )
+        
+        # 第五个卷积块 - 64通道，有BN，无池化
+        self.conv5 = nn.Sequential(
+            nn.Conv1d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU()
+        )
+        
+        # 全局自适应平均池化
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        
+        # 特征映射层
+        self.feature_layer = nn.Sequential(
+            nn.Linear(64, feature_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate)
+        )
+        
+        self.use_l2_norm = use_l2_norm
+        
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # 应用输入标准化
+        x = self.norm(x)
+        
+        # 应用卷积块
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        
+        # 全局池化
+        x = self.global_pool(x)
+        
+        # 展平
+        x = x.view(x.size(0), -1)
+        
+        # 特征映射
+        x = self.feature_layer(x)
+        
+        # 条件L2归一化
+        if self.use_l2_norm:
+            x = F.normalize(x, p=2, dim=1)
+        
+        return x
 
 
 class AllModel(nn.Module):
@@ -98,7 +196,7 @@ class AllModel(nn.Module):
         in_channels (int): 输入数据的通道数
         hidden_dim (int): 嵌入网络的隐藏层维度
         feature_dim (int): 最终特征向量的维度
-        backbone (str): 特征提取器的类型 ('cnn1d', 'cnn2d', 'lstm')
+        backbone (str): 特征提取器的类型 ('cnn1d', 'cnn2d', 'lstm', 'enhanced_cnn1d')
         distance_type (str): 距离度量方式 ('euclidean', 'cosine', 'relation', 'relation_selfattention')
         dropout (float): Dropout比率
     """
@@ -117,7 +215,7 @@ class AllModel(nn.Module):
             in_channels: 输入通道数
             hidden_dim: 隐藏层维度
             feature_dim: 特征维度
-            backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam']
+            backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam', 'enhanced_cnn1d']
             distance_type: 距离度量类型，可选['euclidean', 'cosine', 'relation', 'relation_selfattention']
             dropout: Dropout比率
         """
@@ -147,6 +245,14 @@ class AllModel(nn.Module):
                 self.hidden_dim, 
                 self.feature_dim,
                 self.dropout
+            )
+        elif self.backbone == 'enhanced_cnn1d':
+            return EnhancedCNN1D_embed(
+                self.in_channels,
+                self.hidden_dim,
+                self.feature_dim,
+                use_l2_norm=True,
+                dropout_rate=self.dropout
             )
         elif self.backbone in ['channel', 'spatial', 'cbam']:
             return AttentiveEncoder(

@@ -43,8 +43,8 @@ if __name__ == "__main__":
     parser.add_argument('--hidden_dim', type=int, default=64, help='隐藏层维度')
     parser.add_argument('--feature_dim', type=int, default=64, help='特征维度')
     parser.add_argument('--backbone', type=str, default='cnn1d', 
-                      choices=['cnn1d', 'channel', 'spatial', 'cbam'],
-                      help='骨干网络类型: cnn1d, channel, spatial, cbam')
+                      choices=['cnn1d', 'channel', 'spatial', 'cbam', 'enhanced_cnn1d'],
+                      help='骨干网络类型: cnn1d, channel, spatial, cbam, enhanced_cnn1d')
     parser.add_argument('--distance', type=str, default='euclidean', 
                       choices=['euclidean', 'cosine', 'relation', 'relation_selfattention'],
                       help='距离度量类型: euclidean, cosine, relation, relation_selfattention')
