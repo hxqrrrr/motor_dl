@@ -1,0 +1,59 @@
+{
+    "model_name": "all_model",
+    "model_path": "runs/all_model_cbam_euclidean_20250224_205957/best_model_val_acc_0.8616.pth",
+    "timestamp": "20250224_220941",
+    "configs": [
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.034803079366684,
+                "accuracy": 0.8521333545446396,
+                "recall": 0.8521333332197149,
+                "f1": 0.8521333282197153
+            }
+        },
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.0297039759159088,
+                "accuracy": 0.8481333547830582,
+                "recall": 0.8481333332202486,
+                "f1": 0.8481333282202493
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.4350157463550568,
+                "accuracy": 0.7502500456571579,
+                "recall": 0.7554666665659373,
+                "f1": 0.7506840228250633
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.4282734608650207,
+                "accuracy": 0.7597500443458557,
+                "recall": 0.7645333332313947,
+                "f1": 0.7638197790643413
+            }
+        }
+    ]
+}

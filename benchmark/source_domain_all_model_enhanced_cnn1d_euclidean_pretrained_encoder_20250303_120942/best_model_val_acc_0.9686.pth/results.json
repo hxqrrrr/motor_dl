@@ -1,0 +1,51 @@
+{
+    "model_path": "/root/hxq/motor_dl/hxq/motor_dl/runs/source_domain_all_model_enhanced_cnn1d_euclidean_pretrained_encoder_20250303_120942/best_model_val_acc_0.9686.pth",
+    "target_data": "data/h5data/remaining_data.h5",
+    "model_params": {
+        "in_channels": 5,
+        "hidden_dim": 64,
+        "feature_dim": 64,
+        "backbone": "enhanced_cnn1d",
+        "distance_type": "euclidean",
+        "model_name": "protonet",
+        "model": "all_model"
+    },
+    "configs": [
+        {
+            "n_way": 4,
+            "n_support": 1,
+            "n_query": 35,
+            "loss": 1.0789934921264648,
+            "accuracy": 0.6851428580284119,
+            "recall": 0.6851428571306224,
+            "f1": 0.6851428521306226
+        },
+        {
+            "n_way": 4,
+            "n_support": 5,
+            "n_query": 35,
+            "loss": 1.0633522844314576,
+            "accuracy": 0.7184285759925843,
+            "recall": 0.7184285714157422,
+            "f1": 0.7184285664157425
+        },
+        {
+            "n_way": 4,
+            "n_support": 10,
+            "n_query": 35,
+            "loss": 1.0590735149383546,
+            "accuracy": 0.7205714321136475,
+            "recall": 0.7205714285585612,
+            "f1": 0.7205714235585612
+        },
+        {
+            "n_way": 4,
+            "n_support": 20,
+            "n_query": 35,
+            "loss": 1.0595695924758912,
+            "accuracy": 0.7328571462631226,
+            "recall": 0.7328571428440561,
+            "f1": 0.7328571378440562
+        }
+    ]
+}

@@ -1,0 +1,59 @@
+{
+    "model_name": "all_model",
+    "model_path": "runs/all_model_spatial_cosine_20250224_164030/best_model_val_acc_0.8272.pth",
+    "timestamp": "20250224_221146",
+    "configs": [
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.087787274122238,
+                "accuracy": 0.8148000198602676,
+                "recall": 0.8147999998913594,
+                "f1": 0.8147999948913599
+            }
+        },
+        {
+            "config": {
+                "n_way": 5,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.0861913311481475,
+                "accuracy": 0.8225333535671234,
+                "recall": 0.8225333332236616,
+                "f1": 0.8225333282236623
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 5,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.496679244041443,
+                "accuracy": 0.699333370923996,
+                "recall": 0.7207999999038931,
+                "f1": 0.7043051938984587
+            }
+        },
+        {
+            "config": {
+                "n_way": 8,
+                "n_support": 8,
+                "n_query": 15
+            },
+            "metrics": {
+                "loss": 1.4957159948349,
+                "accuracy": 0.7269167065620422,
+                "recall": 0.7178666665709511,
+                "f1": 0.7240684912425922
+            }
+        }
+    ]
+}
