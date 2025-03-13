@@ -63,6 +63,8 @@ if __name__ == "__main__":
                       help='第二个准确率阈值，达到此值后停止训练')
     parser.add_argument('--lr_decay_factor', type=float, default=0.4, 
                       help='准确率达到第一阈值后的学习率衰减因子')
+    parser.add_argument('--visualize', action='store_true', default=True,  # 默认开启
+                      help='是否启用注意力可视化')
     args = parser.parse_args()
 
     # 设置训练参数
@@ -186,7 +188,8 @@ if __name__ == "__main__":
         feature_dim=training_params['feature_dim'],
         backbone=training_params['backbone'],
         distance_type=training_params['distance_type'],
-        dropout=training_params['dropout']
+        dropout=training_params['dropout'],
+        visualize=args.visualize
     )
     model = model.to(device)
     
@@ -262,8 +265,18 @@ if __name__ == "__main__":
     for epoch in range(start_epoch, training_params['n_epochs']):
         print(f"\nEpoch {epoch+1}/{training_params['n_epochs']}")
         
+        # 更新所有注意力模块的epoch计数
+        def update_attention_epoch(module):
+            if hasattr(module, 'current_epoch'):
+                module.current_epoch = epoch
+            if hasattr(module, 'visualize'):
+                module.visualize = (epoch % 10 == 0)
+        model.apply(update_attention_epoch)
+        
         # 训练一个epoch
-        train_loss, train_acc, train_recall, train_f1 = train_epoch(model, train_loader, optimizer, device,training_params['n_way'])
+        train_loss, train_acc, train_recall, train_f1 = train_epoch(
+            model, train_loader, optimizer, device, training_params['n_way']
+        )
         print(f"训练集 - 损失: {train_loss:.4f}, 准确率: {train_acc:.4f}, 召回率: {train_recall:.4f}, F1分数: {train_f1:.4f}")
         
         # 记录训练指标到 TensorBoard
@@ -278,7 +291,12 @@ if __name__ == "__main__":
         train_f1s.append(train_f1)
         
         # 在验证集上评估
-        val_loss, val_acc, val_recall, val_f1 = evaluate(model, val_loader, device)
+        val_loss, val_acc, val_recall, val_f1 = evaluate(
+            model, 
+            val_loader, 
+            device,
+            training_params['n_way']  # 添加n_way参数
+        )
         print(f"验证集 - 损失: {val_loss:.4f}, 准确率: {val_acc:.4f}, 召回率: {val_recall:.4f}, F1分数: {val_f1:.4f}")
         
         # 记录验证指标到 TensorBoard

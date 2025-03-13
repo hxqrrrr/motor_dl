@@ -13,17 +13,18 @@ from utils.utils_train import evaluate
 
 def load_model_params(model_path):
     """从模型文件和训练参数JSON文件中提取模型参数"""
-    # 加载模型文件，添加map_location参数以支持CPU加载GPU模型
+    # 加载模型文件
     checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+    training_params = checkpoint.get('training_params', {})
     
     # 尝试从模型文件中直接获取参数
     model_params = {
-        'in_channels': checkpoint.get('in_channels', 5),
-        'hidden_dim': checkpoint.get('hidden_dim', 64),
-        'feature_dim': checkpoint.get('feature_dim', 64),
-        'backbone': checkpoint.get('backbone', 'cnn1d'),
-        'distance_type': checkpoint.get('distance_type', 'euclidean'),
-        'model_name': checkpoint.get('model_name', 'protonet')
+        'in_channels': training_params.get('in_channels', 5),
+        'hidden_dim': training_params.get('hidden_dim', 16),
+        'feature_dim': training_params.get('feature_dim', 128),
+        'backbone': training_params.get('backbone', 'cnn1d'),
+        'distance_type': training_params.get('distance_type', 'euclidean'),
+        'model': training_params.get('model', 'all_model')
     }
     
     # 尝试从训练参数文件中获取更多信息
@@ -39,7 +40,7 @@ def load_model_params(model_path):
             'feature_dim': params.get('feature_dim', model_params['feature_dim']),
             'backbone': params.get('backbone', model_params['backbone']),
             'distance_type': params.get('distance_type', model_params['distance_type']),
-            'model': params.get('model', model_params['model_name'])
+            'model': params.get('model', model_params['model'])
         })
     
     return model_params
@@ -84,8 +85,18 @@ def plot_confusion_matrix(cm, n_way, save_path):
     plt.savefig(save_path)
     plt.close()
 
-def test_model(model_path, target_data_path, device, test_configs, num_episodes=100, batch_size=4, save_dir=None, optimize_memory=False):
-    """测试模型在目标域数据上的性能"""
+def test_model(
+    model_path, 
+    target_data_path, 
+    device, 
+    test_configs, 
+    num_episodes, 
+    batch_size=4, 
+    save_dir='benchmark', 
+    optimize_memory=False,
+    visualize=True
+):
+    """测试模型在目标域上的性能"""
     print(f"\n正在测试模型: {model_path}")
     
     # 加载模型参数
@@ -95,19 +106,23 @@ def test_model(model_path, target_data_path, device, test_configs, num_episodes=
     for key, value in model_params.items():
         print(f"  {key}: {value}")
     
-    # 创建并加载模型
+    # 加载模型
+    checkpoint = torch.load(model_path)
+    training_params = checkpoint.get('training_params', {})
+    
     model = get_model(
         model_name=model_params['model'],
         in_channels=model_params['in_channels'],
         hidden_dim=model_params['hidden_dim'],
         feature_dim=model_params['feature_dim'],
         backbone=model_params['backbone'],
-        distance_type=model_params['distance_type']
-    ).to(device)
-
-    # 加载预训练模型，添加map_location参数以支持CPU加载GPU模型
-    checkpoint = torch.load(model_path, map_location=device)
+        distance_type=model_params['distance_type'],
+        visualize=visualize
+    )
+    
+    # 加载模型权重
     model.load_state_dict(checkpoint['model_state_dict'])
+    model = model.to(device)
     model.eval()
 
     # 如果使用GPU，启用半精度浮点数以节省内存
@@ -174,13 +189,18 @@ def test_model(model_path, target_data_path, device, test_configs, num_episodes=
             test_dataset,
             batch_size=batch_size,
             shuffle=False,
-            num_workers=4 if torch.cuda.is_available() else 0,  # 在GPU模式下使用多线程，CPU模式下不使用
-            pin_memory=torch.cuda.is_available(),  # 只在GPU模式下使用pin_memory
-            persistent_workers=torch.cuda.is_available() and True  # 在GPU模式下保持worker进程
+            num_workers=4 if torch.cuda.is_available() else 0,
+            pin_memory=torch.cuda.is_available(),
+            persistent_workers=torch.cuda.is_available() and True
         )
         
-        # 评估
-        test_loss, test_acc, test_recall, test_f1 = evaluate(model, test_loader, device)
+        # 评估 - 添加n_way参数
+        test_loss, test_acc, test_recall, test_f1 = evaluate(
+            model, 
+            test_loader, 
+            device,
+            config['n_way']  # 添加这个参数
+        )
         
         # 打印结果
         print(f"平均损失: {test_loss:.4f}")

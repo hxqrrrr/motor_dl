@@ -11,7 +11,7 @@ import os
 import json
 
 
-def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distance_type, dropout=0.5):
+def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distance_type, dropout=0.5, visualize=True):
     """
     根据模型名称返回相应的模型实例
     
@@ -23,6 +23,7 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
         backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam']
         distance_type: 距离度量类型，可选['euclidean', 'cosine', 'relation', 'relation_selfattention']
         dropout: Dropout比率
+        visualize (bool): 是否启用注意力可视化
     
     返回:
         model: 模型实例
@@ -41,16 +42,36 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
     if distance_type not in valid_distance_types:
         raise ValueError(f"不支持的距离类型: {distance_type}，可用的距离类型有: {valid_distance_types}")
     
-    return model_dict[model_name](
-        in_channels=in_channels,
-        hidden_dim=hidden_dim,
-        feature_dim=feature_dim,
-        backbone=backbone,
-        distance_type=distance_type,
-        dropout=dropout
-    )
+    if backbone in ['channel', 'spatial', 'cbam']:
+        model = ProtoNetWithAttention(
+            in_channels=in_channels,
+            hidden_dim=hidden_dim,
+            feature_dim=feature_dim,
+            attention_type=backbone,
+            backbone='cnn1d',
+            distance_type=distance_type,
+            dropout=dropout
+        )
+        # 启用注意力可视化
+        if visualize:
+            if hasattr(model.encoder, 'attention'):
+                model.encoder.attention.visualize = True
+            if hasattr(model.encoder, 'channel_attention'):
+                model.encoder.channel_attention.visualize = True
+            if hasattr(model.encoder, 'spatial_attention'):
+                model.encoder.spatial_attention.visualize = True
+    else:
+        model = ProtoNet(
+            in_channels=in_channels,
+            hidden_dim=hidden_dim,
+            feature_dim=feature_dim,
+            backbone=backbone,
+            distance_type=distance_type
+        )
+    
+    return model
 
-def train_epoch(model, train_loader, optimizer, device,n_way):
+def train_epoch(model, train_loader, optimizer, device, n_way):
     """训练一个epoch"""
     model.train()
     total_loss = 0
@@ -59,8 +80,18 @@ def train_epoch(model, train_loader, optimizer, device,n_way):
     total_f1 = 0
     n_batches = len(train_loader)
     
+    # 只在第一个batch进行可视化
+    first_batch = True
+    
     with tqdm(train_loader, desc="训练", ncols=100, leave=True) as pbar:
         for batch_idx, (support_x, support_y, query_x, query_y) in enumerate(pbar):
+            # 临时关闭除第一个batch外的所有可视化
+            if not first_batch:
+                def disable_visualization(module):
+                    if hasattr(module, 'visualize'):
+                        module.visualize = False
+                model.apply(disable_visualization)
+            
             # 将数据移到设备上
             support_x = support_x.to(device)  # [batch_size, n_support, channels, length]
             support_y = support_y.to(device)  # [batch_size, n_support]
@@ -113,6 +144,15 @@ def train_epoch(model, train_loader, optimizer, device,n_way):
             pbar.set_postfix_str(
                 f"loss: {loss.item():.3f}, acc: {acc:.3f}, recall: {recall:.3f}, f1: {f1:.3f}, lr: {current_lr:.2e}"
             )
+            
+            # 恢复可视化设置
+            if not first_batch:
+                def restore_visualization(module):
+                    if hasattr(module, 'visualize'):
+                        module.visualize = True
+                model.apply(restore_visualization)
+            
+            first_batch = False
     
     avg_loss = total_loss / n_batches
     avg_acc = total_acc / n_batches
@@ -121,7 +161,7 @@ def train_epoch(model, train_loader, optimizer, device,n_way):
     
     return avg_loss, avg_acc, avg_recall, avg_f1
 
-def evaluate(model, val_loader, device):
+def evaluate(model, val_loader, device, n_way):
     """评估模型"""
     model.eval()
     total_loss = 0
@@ -129,7 +169,13 @@ def evaluate(model, val_loader, device):
     total_recall = 0
     total_f1 = 0
     n_batches = len(val_loader)
-    n_way = 5  # 固定的n_way值
+    
+    # 临时关闭所有可视化
+    def disable_visualization(module):
+        if hasattr(module, 'visualize'):
+            module._visualize_backup = module.visualize  # 备份当前状态
+            module.visualize = False
+    model.apply(disable_visualization)
     
     with torch.no_grad():
         with tqdm(val_loader, desc="评估", ncols=100, leave=True) as pbar:
@@ -179,6 +225,13 @@ def evaluate(model, val_loader, device):
                 pbar.set_postfix_str(
                     f"loss: {loss.item():.3f}, acc: {acc:.3f}, recall: {recall:.3f}, f1: {f1:.3f}"
                 )
+    
+    # 恢复可视化设置
+    def restore_visualization(module):
+        if hasattr(module, '_visualize_backup'):
+            module.visualize = module._visualize_backup
+            delattr(module, '_visualize_backup')
+    model.apply(restore_visualization)
     
     avg_loss = total_loss / n_batches
     avg_acc = total_acc / n_batches

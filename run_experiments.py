@@ -176,7 +176,7 @@ if __name__ == "__main__":
            
             
             {
-                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone channel --distance euclidean --lr 0.0001 --feature_dim 256 --hidden_dim 16 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone channel --distance euclidean --lr 0.00001 --feature_dim 128 --hidden_dim 16 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
                 "wait_time": 10
             },
             {

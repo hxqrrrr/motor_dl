@@ -33,6 +33,8 @@ if __name__ == "__main__":
     parser.add_argument('--force_cpu', action='store_true', help='强制使用CPU，即使有GPU可用')
     parser.add_argument('--batch_size', type=int, default=4, help='批处理大小，GPU模式下可以设置更大')
     parser.add_argument('--optimize_memory', action='store_true', help='优化GPU内存使用')
+    parser.add_argument('--visualize', action='store_true', default=True,  # 默认开启
+                      help='是否启用注意力可视化')
     args = parser.parse_args()
     
     # 创建benchmark文件夹
@@ -129,7 +131,8 @@ if __name__ == "__main__":
                 num_episodes=args.num_episodes,
                 batch_size=args.batch_size,
                 save_dir=f'benchmark/{model_save_path}',
-                optimize_memory=args.optimize_memory
+                optimize_memory=args.optimize_memory,
+                visualize=args.visualize
             )
             all_results.append(model_results)
     
@@ -171,7 +174,8 @@ if __name__ == "__main__":
             num_episodes=args.num_episodes,
             batch_size=args.batch_size,
             save_dir=f'benchmark/{model_save_path}',
-            optimize_memory=args.optimize_memory
+            optimize_memory=args.optimize_memory,
+            visualize=args.visualize
         )
         all_results.append(model_results)
     

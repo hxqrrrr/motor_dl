@@ -4,6 +4,9 @@ import torch.nn.functional as F
 import numpy as np
 from typing import Dict, Optional, Tuple
 from models.ProtoNet import ProtoNet
+import os
+from datetime import datetime
+from utils.visualize import visualize_attention
 
 
 class ChannelAttention(nn.Module):
@@ -12,9 +15,13 @@ class ChannelAttention(nn.Module):
     参数:
         in_channels (int): 输入特征的通道数
         reduction_ratio (int): 降维比例
+        visualize (bool): 是否可视化注意力权重
     """
-    def __init__(self, in_channels: int, reduction_ratio: int = 16):
+    def __init__(self, in_channels: int, reduction_ratio: int = 16, visualize=True):
         super(ChannelAttention, self).__init__()
+        self.visualize = visualize
+        self.in_channels = in_channels
+        self.current_epoch = 0  # 添加epoch计数器
         
         # 确保降维后的通道数至少为1
         reduced_channels = max(1, in_channels // reduction_ratio)
@@ -31,6 +38,52 @@ class ChannelAttention(nn.Module):
         
         self.sigmoid = nn.Sigmoid()
         
+    def visualize_attention(self, x, attention, step_name):
+        """可视化注意力权重"""
+        import matplotlib.pyplot as plt
+        import numpy as np
+        
+        # 创建保存目录
+        save_dir = "attention_vis"
+        os.makedirs(save_dir, exist_ok=True)
+        
+        # 获取当前时间戳
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # 将数据移到CPU并转换为numpy数组
+        x_np = x[0].cpu().detach().numpy()  # 取第一个样本
+        attention_np = attention[0].cpu().detach().numpy()
+        
+        # 创建图形
+        plt.figure(figsize=(15, 10))
+        
+        # 绘制原始信号
+        plt.subplot(3, 1, 1)
+        plt.title(f"Original Signal - {step_name}")
+        for i in range(self.in_channels):
+            plt.plot(x_np[i], label=f'Channel {i}')
+        plt.legend()
+        
+        # 绘制注意力权重
+        plt.subplot(3, 1, 2)
+        plt.title(f"Attention Weights - {step_name}")
+        plt.bar(range(self.in_channels), attention_np.squeeze())
+        plt.xlabel("Channel")
+        plt.ylabel("Attention Weight")
+        
+        # 绘制加权后的信号
+        plt.subplot(3, 1, 3)
+        plt.title(f"Weighted Signal - {step_name}")
+        weighted_signal = x_np * attention_np
+        for i in range(self.in_channels):
+            plt.plot(weighted_signal[i], label=f'Channel {i}')
+        plt.legend()
+        
+        # 保存图像
+        plt.tight_layout()
+        plt.savefig(f"{save_dir}/attention_{step_name}_{timestamp}.png")
+        plt.close()
+        
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         参数:
@@ -41,24 +94,45 @@ class ChannelAttention(nn.Module):
         """
         b, c, _ = x.size()
         
-        # 平均池化分支 [b, c, 1] -> [b, c]
+        # 平均池化分支
         avg_out = self.avg_pool(x).squeeze(-1)
         avg_out = self.mlp(avg_out)
         
-        # 最大池化分支 [b, c, 1] -> [b, c]
+        # 最大池化分支
         max_out = self.max_pool(x).squeeze(-1)
         max_out = self.mlp(max_out)
         
-        # 融合两个分支 [b, c] -> [b, c, 1]
+        # 融合注意力
         attention = self.sigmoid(avg_out + max_out).unsqueeze(-1)
+        
+        # 可视化 - 每10个epoch执行一次
+        if self.visualize and self.current_epoch % 10 == 0:
+            channel_names = []
+            if self.in_channels == 5:
+                channel_names = ['Vibration_X', 'Vibration_Y', 'Vibration_Z', 'Current', 'Voltage']
+            elif self.in_channels == 4:
+                channel_names = ['Vibration_X', 'Vibration_Y', 'Vibration_Z', 'Current']
+            else:
+                channel_names = [f'Channel_{i}' for i in range(self.in_channels)]
+                
+            visualize_attention(
+                x=x,
+                attention=attention,
+                attention_type='channel',
+                save_dir='attention_vis',
+                step_name=f'epoch_{self.current_epoch}',  # 添加epoch信息到文件名
+                channels=channel_names
+            )
         
         return x * attention
 
 
 class SpatialAttention(nn.Module):
     """空间注意力模块"""
-    def __init__(self, kernel_size: int = 7):
+    def __init__(self, kernel_size: int = 7, visualize=True):
         super(SpatialAttention, self).__init__()
+        self.visualize = visualize
+        self.current_epoch = 0  # 添加epoch计数器
         
         padding = kernel_size // 2
         self.conv = nn.Conv1d(2, 1, kernel_size, padding=padding)
@@ -82,21 +156,47 @@ class SpatialAttention(nn.Module):
         # 空间注意力权重
         attention = self.sigmoid(self.conv(x_cat))
         
+        if self.visualize and self.current_epoch % 10 == 0:
+            visualize_attention(
+                x=x,
+                attention=attention,
+                attention_type='spatial',
+                save_dir='attention_vis',
+                step_name=f'epoch_{self.current_epoch}',
+                channels=None
+            )
+        
         return x * attention
 
 
 class CBAM(nn.Module):
     """CBAM注意力模块：结合通道注意力和空间注意力"""
-    def __init__(self, in_channels: int, reduction_ratio: int = 16, kernel_size: int = 7):
+    def __init__(self, in_channels: int, reduction_ratio: int = 16, kernel_size: int = 7, visualize=True):
         super(CBAM, self).__init__()
+        self.visualize = visualize
+        self.current_epoch = 0  # 添加epoch计数器
         
-        self.channel_attention = ChannelAttention(in_channels, reduction_ratio)
-        self.spatial_attention = SpatialAttention(kernel_size)
+        self.channel_attention = ChannelAttention(in_channels, reduction_ratio, visualize)
+        self.spatial_attention = SpatialAttention(kernel_size, visualize)
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # 依次应用通道注意力和空间注意力
         x = self.channel_attention(x)
         x = self.spatial_attention(x)
+        
+        if self.visualize and self.current_epoch % 10 == 0:
+            visualize_attention(
+                x=x,
+                attention={
+                    'channel': self.channel_attention.last_attention,
+                    'spatial': self.spatial_attention.last_attention
+                },
+                attention_type='cbam',
+                save_dir='attention_vis',
+                step_name=f'epoch_{self.current_epoch}',
+                channels=None
+            )
+        
         return x
 
 
