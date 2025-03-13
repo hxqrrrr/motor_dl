@@ -1,5 +1,3 @@
-
-
 # *.pth
 __pycache__/
 *.pyc
@@ -10,3 +8,4 @@ __pycache__/
 others/
 runs/
 logs/
+*.h5

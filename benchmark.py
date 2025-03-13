@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='目标域元学习模型测试脚本')
     parser.add_argument('--model_path', type=str, help='模型路径')
-    parser.add_argument('--target_data', type=str, default='data/h5data/remaining_data.h5', help='目标域数据路径 (h5文件或文件夹)')
+    parser.add_argument('--target_data', type=str, default='hxq/motor_dl/data/h5data/remaining_data.h5', help='目标域数据路径 (h5文件或文件夹)')
     parser.add_argument('--model_name', type=str, default='all_model', help='模型名称')
     parser.add_argument('--test_all_models', action='store_true', help='是否测试所有模型')
     parser.add_argument('--num_episodes', type=int, default=100, help='测试的episode数量')
@@ -87,10 +87,10 @@ if __name__ == "__main__":
     
     # 测试配置
     test_configs = [
-        {'n_way': 4, 'n_support': 1, 'n_query': 15},
-        {'n_way': 4, 'n_support': 5, 'n_query': 15},
-        {'n_way': 4, 'n_support': 10, 'n_query': 15},
-        {'n_way': 4, 'n_support': 20, 'n_query': 15},
+        {'n_way': 4, 'n_support': 1, 'n_query': 35},
+        {'n_way': 4, 'n_support': 5, 'n_query': 35},
+        {'n_way': 4, 'n_support': 10, 'n_query': 35},
+        {'n_way': 4, 'n_support': 20, 'n_query': 35},
     ]
     
     # 创建保存目录
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     
     if args.test_all_models:
         # 测试所有模型
-        runs_directory = 'runs'
+        runs_directory = 'hxq/motor_dl/runs'  # 例如 'my_models' 或 '/path/to/models'
         best_model_paths = find_best_model_paths(runs_directory)
         
         if not best_model_paths:
@@ -134,6 +134,25 @@ if __name__ == "__main__":
             all_results.append(model_results)
     
     elif args.model_path:
+        # 检查模型路径是否存在
+        if not os.path.exists(args.model_path):
+            # 尝试添加前缀
+            possible_paths = [
+                args.model_path,
+                os.path.join("/root", args.model_path),
+                os.path.join("/root/hxq/motor_dl", args.model_path.replace("hxq/motor_dl/", ""))
+            ]
+            
+            for path in possible_paths:
+                if os.path.exists(path):
+                    args.model_path = path
+                    print(f"找到模型文件: {path}")
+                    break
+            else:
+                print(f"错误: 找不到模型文件 '{args.model_path}'")
+                print("请检查文件路径是否正确")
+                sys.exit(1)
+        
         # 测试单个模型
         # 获取模型完整路径，去掉"runs"部分
         model_full_path = args.model_path

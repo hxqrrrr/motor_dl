@@ -216,3 +216,101 @@ class RelationModuleWithAttention(nn.Module):
         
         return relation_scores
 
+class SimpleConvRelationModule(nn.Module):
+    """简化版基于卷积的关系网络模块
+    
+    参数:
+        feature_dim: 输入特征维度
+        hidden_dim: 隐藏层维度
+        dropout: Dropout比率
+    """
+    def __init__(self, feature_dim: int, hidden_dim: int, dropout: float = 0.2):
+        super(SimpleConvRelationModule, self).__init__()
+        
+        # 假设特征可以重塑为正方形
+        self.feature_size = int(feature_dim ** 0.5)
+        self.reshape_dim = self.feature_size ** 2
+        
+        # 如果特征维度不是完全平方数，使用线性层调整
+        if self.reshape_dim != feature_dim:
+            self.feature_adapter = nn.Linear(feature_dim, self.reshape_dim)
+        else:
+            self.feature_adapter = None
+        
+        # 简化的卷积关系网络 - 只有两层卷积
+        self.relation_net = nn.Sequential(
+            # 第一层卷积
+            nn.Conv2d(2, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            
+            # 第二层卷积
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            
+            # 扁平化
+            nn.Flatten(),
+            
+            # 全连接层
+            nn.Linear(64 * self.feature_size * self.feature_size, hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Dropout(dropout),
+            
+            nn.Linear(hidden_dim, 1),
+            nn.Sigmoid()  # 将关系分数归一化到[0,1]区间
+        )
+        
+    def forward(self, query_features: torch.Tensor, support_features: torch.Tensor) -> torch.Tensor:
+        """
+        参数:
+            query_features: [batch_size, n_query, feature_dim]
+            support_features: [batch_size, n_way, feature_dim] - 类别原型
+            
+        返回:
+            relation_scores: [batch_size, n_query, n_way]
+        """
+        batch_size = query_features.size(0)
+        n_query = query_features.size(1)
+        n_way = support_features.size(1)
+        
+        # 特征归一化，提高稳定性
+        query_features = F.normalize(query_features, p=2, dim=-1)
+        support_features = F.normalize(support_features, p=2, dim=-1)
+        
+        # 如果需要，调整特征维度
+        if self.feature_adapter is not None:
+            query_features = self.feature_adapter(query_features)
+            support_features = self.feature_adapter(support_features)
+        
+        # 准备特征对
+        relation_pairs = []
+        for i in range(n_way):
+            for j in range(n_query):
+                # 获取当前查询和支持特征
+                q_feature = query_features[:, j, :]  # [batch_size, feature_dim]
+                s_feature = support_features[:, i, :]  # [batch_size, feature_dim]
+                
+                # 重塑为图像格式
+                q_feature = q_feature.view(batch_size, 1, self.feature_size, self.feature_size)
+                s_feature = s_feature.view(batch_size, 1, self.feature_size, self.feature_size)
+                
+                # 连接特征作为通道
+                paired = torch.cat([q_feature, s_feature], dim=1)  # [batch_size, 2, feature_size, feature_size]
+                relation_pairs.append(paired)
+        
+        # 堆叠所有对
+        relation_pairs = torch.stack(relation_pairs, dim=0)  # [n_way*n_query, batch_size, 2, feature_size, feature_size]
+        
+        # 重塑以便批量处理
+        relation_pairs = relation_pairs.view(-1, 2, self.feature_size, self.feature_size)  # [n_way*n_query*batch_size, 2, feature_size, feature_size]
+        
+        # 计算关系分数
+        relation_scores = self.relation_net(relation_pairs)  # [n_way*n_query*batch_size, 1]
+        
+        # 重塑回原始维度
+        relation_scores = relation_scores.view(n_way, n_query, batch_size, -1)  # [n_way, n_query, batch_size, 1]
+        relation_scores = relation_scores.permute(2, 1, 0, 3).squeeze(-1)  # [batch_size, n_query, n_way]
+        
+        return relation_scores
+

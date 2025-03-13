@@ -5,7 +5,7 @@ import numpy as np
 from typing import Dict, Optional, Tuple, List
 from models.ProtoNet_backbone import AttentiveEncoder
 import random
-from models.relation import RelationModule, RelationModuleWithAttention
+from models.relation import RelationModule, RelationModuleWithAttention, SimpleConvRelationModule
 
 
 class CNN1D_embed(nn.Module):
@@ -114,39 +114,39 @@ class EnhancedCNN1D_embed(nn.Module):
         
         # 第一个卷积块 - 16通道，无BN
         self.conv1 = nn.Sequential(
-            nn.Conv1d(in_channels, 16, kernel_size=3, padding=1),
+            nn.Conv1d(in_channels, hidden_dim, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(2)
         )
         
         # 第二个卷积块 - 32通道，有BN
         self.conv2 = nn.Sequential(
-            nn.Conv1d(16, 32, kernel_size=3, padding=1),
-            nn.BatchNorm1d(32),
+            nn.Conv1d(hidden_dim, hidden_dim * 2, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 2),
             nn.ReLU(),
             nn.MaxPool1d(2)
         )
         
         # 第三个卷积块 - 64通道，有BN
         self.conv3 = nn.Sequential(
-            nn.Conv1d(32, 64, kernel_size=3, padding=1),
-            nn.BatchNorm1d(64),
+            nn.Conv1d(hidden_dim * 2, hidden_dim * 4, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 4),
             nn.ReLU(),
             nn.MaxPool1d(2)
         )
         
         # 第四个卷积块 - 64通道，有BN
         self.conv4 = nn.Sequential(
-            nn.Conv1d(64, 64, kernel_size=3, padding=1),
-            nn.BatchNorm1d(64),
+            nn.Conv1d(hidden_dim * 4, hidden_dim * 4, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 4),
             nn.ReLU(),
             nn.MaxPool1d(2)
         )
         
         # 第五个卷积块 - 64通道，有BN，无池化
         self.conv5 = nn.Sequential(
-            nn.Conv1d(64, 64, kernel_size=3, padding=1),
-            nn.BatchNorm1d(64),
+            nn.Conv1d(hidden_dim * 4, hidden_dim * 4, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_dim * 4),
             nn.ReLU()
         )
         
@@ -155,7 +155,7 @@ class EnhancedCNN1D_embed(nn.Module):
         
         # 特征映射层
         self.feature_layer = nn.Sequential(
-            nn.Linear(64, feature_dim),
+            nn.Linear(hidden_dim * 4, feature_dim),
             nn.ReLU(),
             nn.Dropout(dropout_rate)
         )
@@ -233,7 +233,7 @@ class AllModel(nn.Module):
         
         # 初始化关系模块
         if distance_type == 'relation':
-            self.relation_module = RelationModule(feature_dim, hidden_dim, dropout)
+            self.relation_module = SimpleConvRelationModule(feature_dim, hidden_dim, dropout)
         elif distance_type == 'relation_selfattention':
             self.relation_module = RelationModuleWithAttention(feature_dim, hidden_dim, dropout)
     

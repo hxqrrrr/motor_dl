@@ -101,7 +101,7 @@ class CBAM(nn.Module):
 
 
 class CNN1D_Attention(nn.Module):
-    """专门为注意力机制设计的1D-CNN网络
+    """专门为注意力机制设计的1D-CNN网络，基于EnhancedCNN1D_embed架构
     
     参数:
         in_channels (int): 输入通道数
@@ -114,35 +114,54 @@ class CNN1D_Attention(nn.Module):
         in_channels: int,
         hidden_dim: int,
         feature_dim: int,
-        dropout: float = 0.5
+        dropout: float = 0.1
     ):
         super(CNN1D_Attention, self).__init__()
         
-        # 第一个卷积块 - 保持通道数不变，方便后续注意力机制
+        # 输入标准化层
+        self.norm = nn.BatchNorm1d(in_channels)
+        
+        # 第一个卷积块 - 16通道，无BN
         self.conv1 = nn.Sequential(
-            nn.Conv1d(in_channels, hidden_dim, kernel_size=3, padding=1),
-            nn.BatchNorm1d(hidden_dim),
-            nn.ReLU(inplace=True),
+            nn.Conv1d(in_channels, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
             nn.MaxPool1d(2),
-            nn.Dropout(dropout)
+            
         )
         
-        # 第二个卷积块 - 同样保持通道数不变
+        # 第二个卷积块 - 32通道，有BN
         self.conv2 = nn.Sequential(
-            nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.BatchNorm1d(hidden_dim),
-            nn.ReLU(inplace=True),
+            nn.Conv1d(16, 32, kernel_size=3, padding=1),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
             nn.MaxPool1d(2),
-            nn.Dropout(dropout)
+            
         )
         
-        # 第三个卷积块 - 增加通道数
+        # 第三个卷积块 - 64通道，有BN
         self.conv3 = nn.Sequential(
-            nn.Conv1d(hidden_dim, hidden_dim * 2, kernel_size=3, padding=1),
-            nn.BatchNorm1d(hidden_dim * 2),
-            nn.ReLU(inplace=True),
+            nn.Conv1d(32, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
             nn.MaxPool1d(2),
-            nn.Dropout(dropout)
+            
+        )
+        
+        # 第四个卷积块 - 64通道，有BN
+        self.conv4 = nn.Sequential(
+            nn.Conv1d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.MaxPool1d(2),
+            
+        )
+        
+        # 第五个卷积块 - 64通道，有BN，无池化
+        self.conv5 = nn.Sequential(
+            nn.Conv1d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+        
         )
         
         # 全局池化层
@@ -150,10 +169,9 @@ class CNN1D_Attention(nn.Module):
         
         # 特征映射层
         self.feature_layer = nn.Sequential(
-            nn.Linear(hidden_dim * 2, feature_dim),
-            nn.BatchNorm1d(feature_dim),
-            nn.ReLU(inplace=True),
-            nn.Dropout(dropout)
+            nn.Linear(64, feature_dim),
+            nn.ReLU(),
+           
         )
         
     def get_intermediate_features(self, x: torch.Tensor) -> torch.Tensor:
@@ -163,22 +181,26 @@ class CNN1D_Attention(nn.Module):
             x: 输入数据 [batch_size, in_channels, length]
             
         返回:
-            features: 中间特征 [batch_size, hidden_dim, length/4]
+            features: 中间特征 [batch_size, 32, length/4]
         """
+        x = self.norm(x)
         x = self.conv1(x)
         x = self.conv2(x)
+        x = self.conv3(x)
         return x
     
     def get_final_features(self, x: torch.Tensor) -> torch.Tensor:
         """从中间特征继续处理得到最终特征
         
         参数:
-            x: 中间特征 [batch_size, hidden_dim, length/4]
+            x: 中间特征 [batch_size, 32, length/4]
             
         返回:
             features: 最终特征 [batch_size, feature_dim]
         """
-        x = self.conv3(x)
+       
+        x = self.conv4(x)
+        x = self.conv5(x)
         x = self.global_pool(x)
         x = x.view(x.size(0), -1)
         x = self.feature_layer(x)
@@ -214,13 +236,13 @@ class AttentiveEncoder(nn.Module):
         # 使用新的CNN1D_Attention作为backbone
         self.backbone = CNN1D_Attention(in_channels, hidden_dim, feature_dim, dropout)
         
-        # 注意力模块 - 使用hidden_dim作为通道数
+        # 注意力模块 - 使用64作为通道数（第三个卷积块的输出通道数）
         if attention_type == 'channel':
-            self.attention = ChannelAttention(hidden_dim)
+            self.attention = ChannelAttention(64)
         elif attention_type == 'spatial':
             self.attention = SpatialAttention()
         elif attention_type == 'cbam':
-            self.attention = CBAM(hidden_dim)
+            self.attention = CBAM(64)
         else:
             raise ValueError(f"Unknown attention type: {attention_type}")
             
@@ -233,11 +255,11 @@ class AttentiveEncoder(nn.Module):
             features: 增强后的特征 [batch_size, feature_dim]
         """
         # 获取中间特征
-        features = self.backbone.get_intermediate_features(x)  # [batch_size, hidden_dim, length/4]
+        features = self.backbone.get_intermediate_features(x)  # [batch_size, 64, length/8]
         
         # 应用注意力
         attended_features = self.attention(features)
-        
+     
         # 继续处理得到最终特征
         final_features = self.backbone.get_final_features(attended_features)  # [batch_size, feature_dim]
         

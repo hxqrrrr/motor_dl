@@ -13,6 +13,11 @@ from datetime import datetime
 import argparse
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import LinearLR, SequentialLR, ReduceLROnPlateau
+from models.ProtoNet_backbone import AttentiveEncoder
+# 获取脚本所在目录的绝对路径
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# 获取项目根目录（假设脚本在项目的二级目录下）
+project_root = os.path.dirname(os.path.dirname(script_dir))
 
 # 添加项目根目录到路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -220,7 +225,30 @@ class EncoderClassifier(nn.Module):
                 use_l2_norm=use_l2_norm,
                 dropout_rate=dropout
             )
-        
+        elif backbone == 'cbam':
+            # 使用注意力机制的编码器
+            self.encoder = AttentiveEncoder(
+                in_channels,
+                hidden_dim,
+                feature_dim,
+                attention_type='cbam'
+            )
+        elif backbone == 'channel':
+            # 使用通道注意力的编码器
+            self.encoder = AttentiveEncoder(
+                in_channels,
+                hidden_dim,
+                feature_dim,
+                attention_type='channel'
+            )
+        elif backbone == 'spatial':
+            # 使用空间注意力的编码器
+            self.encoder = AttentiveEncoder(
+                in_channels,
+                hidden_dim,
+                feature_dim,
+                attention_type='spatial'
+            )
         else:
             raise ValueError(f"不支持的骨干网络类型: {backbone}")
         
@@ -369,9 +397,9 @@ if __name__ == "__main__":
     parser.add_argument('--in_channels', type=int, default=5, help='输入通道数')
     parser.add_argument('--hidden_dim', type=int, default=64, help='隐藏层维度')
     parser.add_argument('--feature_dim', type=int, default=64, help='特征维度')
-    parser.add_argument('--backbone', type=str, default='cnn1d_embed_enhanced', 
-                      choices=['cnn1d', 'cnn1d_enhanced', 'cnn1d_embed_enhanced', 'five_cnn1d'],
-                      help='骨干网络类型: cnn1d, cnn1d_enhanced, cnn1d_embed_enhanced, five_cnn1d')
+    parser.add_argument('--backbone', type=str, default='cnn1d_enhanced', 
+                      choices=['cnn1d', 'cnn1d_enhanced', 'cnn1d_embed_enhanced', 'channel', 'spatial', 'cbam'],
+                      help='骨干网络类型: cnn1d, cnn1d_enhanced, cnn1d_embed_enhanced, channel, spatial, cbam')
     parser.add_argument('--dropout', type=float, default=0.6, help='Dropout比率')
     parser.add_argument('--use_l2_norm', type=bool, default=True, help='是否使用L2归一化')
     parser.add_argument('--batch_size', type=int, default=32, help='批次大小')
@@ -383,7 +411,9 @@ if __name__ == "__main__":
                       help='学习率调度器类型: step, cosine, plateau')
     parser.add_argument('--warmup_epochs', type=int, default=3, help='预热阶段的epoch数')
     parser.add_argument('--warmup_start_lr', type=float, default=1e-5, help='预热阶段的初始学习率')
-    parser.add_argument('--source_data', type=str, default='data/h5data/selected_data.h5', help='源域数据文件路径')
+    parser.add_argument('--source_data', type=str, 
+                    default=os.path.join('/root', 'hxq/motor_dl/data/h5data/selected_data.h5'), 
+                    help='源域数据文件路径')
     parser.add_argument('--train_ratio', type=float, default=0.8, help='训练集比例')
     parser.add_argument('--seed', type=int, default=42, help='随机种子')
     parser.add_argument('--patience', type=int, default=10, help='早停耐心值')
@@ -401,7 +431,7 @@ if __name__ == "__main__":
     
     # 创建保存目录
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    save_dir = f'runs/encoder_pretrain_{args.backbone}_{timestamp}'
+    save_dir = f'hxq/motor_dl/runs/encoder_pretrain_{args.backbone}_{timestamp}'
     os.makedirs(save_dir, exist_ok=True)
     
     # 创建TensorBoard writer

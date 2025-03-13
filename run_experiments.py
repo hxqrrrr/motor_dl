@@ -1,154 +1,189 @@
-import subprocess
-import time
 import os
-from typing import List, Dict
+import sys
+import subprocess
 import json
+import time
 from datetime import datetime
+import argparse
+from utils.gpu_info import set_gpu, print_gpu_info
 
-def run_command(command: str, log_file: str = None) -> bool:
+def run_experiment(command, gpu_id=None, log_dir="logs"):
     """
-    执行单个命令并记录输出
+    运行单个实验命令
     
     参数:
-        command: 要执行的命令
-        log_file: 日志文件路径
+        command: 要运行的命令
+        gpu_id: 指定的GPU ID，如果为None则自动选择最佳GPU
+        log_dir: 日志保存目录
     
     返回:
-        bool: 命令是否成功执行
+        bool: 实验是否成功
     """
-    try:
-        # 如果指定了日志文件，将输出重定向到文件
-        if log_file:
-            with open(log_file, 'a', encoding='utf-8') as f:
-                f.write(f"\n{'='*50}\n")
-                f.write(f"执行命令: {command}\n")
-                f.write(f"开始时间: {datetime.now()}\n")
-                f.write(f"{'='*50}\n\n")
-                
-            with open(log_file, 'a', encoding='utf-8') as f:
-                process = subprocess.Popen(
-                    command,
-                    shell=True,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    universal_newlines=True
-                )
-                
-                # 实时输出命令执行结果
-                for line in process.stdout:
-                    print(line, end='')
-                    f.write(line)
-                    
-                process.wait()
-                
-                f.write(f"\n{'='*50}\n")
-                f.write(f"命令执行完成时间: {datetime.now()}\n")
-                f.write(f"返回码: {process.returncode}\n")
-                f.write(f"{'='*50}\n\n")
-                
+    # 确保日志目录存在
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # 设置GPU
+    if gpu_id is not None:
+        # 在命令中添加GPU选择
+        if "--gpu" in command:
+            # 如果命令中已经有--gpu参数，替换它
+            command = command.replace("--gpu", f"--gpu {gpu_id} --")
         else:
-            # 如果没有指定日志文件，直接执行命令
-            process = subprocess.Popen(
-                command,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                universal_newlines=True
-            )
-            
-            for line in process.stdout:
-                print(line, end='')
-                
-            process.wait()
-            
-        return process.returncode == 0
+            # 否则添加--gpu参数
+            command += f" --gpu {gpu_id}"
+    
+    # 获取当前时间作为日志文件名
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"experiment_{timestamp}.log")
+    
+    print(f"运行命令: {command}")
+    print(f"日志将保存到: {log_file}")
+    
+    # 添加内存优化环境变量
+    env = os.environ.copy()
+    env["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
+    
+    # 打开日志文件
+    with open(log_file, "w") as f:
+        # 记录实验开始时间和命令
+        f.write(f"实验开始时间: {timestamp}\n")
+        f.write(f"命令: {command}\n\n")
+        f.flush()
         
-    except Exception as e:
-        print(f"执行命令时出错: {str(e)}")
-        if log_file:
-            with open(log_file, 'a', encoding='utf-8') as f:
-                f.write(f"\n错误: {str(e)}\n")
-        return False
+        # 运行命令并实时记录输出
+        process = subprocess.Popen(
+            command,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            env=env  # 使用修改后的环境变量
+        )
+        
+        # 实时读取并记录输出
+        for line in process.stdout:
+            sys.stdout.write(line)  # 在控制台显示
+            f.write(line)  # 写入日志文件
+            f.flush()  # 确保立即写入
+        
+        # 等待进程结束并获取返回码
+        return_code = process.wait()
+        
+        # 记录实验结束时间和状态
+        end_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        f.write(f"\n实验结束时间: {end_time}\n")
+        f.write(f"返回码: {return_code}\n")
+        
+        return return_code == 0
 
-def run_experiments(experiments: List[Dict[str, str]], log_dir: str = "logs") -> None:
+def run_experiments(experiments, gpu_id=None, log_dir="logs"):
     """
-    连续执行多个实验
+    运行一系列实验
     
     参数:
         experiments: 实验配置列表
-        log_dir: 日志目录
+        gpu_id: 指定的GPU ID，如果为None则自动选择最佳GPU
+        log_dir: 日志保存目录
     """
-    # 创建日志目录
-    os.makedirs(log_dir, exist_ok=True)
+    # 打印GPU信息
+    print_gpu_info()
     
-    # 获取当前时间作为实验组的标识
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # 如果指定了GPU，设置它
+    if gpu_id is not None:
+        set_gpu(gpu_id)
     
-    # 创建本次实验的日志文件
-    log_file = os.path.join(log_dir, f"experiment_group_{timestamp}.log")
+    # 创建结果目录
+    results_dir = os.path.join(log_dir, f"batch_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+    os.makedirs(results_dir, exist_ok=True)
     
-    # 记录实验开始
-    with open(log_file, 'w', encoding='utf-8') as f:
-        f.write(f"实验组开始时间: {datetime.now()}\n")
-        f.write(f"实验配置:\n{json.dumps(experiments, indent=2, ensure_ascii=False)}\n")
-        f.write(f"{'='*50}\n\n")
+    # 保存实验配置
+    with open(os.path.join(results_dir, "experiments.json"), "w") as f:
+        json.dump(experiments, f, indent=2)
     
-    # 执行每个实验
-    for i, exp in enumerate(experiments, 1):
-        print(f"\n开始执行实验 {i}/{len(experiments)}")
+    # 运行每个实验
+    results = []
+    for i, exp in enumerate(experiments):
+        print(f"\n开始执行实验 {i+1}/{len(experiments)}")
         print(f"实验配置: {exp}")
         
-        # 构建命令
-        command = exp['command']
+        # 获取命令
+        command = exp["command"]
         
-        # 执行命令
-        success = run_command(command, log_file)
+        # 确保命令中的路径正确
+        if "cd" in command and "&&" in command:
+            # 分离cd命令和实际命令
+            cd_part, cmd_part = command.split("&&", 1)
+            cd_dir = cd_part.replace("cd", "").strip()
+            
+            # 检查目录是否存在
+            if not os.path.exists(cd_dir):
+                print(f"警告: 目录 '{cd_dir}' 不存在")
+                
+                # 尝试修复路径
+                if "motor_dl_dl" in cd_dir:
+                    fixed_dir = cd_dir.replace("motor_dl_dl", "motor_dl")
+                    if os.path.exists(fixed_dir):
+                        print(f"已修复路径为: '{fixed_dir}'")
+                        command = f"cd {fixed_dir} && {cmd_part}"
         
-        if not success:
-            print(f"实验 {i} 执行失败")
-            # 可以选择在这里中断所有实验
-            # break
+        # 运行实验
+        success = run_experiment(command, gpu_id, results_dir)
         
-        # 实验之间添加间隔时间（可选）
-        if i < len(experiments):
-            time.sleep(2)
+        # 记录结果
+        result = {
+            "experiment_id": i+1,
+            "config": exp,
+            "success": success,
+            "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S")
+        }
+        results.append(result)
+        
+        # 保存当前结果
+        with open(os.path.join(results_dir, "results.json"), "w") as f:
+            json.dump(results, f, indent=2)
+        
+        if success:
+            print(f"实验 {i+1} 执行成功")
+        else:
+            print(f"实验 {i+1} 执行失败")
+        
+        # 如果配置了等待时间，则等待
+        if "wait_time" in exp and exp["wait_time"] > 0 and i < len(experiments) - 1:
+            wait_time = exp["wait_time"]
+            print(f"等待 {wait_time} 秒后开始下一个实验...")
+            time.sleep(wait_time)
     
-    # 记录实验组结束
-    with open(log_file, 'a', encoding='utf-8') as f:
-        f.write(f"\n{'='*50}\n")
-        f.write(f"实验组结束时间: {datetime.now()}\n")
+    # 打印总结
+    print("\n所有实验执行完毕")
+    print(f"总实验数: {len(experiments)}")
+    print(f"成功: {sum(1 for r in results if r['success'])}")
+    print(f"失败: {sum(1 for r in results if not r['success'])}")
+    print(f"结果保存在: {results_dir}")
 
 if __name__ == "__main__":
-    # Python解释器的完整路径
-    python_path = "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/python.exe"
-    tensorboard_path = "C:/Users/hxq11/anaconda3/envs/CLIP-LoRA/Scripts/tensorboard.exe"
+    parser = argparse.ArgumentParser(description="批量运行实验")
+    parser.add_argument("--config", type=str, help="实验配置文件路径")
+    parser.add_argument("--gpu", type=int, default=None, help="指定使用的GPU ID")
+    args = parser.parse_args()
     
-    # 定义要执行的实验列表
-    experiments_benchmark = [
-      
-        
-        
-    ]
-    experiments_train = [
-        {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance cosine --feature_dim 128 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
-        },
-        {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 64 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
-        },
-        {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 256 --hidden_dim 128 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
-        },
-        {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 128 --hidden_dim 256 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
-        },
-        {
-            "command": f'"{python_path}" train.py --model all_model --backbone cbam --distance euclidean --feature_dim 256 --hidden_dim 256 --dropout 0.3 --n_way 4 --n_support 5 --n_query 15 --batch_size 8 --epochs 100'
-        },
-      
-        
-        
-    ]
-    # 执行实验
-    # run_experiments(experiments_benchmark) 
-    run_experiments(experiments_train)
+    if args.config:
+        # 从配置文件加载实验
+        with open(args.config, "r") as f:
+            experiments = json.load(f)
+    else:
+        # 默认实验配置，减小batch_size和模型复杂度
+        experiments = [
+           
+            
+            {
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone enhanced_cnn1d --distance euclidean --lr 0.00001 --feature_dim 256 --hidden_dim 16 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
+                "wait_time": 10
+            },
+            {
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone enhanced_cnn1d --distance euclidean --lr 0.00001 --feature_dim 256 --hidden_dim 32 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
+                "wait_time": 10
+            },
+        ]
+    
+    # 运行实验
+    run_experiments(experiments, args.gpu)
