@@ -102,36 +102,62 @@ def visualize_channel_attention(x_np, attention_np, save_dir, timestamp, step_na
     plt.close()
 
 def visualize_spatial_attention(x_np, attention_np, save_dir, timestamp, step_name=None):
-    """可视化空间注意力"""
-    plt.figure(figsize=(15, 10))
+    """
+    可视化空间注意力权重
     
-    # 1. 原始信号强度
-    plt.subplot(3, 1, 1)
-    plt.title("Original Signal Intensity")
-    plt.imshow(x_np, aspect='auto', cmap='viridis')
-    plt.colorbar(label='Amplitude')
-    plt.ylabel("Channel")
-    
-    # 2. 空间注意力权重
-    plt.subplot(3, 1, 2)
-    plt.title("Spatial Attention Weights")
-    plt.plot(attention_np.squeeze())
-    plt.xlabel("Time Step")
-    plt.ylabel("Attention Weight")
-    
-    # 3. 加权后的信号
-    plt.subplot(3, 1, 3)
-    plt.title("Weighted Signal")
-    weighted_signal = x_np * attention_np.T
-    plt.imshow(weighted_signal, aspect='auto', cmap='viridis')
-    plt.colorbar(label='Weighted Amplitude')
-    plt.ylabel("Channel")
-    
-    # 保存图像
-    plt.tight_layout()
-    name = f"spatial_attention_{step_name}_{timestamp}.png" if step_name else f"spatial_attention_{timestamp}.png"
-    plt.savefig(os.path.join(save_dir, name))
-    plt.close()
+    参数:
+        x_np: 输入信号 numpy数组
+        attention_np: 注意力权重 numpy数组
+        save_dir: 保存目录
+        timestamp: 时间戳
+        step_name: 步骤名称（可选）
+    """
+    try:
+        # 打印形状信息以便调试
+        print(f"输入信号形状: {x_np.shape}")
+        print(f"注意力权重形状: {attention_np.shape}")
+        
+        # 检查维度是否匹配
+        if x_np.shape[0] != attention_np.shape[1]:
+            print(f"警告：维度不匹配。调整注意力权重维度...")
+            attention_np = attention_np.reshape(-1, x_np.shape[0])
+            
+        # 计算加权信号
+        weighted_signal = x_np * attention_np.T
+        
+        plt.figure(figsize=(15, 10))
+        
+        # 1. 原始信号强度
+        plt.subplot(3, 1, 1)
+        plt.title("Original Signal Intensity")
+        plt.imshow(x_np, aspect='auto', cmap='viridis')
+        plt.colorbar(label='Amplitude')
+        plt.ylabel("Channel")
+        
+        # 2. 空间注意力权重
+        plt.subplot(3, 1, 2)
+        plt.title("Spatial Attention Weights")
+        plt.plot(attention_np.squeeze())
+        plt.xlabel("Time Step")
+        plt.ylabel("Attention Weight")
+        
+        # 3. 加权后的信号
+        plt.subplot(3, 1, 3)
+        plt.title("Weighted Signal")
+        plt.imshow(weighted_signal, aspect='auto', cmap='viridis')
+        plt.colorbar(label='Weighted Amplitude')
+        plt.ylabel("Channel")
+        
+        # 保存图像
+        plt.tight_layout()
+        name = f"spatial_attention_{step_name}_{timestamp}.png" if step_name else f"spatial_attention_{timestamp}.png"
+        plt.savefig(os.path.join(save_dir, name))
+        plt.close()
+        
+    except Exception as e:
+        print(f"可视化过程中出现错误: {str(e)}")
+        print("跳过可视化继续执行...")
+        return
 
 def visualize_cbam_attention(x_np, channel_attention_np, spatial_attention_np, 
                            save_dir, timestamp, step_name=None, channels=None):

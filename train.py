@@ -4,9 +4,7 @@ import json
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from models.ProtoNet import ProtoNet
+
 from models.dataset import h5Dataset, ProtoNetDataset,SourceDomainDataset
 from torch.utils.data import DataLoader, Dataset
 import torch.optim as optim
@@ -40,8 +38,8 @@ if __name__ == "__main__":
     parser.add_argument('--hidden_dim', type=int, default=16, help='隐藏层维度')
     parser.add_argument('--feature_dim', type=int, default=128, help='特征维度')
     parser.add_argument('--backbone', type=str, default='cnn1d', 
-                      choices=['cnn1d', 'channel', 'spatial', 'cbam', 'enhanced_cnn1d'],
-                      help='骨干网络类型: cnn1d, channel, spatial, cbam, enhanced_cnn1d')
+                      choices=['cnn1d', 'channel', 'spatial', 'cbam', 'enhanced_cnn1d','transformer'],
+                      help='骨干网络类型: cnn1d, channel, spatial, cbam, enhanced_cnn1d,transformer')
     parser.add_argument('--distance', type=str, default='euclidean', 
                       choices=['euclidean', 'cosine', 'relation', 'relation_selfattention'],
                       help='距离度量类型: euclidean, cosine, relation, relation_selfattention')
@@ -65,6 +63,7 @@ if __name__ == "__main__":
                       help='准确率达到第一阈值后的学习率衰减因子')
     parser.add_argument('--visualize', action='store_true', default=True,  # 默认开启
                       help='是否启用注意力可视化')
+    parser.add_argument('--no_attention_vis', action='store_true', help='禁用注意力可视化')
     args = parser.parse_args()
 
     # 设置训练参数
@@ -189,7 +188,7 @@ if __name__ == "__main__":
         backbone=training_params['backbone'],
         distance_type=training_params['distance_type'],
         dropout=training_params['dropout'],
-        visualize=args.visualize
+        visualize=not args.no_attention_vis  # 根据命令行参数设置可视化
     )
     model = model.to(device)
     

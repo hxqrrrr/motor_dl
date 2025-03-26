@@ -11,7 +11,7 @@ import os
 import json
 
 
-def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distance_type, dropout=0.5, visualize=True):
+def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distance_type, dropout=0.5, visualize=True, no_attention_vis=False):
     """
     根据模型名称返回相应的模型实例
     
@@ -20,16 +20,17 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
         in_channels: 输入通道数
         hidden_dim: 隐藏层维度
         feature_dim: 特征维度
-        backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam']
+        backbone: 骨干网络类型，可选['cnn1d', 'channel', 'spatial', 'cbam','transformer']
         distance_type: 距离度量类型，可选['euclidean', 'cosine', 'relation', 'relation_selfattention']
         dropout: Dropout比率
         visualize (bool): 是否启用注意力可视化
+        no_attention_vis (bool): 是否禁用注意力可视化
     
     返回:
         model: 模型实例
     """
     model_dict = {
-        'protonet': ProtoNet,
+
         'protonet_attention': ProtoNetWithAttention,
         'all_model': AllModel
     }
@@ -42,7 +43,7 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
     if distance_type not in valid_distance_types:
         raise ValueError(f"不支持的距离类型: {distance_type}，可用的距离类型有: {valid_distance_types}")
     
-    if backbone in ['channel', 'spatial', 'cbam']:
+    if backbone in ['channel', 'spatial', 'cbam', 'enhanced_cnn1d','transformer']:
         model = ProtoNetWithAttention(
             in_channels=in_channels,
             hidden_dim=hidden_dim,
@@ -52,22 +53,16 @@ def get_model(model_name, in_channels, hidden_dim, feature_dim, backbone, distan
             distance_type=distance_type,
             dropout=dropout
         )
-        # 启用注意力可视化
-        if visualize:
-            if hasattr(model.encoder, 'attention'):
-                model.encoder.attention.visualize = True
-            if hasattr(model.encoder, 'channel_attention'):
-                model.encoder.channel_attention.visualize = True
-            if hasattr(model.encoder, 'spatial_attention'):
-                model.encoder.spatial_attention.visualize = True
+        
+        # 在创建模型后设置注意力模块的可视化
+        if hasattr(model.encoder, 'attention'):
+            model.encoder.attention.visualize = visualize
+        if hasattr(model.encoder, 'channel_attention'):
+            model.encoder.channel_attention.visualize = visualize
+        if hasattr(model.encoder, 'spatial_attention'):
+            model.encoder.spatial_attention.visualize = visualize
     else:
-        model = ProtoNet(
-            in_channels=in_channels,
-            hidden_dim=hidden_dim,
-            feature_dim=feature_dim,
-            backbone=backbone,
-            distance_type=distance_type
-        )
+        print("backbone not supported")
     
     return model
 

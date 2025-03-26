@@ -171,16 +171,22 @@ if __name__ == "__main__":
         with open(args.config, "r") as f:
             experiments = json.load(f)
     else:
-        # 默认实验配置，减小batch_size和模型复杂度
+        # 默认实验配置，测试不同特征维度的效果
         experiments = [
-           
-            
             {
-                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone channel --distance euclidean --lr 0.00001 --feature_dim 128 --hidden_dim 16 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone transformer --distance euclidean --lr 0.00001 --feature_dim 128 --hidden_dim 16 --dropout 0.2 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100 --no_attention_vis",
                 "wait_time": 10
             },
             {
-                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone enhanced_cnn1d --distance euclidean --lr 0.00001 --feature_dim 256 --hidden_dim 32 --dropout 0.1 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100",
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone spatial --distance euclidean --lr 0.00001 --feature_dim 128 --hidden_dim 32 --dropout 0.2 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100 --no_attention_vis",
+                "wait_time": 10
+            },
+            {
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone spatial --distance euclidean --lr 0.00001 --feature_dim 256 --hidden_dim 16 --dropout 0.2 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100 --no_attention_vis",
+                "wait_time": 10
+            },
+            {
+                "command": "cd /root/hxq/motor_dl && python train.py --model all_model --backbone spatial --distance euclidean --lr 0.00001 --feature_dim 256 --hidden_dim 32 --dropout 0.2 --n_way 4 --n_support 5 --n_query 15 --batch_size 4 --epochs 100 --no_attention_vis",
                 "wait_time": 10
             },
         ]
