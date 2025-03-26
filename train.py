@@ -4,6 +4,7 @@ import json
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
+import torch.cuda
 
 from models.dataset import h5Dataset, ProtoNetDataset,SourceDomainDataset
 from torch.utils.data import DataLoader, Dataset
@@ -22,7 +23,21 @@ from utils.utils_train import check_data_leakage, train_epoch, evaluate, plot_tr
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # 使用GPU 1
 
+def print_cuda_info():
+    print("\n=== CUDA Information ===")
+    print(f"CUDA is available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"CUDA version: {torch.version.cuda}")
+        print(f"Current CUDA device: {torch.cuda.current_device()}")
+        print(f"Device name: {torch.cuda.get_device_name()}")
+        print(f"Device count: {torch.cuda.device_count()}")
+        print(f"Device properties: {torch.cuda.get_device_properties(torch.cuda.current_device())}")
+    print("=====================\n")
+
 if __name__ == "__main__":
+    # 添加在参数解析之后
+    print_cuda_info()
+    
     # 创建命令行参数解析器
     parser = argparse.ArgumentParser(description='源域元学习模型训练脚本')
     parser.add_argument('--model', type=str, default='all_model',
